@@ -110,11 +110,19 @@ class Authenticator:
         self.rootdse  = {}
 
     # -- connection factory --------------------------------------------------
-    def _new_conn(self):
+    def _new_conn(self, host: str = ""):
+        """Build an impacket LDAPConnection.
+
+        The URL host becomes the Kerberos target (SPN ldap/<host>), while the
+        socket always connects to dc_ip. For Kerberos we pass the DC FQDN so the
+        SPN is ldap/<fqdn> (ldap/<ip> is not in the KDC); the socket still hits
+        dc_ip, so the FQDN need not resolve locally.
+        """
+        h = host or self.host
         scheme = "ldaps" if self.use_tls else "ldap"
         default = 636 if self.use_tls else 389
-        host = self.host if self.port in (0, default) else f"{self.host}:{self.port}"
-        return _ldap.LDAPConnection(f"{scheme}://{host}", self.base_dn, self.dc_ip)
+        hostport = h if self.port in (0, default) else f"{h}:{self.port}"
+        return _ldap.LDAPConnection(f"{scheme}://{hostport}", self.base_dn, self.dc_ip)
 
     # -- discovery -----------------------------------------------------------
     def _discover(self):
@@ -216,7 +224,8 @@ class Authenticator:
         return conn
 
     def _kerberos_bind(self, use_cache: bool):
-        conn = self._new_conn()
+        # Target the DC FQDN so the requested SPN is ldap/<fqdn> (not ldap/<ip>).
+        conn = self._new_conn(host=self.dc_fqdn or self.host)
         conn.kerberosLogin(
             self.username,
             "" if use_cache else self.password,

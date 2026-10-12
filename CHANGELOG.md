@@ -33,6 +33,10 @@ backend could not.
 - SID → name resolution now reads the `<SID=...>` DN (base scope) instead of a
   binary `(objectSid=\xx..)` filter: impacket's filter compiler UTF-8 re-encodes
   high bytes, so binary-value filters never matched.
+- Kerberos binds target the DC **FQDN** (SPN `ldap/<fqdn>`) while the socket
+  still connects to the IP, fixing `KDC_ERR_S_PRINCIPAL_UNKNOWN` on ccache /
+  password Kerberos.
+- `policies` module crashed with a `SCOPE_BASE` NameError (missing import).
 
 ### Removed
 - `ldap3` and `gssapi` dependencies.
