@@ -26,6 +26,12 @@ Directory environments. Pure Python 3, authenticated or anonymous.
 - **LAPS** (legacy + Windows) and **Shadow Credentials** detection.
 - **Quick Wins** summary sorted by severity, plus optional user-list dumps.
 
+## Example output
+
+See **[docs/example-output.md](docs/example-output.md)** — a real ADCS run as a
+compromised `svc_ca` account, flagging **ESC1** with a ready-to-run exploitation
+command. GitHub renders the terminal colors inline.
+
 ## Install
 
 ```bash
