@@ -3,7 +3,7 @@
 LDAP enumeration tool for offensive security assessments, targeting Active
 Directory environments. Pure Python 3, authenticated or anonymous.
 
-> For authorized security testing, CTFs, and lab/educational use only.
+> ⚠️ **Authorized use only** — see the [Disclaimer](#disclaimer) below.
 
 ## Features
 
@@ -82,3 +82,24 @@ utils/            LDAP helpers, SID resolution, timestamps, UAC, description heu
   inherited/complex structure.
 - `lastLogonTimestamp` is replicated and can lag up to ~14 days.
 - ADCS ESC5 and ESC10–ESC16 are not currently covered.
+
+## Disclaimer
+
+This tool is provided for **authorized security testing, research, and
+educational purposes only** — for example penetration-testing engagements with
+written authorization, CTF competitions, and lab environments you own or are
+explicitly permitted to assess.
+
+Running it against Active Directory systems **without the explicit, prior
+permission of the owner is illegal** and may violate computer-misuse laws. You
+are solely responsible for obtaining proper authorization and for complying
+with all applicable laws and regulations. The authors and contributors accept
+**no liability** for any misuse or damage caused by this software, and provide
+it with no warranty (see [LICENSE](LICENSE)).
+
+By using listdap you agree that you have the necessary authorization for any
+environment you point it at.
+
+## License
+
+Released under the [MIT License](LICENSE). © 2026 johnkravicz.
