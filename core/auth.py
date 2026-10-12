@@ -455,11 +455,18 @@ class Authenticator:
             reasons = []
             if has_creds:
                 reasons = [
-                    "Authenticated bind failed with the supplied credentials.",
-                    "If the creds are correct, the DC likely enforces LDAP "
-                    "signing/channel binding — ldap3 cannot sign plaintext LDAP.",
-                    "Retry with --ldaps, or use Kerberos (impacket-getTGT + --ccache).",
+                    "Authenticated bind failed; the DC likely enforces LDAP "
+                    "signing/channel binding (ldap3 cannot sign plaintext LDAP "
+                    "nor do channel binding over LDAPS).",
+                    "Most reliable fix on such DCs — Kerberos:",
+                    f"  impacket-getTGT '{self.domain}/{self.username}:<password>' "
+                    f"-dc-ip {self.dc_ip}",
+                    f"  KRB5CCNAME={self.username}.ccache listdap.py -dc {self.dc_ip} "
+                    f"-u {self.username} -d {self.domain} --ccache {self.username}.ccache",
                 ]
+                # surface the real per-method errors for diagnosis
+                for e in errors:
+                    reasons.append(f"[attempt] {e}")
             return conn, AuthResult(auth_type=AuthType.ANONYMOUS,
                                     fallback_reasons=reasons)
         except AuthError as e:
