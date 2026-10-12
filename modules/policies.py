@@ -5,7 +5,7 @@ Includes spray planning advice.
 
 from modules.base import BaseModule, ScanContext
 from core.output import Severity, C
-from utils.ldap_helpers import get_attr, get_int, get_list
+from utils.ldap_helpers import get_attr, get_int, get_list, SCOPE_BASE
 
 # Default domain password policy is stored on the domain object
 _DOMAIN_ATTRS = [
