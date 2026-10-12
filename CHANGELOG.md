@@ -18,8 +18,9 @@ banner and via `listdap.py --version`.
   variant** (getTGT + `-k -no-pass`) for signing-enforcing DCs where applicable:
   Kerberoasting (GetUserSPNs), AS-REP roasting (GetNPUsers), DCSync
   (secretsdump), RBCD via MachineAccountQuota (addcomputer/rbcd/getST),
-  password spraying (nxc), and PASSWD_NOTREQD empty-password tests.
-  New helper module `utils/exploit_cmds.py`.
+  password spraying (nxc), PASSWD_NOTREQD empty-password tests, unconstrained /
+  constrained / RBCD delegation abuse (getST/S4U, coercion), and Shadow
+  Credentials (certipy shadow auto). New helper module `utils/exploit_cmds.py`.
 
 ## [2.0.0] - 2026-10-12
 

@@ -272,7 +272,8 @@ class UsersModule(BaseModule):
                 Severity.HIGH,
                 f"Shadow Credentials set on {len(shadow_creds)} account(s)",
                 "May indicate persistence backdoor or RBCD setup. Accounts: "
-                + ", ".join(u["sam"] for u in shadow_creds),
+                + ", ".join(u["sam"] for u in shadow_creds) + "\n"
+                + exploit_cmds.shadow_creds(ctx, shadow_creds[0]["sam"]),
             )
 
         # --- PASSWD_NOTREQD ---

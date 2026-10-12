@@ -65,13 +65,13 @@ class ShadowModule(BaseModule):
             out.table(["Computer", "Key Count", "DN"], rows,
                       highlight_fn=lambda r: C.YELLOW)
 
+        from utils import exploit_cmds
+        affected = [o["sam"] for o in users + computers]
         ctx.quick_wins.add(
             Severity.HIGH,
             f"Shadow Credentials on {total} object(s)",
             "msDS-KeyCredentialLink allows certificate-based authentication as the target account.\n"
             "May indicate persistence (backdoor key) or RBCD abuse setup.\n"
-            "Investigate with: certipy shadow auto -account <sam>\n"
-            "Affected: " + ", ".join(
-                o["sam"] for o in users + computers
-            ),
+            "Affected: " + ", ".join(affected) + "\n"
+            + exploit_cmds.shadow_creds(ctx, affected[0]),
         )

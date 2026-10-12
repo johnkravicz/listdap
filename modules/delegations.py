@@ -6,6 +6,7 @@ Covers both user and computer accounts.
 from modules.base import BaseModule, ScanContext
 from core.output import Severity, C
 from utils.ldap_helpers import get_attr, get_int, get_list
+from utils import exploit_cmds
 from utils.uac import uac_has, UAC_TRUSTED_DELEG, UAC_TRUSTED_TO_AUTH, UAC_SERVER_TRUST
 
 _ATTRS_DELEGATION = [
@@ -92,8 +93,8 @@ class DelegationsModule(BaseModule):
                 Severity.HIGH,
                 f"Unconstrained Delegation — {len(uncons)} account(s)",
                 "Compromise these accounts → capture TGTs of any connecting user (incl. DA).\n"
-                "Attack: SpoolSample / PetitPotam coercion + Rubeus monitor.\n"
-                "Accounts: " + ", ".join(u["sam"] for u in uncons),
+                "Accounts: " + ", ".join(u["sam"] for u in uncons) + "\n"
+                + exploit_cmds.unconstrained(ctx, uncons[0]["sam"]),
             )
 
         # --- Constrained ---
@@ -113,20 +114,21 @@ class DelegationsModule(BaseModule):
             )
             proto_trans_count = sum(1 for c in cons if c["proto_trans"])
             if proto_trans_count:
+                proto_accounts = [c["sam"] for c in cons if c["proto_trans"]]
                 ctx.quick_wins.add(
                     Severity.HIGH,
                     f"Constrained Delegation with Protocol Transition — {proto_trans_count} account(s)",
                     "Protocol transition (S4U2Self) allows impersonating ANY user to the delegated services.\n"
-                    "Accounts: " + ", ".join(
-                        c["sam"] for c in cons if c["proto_trans"]
-                    ),
+                    "Accounts: " + ", ".join(proto_accounts) + "\n"
+                    + exploit_cmds.constrained_deleg(ctx, proto_accounts[0], True),
                 )
             else:
                 ctx.quick_wins.add(
                     Severity.MEDIUM,
                     f"Constrained Delegation — {len(cons)} account(s)",
                     "May be exploitable via S4U2Proxy if you can compromise the delegating account.\n"
-                    "Accounts: " + ", ".join(c["sam"] for c in cons),
+                    "Accounts: " + ", ".join(c["sam"] for c in cons) + "\n"
+                    + exploit_cmds.constrained_deleg(ctx, cons[0]["sam"], False),
                 )
 
         # --- RBCD ---
@@ -139,5 +141,6 @@ class DelegationsModule(BaseModule):
                 f"RBCD configured on {len(rbcd)} account(s)",
                 "An actor with write access to msDS-AllowedToActOnBehalfOfOtherIdentity can\n"
                 "set up RBCD to impersonate any user to the target service.\n"
-                "Accounts: " + ", ".join(r["sam"] for r in rbcd),
+                "Accounts: " + ", ".join(r["sam"] for r in rbcd) + "\n"
+                + exploit_cmds.rbcd_exploit(ctx, rbcd[0]["sam"]),
             )
