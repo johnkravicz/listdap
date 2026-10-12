@@ -428,40 +428,71 @@ class Authenticator:
                     if e not in krb_skip
                 )
 
-        # ---- NTLM path ----
+        # ---- NTLM / SIMPLE (plaintext or TLS per --ldaps) ----
         if has_creds:
-            try:
-                conn = _try_ntlm(server, self.username, self.password, self.domain)
-                return conn, AuthResult(
-                    auth_type=AuthType.NTLM,
-                    username=self.username,
-                    domain=self.domain,
-                    fallback_reasons=krb_skip,
-                )
-            except AuthError as e:
-                errors.append(str(e))
+            res = self._creds_bind(server, krb_skip, errors)
+            if res:
+                return res
+            # ldap3 cannot sign/seal a plaintext LDAP bind, so a DC that
+            # ENFORCES LDAP signing rejects NTLM/SIMPLE on 389. TLS provides the
+            # required integrity, so transparently retry over LDAPS (636).
+            if not self.use_tls:
+                try:
+                    tls_server = make_server(self.host, 636, True)
+                    res = self._creds_bind(
+                        tls_server, krb_skip, errors,
+                        note="escalated to LDAPS — plaintext bind rejected "
+                             "(DC likely enforces LDAP signing)",
+                    )
+                    if res:
+                        return res
+                except Exception as e:
+                    errors.append(f"LDAPS escalation failed: {e}")
 
-        # ---- Simple bind (guest with password / username only) ----
-        if has_creds and self.password:
-            try:
-                conn = _try_simple(server, self.username, self.password)
-                return conn, AuthResult(
-                    auth_type=AuthType.SIMPLE,
-                    username=self.username,
-                )
-            except AuthError as e:
-                errors.append(str(e))
-
-        # ---- Anonymous ----
+        # ---- Anonymous (last resort) ----
         try:
             conn = _try_anonymous(server)
-            return conn, AuthResult(auth_type=AuthType.ANONYMOUS)
+            reasons = []
+            if has_creds:
+                reasons = [
+                    "Authenticated bind failed with the supplied credentials.",
+                    "If the creds are correct, the DC likely enforces LDAP "
+                    "signing/channel binding — ldap3 cannot sign plaintext LDAP.",
+                    "Retry with --ldaps, or use Kerberos (impacket-getTGT + --ccache).",
+                ]
+            return conn, AuthResult(auth_type=AuthType.ANONYMOUS,
+                                    fallback_reasons=reasons)
         except AuthError as e:
             errors.append(str(e))
 
         raise AuthError(
             "All authentication strategies failed:\n  " + "\n  ".join(errors)
         )
+
+    def _creds_bind(self, server, krb_skip, errors, note=""):
+        """Try NTLM then SIMPLE against `server`; return (conn, AuthResult) or None."""
+        try:
+            conn = _try_ntlm(server, self.username, self.password, self.domain)
+            return conn, AuthResult(
+                auth_type=AuthType.NTLM,
+                username=self.username,
+                domain=self.domain,
+                fallback_reasons=list(krb_skip),
+                note=note,
+            )
+        except AuthError as e:
+            errors.append(str(e))
+        if self.password:
+            try:
+                conn = _try_simple(server, self.username, self.password)
+                return conn, AuthResult(
+                    auth_type=AuthType.SIMPLE,
+                    username=self.username,
+                    note=note,
+                )
+            except AuthError as e:
+                errors.append(str(e))
+        return None
 
     def _resolve_ccache(self, errors: list) -> Tuple[str, str]:
         """

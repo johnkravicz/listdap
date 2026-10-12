@@ -186,10 +186,15 @@ def main() -> int:
         base_dn=dc.base_dn or "(unknown)",
     )
 
-    # If a higher-priority auth method was tried and failed, explain why
+    # Explain auth escalation / fallback
+    if auth.note:
+        out.info(auth.note)
     if auth.fallback_reasons:
         from core.output import C
-        out.warning("Kerberos not used — fell back to " + auth.auth_type.value)
+        if auth.auth_type.value.lower().startswith("anonymous"):
+            out.warning("Authenticated bind failed — fell back to ANONYMOUS (read-only)")
+        else:
+            out.warning("Kerberos not used — fell back to " + auth.auth_type.value)
         for reason in auth.fallback_reasons:
             print(f"        {C.DIM}{C.YELLOW}↳ {reason}{C.RESET}")
 
