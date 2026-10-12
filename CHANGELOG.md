@@ -29,6 +29,11 @@ backend could not.
   could truncate large containers).
 - `get_raw` / `get_raw_all` helpers for binary attributes.
 
+### Fixed
+- SID → name resolution now reads the `<SID=...>` DN (base scope) instead of a
+  binary `(objectSid=\xx..)` filter: impacket's filter compiler UTF-8 re-encodes
+  high bytes, so binary-value filters never matched.
+
 ### Removed
 - `ldap3` and `gssapi` dependencies.
 - Temporary `krb5.conf` generation, GSSAPI SPN handling, and the

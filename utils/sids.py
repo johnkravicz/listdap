@@ -206,12 +206,15 @@ def make_ldap_sid_resolver(conn):
     base_dn = getattr(conn, "base_dn", "") or ""
     domain  = getattr(conn, "domain", "") or ""
 
-    from utils.ldap_helpers import get_attr
+    from utils.ldap_helpers import get_attr, SCOPE_BASE
 
     def _resolve(sid: str):
+        # Bind by the AD SID DN form: impacket's filter compiler mangles binary
+        # (objectSid=\xx..) values (it UTF-8 re-encodes high bytes), so a
+        # base-scope read of "<SID=...>" is the reliable way to resolve a SID.
         try:
-            flt = f"(objectSid={sid_to_ldap_filter(sid)})"
-            entries = conn.search(flt, ["sAMAccountName"], base=base_dn)
+            entries = conn.search("(objectClass=*)", ["sAMAccountName"],
+                                  base=f"<SID={sid}>", scope=SCOPE_BASE)
         except Exception:
             return None
         if not entries:
