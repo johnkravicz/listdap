@@ -268,11 +268,14 @@ class ACLsModule(BaseModule):
                 rows,
                 highlight_fn=lambda r: C.RED if "FULL DCSync" in r[2] else C.YELLOW,
             )
+            from utils import exploit_cmds
             ctx.quick_wins.add(
                 Severity.CRITICAL,
                 f"Unexpected DCSync rights — {len(filtered)} principal(s)",
                 "These accounts can dump all domain hashes (DCSync attack):\n"
-                + "\n".join(f"  {n} ({s})" for n, s, _ in filtered),
+                + "\n".join(f"  {n} ({s})" for n, s, _ in filtered)
+                + "\nIf you control one of them (or already are privileged):\n"
+                + exploit_cmds.dcsync(ctx),
             )
         else:
             out.success("No unexpected DCSync rights detected")

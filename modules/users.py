@@ -5,6 +5,7 @@ Users module — full user enumeration with pentest-relevant attributes.
 from modules.base import BaseModule, ScanContext
 from core.output import Severity, C
 from utils.ldap_helpers import get_attr, get_int, get_list
+from utils import exploit_cmds
 from utils.highlight import analyze_description, extract_credentials, HIGH as DESC_HIGH, MEDIUM as DESC_MEDIUM
 from utils.uac import (
     uac_has, uac_summary,
@@ -239,7 +240,8 @@ class UsersModule(BaseModule):
             ctx.quick_wins.add(
                 Severity.CRITICAL,
                 f"AS-REP Roasting — {len(asrep)} account(s)",
-                "Accounts: " + ", ".join(u["sam"] for u in asrep),
+                "Accounts: " + ", ".join(u["sam"] for u in asrep) + "\n"
+                + exploit_cmds.asreproast(ctx),
             )
 
         # --- Kerberoastable ---
@@ -256,7 +258,8 @@ class UsersModule(BaseModule):
             ctx.quick_wins.add(
                 Severity.HIGH,
                 f"Kerberoasting — {len(kerberoastable)} account(s)",
-                "Accounts: " + ", ".join(u["sam"] for u in kerberoastable),
+                "Accounts: " + ", ".join(u["sam"] for u in kerberoastable) + "\n"
+                + exploit_cmds.kerberoast(ctx),
             )
 
         # --- Shadow credentials ---
@@ -281,7 +284,8 @@ class UsersModule(BaseModule):
             ctx.quick_wins.add(
                 Severity.MEDIUM,
                 f"PASSWD_NOTREQD — {len(passwd_notreqd)} account(s)",
-                "These accounts may have empty passwords. Test with: netexec smb ... -u <user> -p ''",
+                "These accounts may have an empty password.\n"
+                + exploit_cmds.empty_password(ctx, [u["sam"] for u in passwd_notreqd]),
             )
 
         # --- Inactive accounts ---

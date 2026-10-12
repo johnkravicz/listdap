@@ -10,6 +10,17 @@ banner and via `listdap.py --version`.
 
 ## [Unreleased]
 
+## [2.1.0] - 2026-10-12
+
+### Added
+- Quick Wins now carry **copy-pasteable exploitation commands** filled from the
+  session (domain, user, password/ccache, DC IP + FQDN), with a **Kerberos
+  variant** (getTGT + `-k -no-pass`) for signing-enforcing DCs where applicable:
+  Kerberoasting (GetUserSPNs), AS-REP roasting (GetNPUsers), DCSync
+  (secretsdump), RBCD via MachineAccountQuota (addcomputer/rbcd/getST),
+  password spraying (nxc), and PASSWD_NOTREQD empty-password tests.
+  New helper module `utils/exploit_cmds.py`.
+
 ## [2.0.0] - 2026-10-12
 
 Full impacket LDAP backend. listdap now authenticates to DCs that enforce LDAP

@@ -136,10 +136,12 @@ class DomainModule(BaseModule):
         if maq > 0:
             out.warning(f"MachineAccountQuota = {maq}  (any authenticated user can create {maq} machine accounts → RBCD vector)")
             from core.output import Severity
+            from utils import exploit_cmds
             ctx.quick_wins.add(
                 Severity.HIGH,
                 f"MachineAccountQuota = {maq}",
-                "Any authenticated user can add machine accounts to the domain — enables RBCD attacks.",
+                "Any authenticated user can add machine accounts to the domain — "
+                "enables RBCD attacks.\n" + exploit_cmds.rbcd_via_maq(ctx),
             )
         else:
             out.success(f"MachineAccountQuota = {maq}  (safe)")

@@ -122,10 +122,12 @@ class PoliciesModule(BaseModule):
         _spray_advice(lockout_threshold, out)
 
         if lockout_threshold == 0:
+            from utils import exploit_cmds
             ctx.quick_wins.add(
                 Severity.HIGH,
                 "No account lockout policy",
-                "Unlimited password spraying / brute-force is possible without locking accounts.",
+                "Unlimited password spraying / brute-force is possible without "
+                "locking accounts.\n" + exploit_cmds.spray(ctx),
             )
         if min_len < 8:
             ctx.quick_wins.add(
