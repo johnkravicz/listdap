@@ -179,6 +179,7 @@ def _write_krb5_conf(domain: str, kdc_ip: str) -> str:
     dns_lookup_kdc = false
     forwardable = true
     rdns = false
+    dns_canonicalize_hostname = false
 
 [realms]
     {realm} = {{
@@ -455,14 +456,18 @@ class Authenticator:
             reasons = []
             if has_creds:
                 reasons = [
-                    "Authenticated bind failed; the DC likely enforces LDAP "
-                    "signing/channel binding (ldap3 cannot sign plaintext LDAP "
-                    "nor do channel binding over LDAPS).",
-                    "Most reliable fix on such DCs — Kerberos:",
-                    f"  impacket-getTGT '{self.domain}/{self.username}:<password>' "
-                    f"-dc-ip {self.dc_ip}",
-                    f"  KRB5CCNAME={self.username}.ccache listdap.py -dc {self.dc_ip} "
-                    f"-u {self.username} -d {self.domain} --ccache {self.username}.ccache",
+                    "Authenticated bind failed. If the credentials are valid, this "
+                    "DC enforces LDAP signing (and/or channel binding) — which "
+                    "ldap3, listdap's LDAP library, cannot satisfy: it negotiates "
+                    "no SASL security layer and cannot sign plaintext LDAP.",
+                    "Enumerate this host with a signing-capable (impacket-based) "
+                    "tool instead, e.g.:",
+                    f"  nxc ldap {self.dc_ip} -u {self.username} -p <password> "
+                    "--users --groups",
+                    f"  certipy-ad find -u {self.username}@{self.domain} -p <password> "
+                    f"-dc-ip {self.dc_ip} -vulnerable -stdout",
+                    "(LDAPS would bypass signing, but only if the DC presents a "
+                    "TLS certificate on 636.)",
                 ]
                 # surface the real per-method errors for diagnosis
                 for e in errors:
