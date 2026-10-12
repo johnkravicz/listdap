@@ -2,10 +2,8 @@
 Domain module — general domain information, FSMO roles, domain SID.
 """
 
-import ldap3
-
 from modules.base import BaseModule, ScanContext
-from utils.ldap_helpers import ldap_search, get_attr, get_int
+from utils.ldap_helpers import get_attr, get_int, get_list, get_raw, SCOPE_BASE
 from utils.sids import bytes_to_sid
 
 
@@ -57,7 +55,7 @@ class DomainModule(BaseModule):
             ldap_filter="(objectClass=domain)",
             attributes=["objectSid", "whenCreated", "ms-DS-MachineAccountQuota"],
             base=ctx.base_dn,
-            scope=ldap3.BASE,
+            scope=SCOPE_BASE,
         )
         if not entries:
             return
@@ -65,22 +63,16 @@ class DomainModule(BaseModule):
         entry = entries[0]
 
         # Domain SID
-        try:
-            raw_sid = entry["objectSid"].raw_values
-            if raw_sid:
-                sid_str = bytes_to_sid(raw_sid[0])
-                ctx.conn.dc_info.domain_sid = sid_str
-                out.kv("Domain SID", sid_str)
-        except Exception:
-            pass
+        raw_sid = get_raw(entry, "objectSid")
+        if raw_sid:
+            sid_str = bytes_to_sid(raw_sid)
+            ctx.conn.dc_info.domain_sid = sid_str
+            out.kv("Domain SID", sid_str)
 
         # Creation date
-        try:
-            when = entry["whenCreated"].value
-            if when:
-                out.kv("Domain Created", str(when))
-        except Exception:
-            pass
+        when = get_attr(entry, "whenCreated")
+        if when:
+            out.kv("Domain Created", str(when))
 
     def _query_fsmo(self, ctx: ScanContext) -> None:
         out = ctx.out
@@ -109,7 +101,7 @@ class DomainModule(BaseModule):
                 ldap_filter="(fSMORoleOwner=*)",
                 attributes=["fSMORoleOwner"],
                 base=dc.schema_dn,
-                scope=ldap3.BASE,
+                scope=SCOPE_BASE,
             )
             for e in schema_entries:
                 owner = get_attr(e, "fSMORoleOwner")
@@ -122,7 +114,7 @@ class DomainModule(BaseModule):
                 ldap_filter="(fSMORoleOwner=*)",
                 attributes=["fSMORoleOwner"],
                 base=partitions_dn,
-                scope=ldap3.BASE,
+                scope=SCOPE_BASE,
             )
             for e in part_entries:
                 owner = get_attr(e, "fSMORoleOwner")
@@ -134,7 +126,7 @@ class DomainModule(BaseModule):
             ldap_filter="(objectClass=domain)",
             attributes=["ms-DS-MachineAccountQuota"],
             base=ctx.base_dn,
-            scope=ldap3.BASE,
+            scope=SCOPE_BASE,
         )
         if not entries:
             return
@@ -162,15 +154,7 @@ class DomainModule(BaseModule):
         if not entries:
             return
 
-        members = []
-        try:
-            m = entries[0]["member"].value
-            if isinstance(m, list):
-                members = m
-            elif m:
-                members = [m]
-        except Exception:
-            pass
+        members = get_list(entries[0], "member")
 
         risky = [m for m in members if "S-1-1-0" in m or "S-1-5-7" in m
                  or "Everyone" in m or "Anonymous" in m]

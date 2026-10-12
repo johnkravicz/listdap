@@ -5,7 +5,7 @@ Supports both legacy LAPS (ms-Mcs-AdmPwd) and Windows LAPS (msLAPS-Password).
 
 from modules.base import BaseModule, ScanContext
 from core.output import Severity, C
-from utils.ldap_helpers import get_attr, get_list
+from utils.ldap_helpers import get_attr, get_list, get_raw
 from utils.timestamp import filetime_to_str
 
 # Legacy LAPS attributes
@@ -43,17 +43,10 @@ class LAPSModule(BaseModule):
 
         for entry in entries:
             sam = get_attr(entry, "sAMAccountName").rstrip("$")
-            try:
-                pwd = entry["ms-Mcs-AdmPwd"].value
-            except Exception:
-                pwd = None
+            pwd = get_attr(entry, "ms-Mcs-AdmPwd")
+            exp = get_attr(entry, "ms-Mcs-AdmPwdExpirationTime")
 
-            try:
-                exp = entry["ms-Mcs-AdmPwdExpirationTime"].value
-            except Exception:
-                exp = None
-
-            if exp is not None:
+            if exp:
                 deployed += 1
 
             if pwd:
@@ -99,20 +92,11 @@ class LAPSModule(BaseModule):
 
         for entry in entries:
             sam = get_attr(entry, "sAMAccountName").rstrip("$")
-            try:
-                pwd = entry["msLAPS-Password"].value
-            except Exception:
-                pwd = None
-            try:
-                enc = entry["msLAPS-EncryptedPassword"].value
-            except Exception:
-                enc = None
-            try:
-                exp = entry["msLAPS-PasswordExpirationTime"].value
-            except Exception:
-                exp = None
+            pwd = get_attr(entry, "msLAPS-Password")
+            enc = get_raw(entry, "msLAPS-EncryptedPassword")
+            exp = get_attr(entry, "msLAPS-PasswordExpirationTime")
 
-            if exp is not None or enc is not None:
+            if exp or enc:
                 deployed += 1
 
             if pwd:

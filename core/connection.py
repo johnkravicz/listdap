@@ -1,14 +1,15 @@
 """
-LDAP connection wrapper — built on top of ldap3.
-Handles server info extraction (base DN, domain, DC version, functional levels).
+LDAP connection wrapper — built on impacket's LDAP client.
+Holds DC metadata (base DN, domain, functional levels) read from the rootDSE.
 """
 
-from dataclasses import dataclass, field
-from typing import Optional, List
-import ldap3
+from dataclasses import dataclass
+from typing import Optional
 
 from core.auth import Authenticator, AuthResult, AuthError
-from utils.ldap_helpers import domain_to_basedn, basedn_to_domain, ldap_search, get_attr
+from utils.ldap_helpers import (
+    domain_to_basedn, basedn_to_domain, ldap_search, SCOPE_SUBTREE,
+)
 
 
 # ---------------------------------------------------------------------------
@@ -35,7 +36,7 @@ def _level_str(value) -> str:
 
 
 # ---------------------------------------------------------------------------
-# Server info
+# DC metadata
 # ---------------------------------------------------------------------------
 
 @dataclass
@@ -59,58 +60,29 @@ class DCInfo:
     domain_naming_master: str = ""
 
 
-def _extract_dc_info(server: ldap3.Server, host: str) -> DCInfo:
-    """Parse the rootDSE to extract DC metadata."""
+def _extract_dc_info(auth: Authenticator, host: str) -> DCInfo:
+    """Build DCInfo from the rootDSE the authenticator read."""
     info = DCInfo(ip=host, hostname=host)
+    rd = auth.rootdse or {}
 
-    if server.info is None:
-        return info
+    def _o(key: str) -> str:
+        v = rd.get(key, [""])
+        return v[0] if v else ""
 
-    si = server.info
+    info.base_dn = auth.base_dn or _o("defaultNamingContext")
+    info.domain  = auth.domain or basedn_to_domain(info.base_dn)
+    info.config_dn    = _o("configurationNamingContext")
+    info.schema_dn    = _o("schemaNamingContext")
+    info.forest_dn    = _o("rootDomainNamingContext")
+    info.dns_hostname = _o("dnsHostName")
 
-    # Build 'other' dict first — si.other is a CaseInsensitiveDict({key: [val, ...]})
-    other = {}
-    if hasattr(si, "other") and si.other:
-        other = dict(si.other)
-
-    def _o(key):
-        v = other.get(key, [""])
-        if isinstance(v, list):
-            return str(v[0]) if v else ""
-        return str(v) if v else ""
-
-    # Naming contexts
-    ncs = getattr(si, "naming_contexts", None) or []
-    ncs = [str(nc) for nc in ncs]
-
-    # Default naming context (domain base DN)
-    dnc = _o("defaultNamingContext")
-    if not dnc and ncs:
-        # Heuristic: shortest non-CN= NC is usually the domain partition
-        domain_ncs = [nc for nc in ncs if not nc.startswith("CN=")]
-        dnc = min(domain_ncs, key=len) if domain_ncs else ncs[0]
-
-    info.base_dn = str(dnc)
-    info.domain  = basedn_to_domain(info.base_dn)
-
-    info.schema_dn       = _o("schemaNamingContext")
-    info.config_dn       = _o("configurationNamingContext")
-    info.forest_dn       = _o("rootDomainNamingContext")
-    info.dns_hostname    = _o("dnsHostName")
-
-    try:
-        info.domain_func_level = _level_str(int(_o("domainFunctionality")))
-    except (ValueError, TypeError):
-        info.domain_func_level = _o("domainFunctionality") or "Unknown"
-
-    try:
-        info.forest_func_level = _level_str(int(_o("forestFunctionality")))
-    except (ValueError, TypeError):
-        info.forest_func_level = _o("forestFunctionality") or "Unknown"
+    dfl = _o("domainFunctionality")
+    ffl = _o("forestFunctionality")
+    info.domain_func_level = _level_str(dfl) if dfl else "Unknown"
+    info.forest_func_level = _level_str(ffl) if ffl else "Unknown"
 
     if info.dns_hostname:
         info.hostname = info.dns_hostname
-
     return info
 
 
@@ -119,16 +91,9 @@ def _extract_dc_info(server: ldap3.Server, host: str) -> DCInfo:
 # ---------------------------------------------------------------------------
 
 class LDAPConnection:
-    """
-    Wraps an ldap3 Connection with metadata about the DC and auth used.
-    """
+    """Wraps a bound impacket LDAPConnection with DC/auth metadata."""
 
-    def __init__(
-        self,
-        conn:        ldap3.Connection,
-        auth_result: AuthResult,
-        dc_info:     DCInfo,
-    ):
+    def __init__(self, conn, auth_result: AuthResult, dc_info: DCInfo):
         self._conn       = conn
         self.auth_result = auth_result
         self.dc_info     = dc_info
@@ -141,28 +106,18 @@ class LDAPConnection:
     def domain(self) -> str:
         return self.dc_info.domain
 
-    def search(
-        self,
-        ldap_filter:  str,
-        attributes:   List[str],
-        base:         Optional[str] = None,
-        scope=ldap3.SUBTREE,
-    ) -> List:
-        """Run a search and return ldap3 entries."""
-        return ldap_search(
-            self._conn,
-            base or self.base_dn,
-            ldap_filter,
-            attributes,
-            scope=scope,
-        )
+    def search(self, ldap_filter: str, attributes, base: Optional[str] = None,
+               scope: str = SCOPE_SUBTREE):
+        """Run a search; returns a list of record dicts (see utils.ldap_helpers)."""
+        return ldap_search(self._conn, base or self.base_dn, ldap_filter,
+                           list(attributes), scope)
 
-    def raw_conn(self) -> ldap3.Connection:
+    def raw_conn(self):
         return self._conn
 
     def close(self) -> None:
         try:
-            self._conn.unbind()
+            self._conn.close()
         except Exception:
             pass
 
@@ -173,39 +128,27 @@ class LDAPConnection:
 
 def connect(
     host:        str,
-    domain:      str      = "",
-    username:    str      = "",
-    password:    str      = "",
-    ccache:      str      = "",
-    no_kerberos: bool     = False,
-    use_tls:     bool     = False,
-    port:        int      = 0,
-    dc_ip:       str      = "",
+    domain:      str  = "",
+    username:    str  = "",
+    password:    str  = "",
+    ccache:      str  = "",
+    no_kerberos: bool = False,
+    use_tls:     bool = False,
+    port:        int  = 0,
+    dc_ip:       str  = "",
 ) -> LDAPConnection:
-    """
-    Establish an LDAP connection using the best available auth method.
-    Returns an LDAPConnection ready to use.
-    Raises AuthError on complete failure.
-    """
+    """Establish an LDAP connection using the best available auth method."""
     if port == 0:
         port = 636 if use_tls else 389
 
     auth = Authenticator(
-        host=host,
-        port=port,
-        use_tls=use_tls,
-        domain=domain,
-        username=username,
-        password=password,
-        ccache=ccache,
-        no_kerberos=no_kerberos,
-        dc_ip=dc_ip or host,
+        host=host, port=port, use_tls=use_tls, domain=domain,
+        username=username, password=password, ccache=ccache,
+        no_kerberos=no_kerberos, dc_ip=dc_ip or host,
     )
-
     conn, auth_result = auth.authenticate()
-    dc_info = _extract_dc_info(conn.server, host)
+    dc_info = _extract_dc_info(auth, host)
 
-    # If domain not parsed from rootDSE but provided by user, fill it in
     if not dc_info.base_dn and domain:
         dc_info.base_dn = domain_to_basedn(domain)
         dc_info.domain  = domain

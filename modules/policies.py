@@ -94,7 +94,7 @@ class PoliciesModule(BaseModule):
             ldap_filter="(objectClass=domain)",
             attributes=_DOMAIN_ATTRS,
             base=ctx.base_dn,
-            scope=__import__("ldap3").BASE,
+            scope=SCOPE_BASE,
         )
         if not entries:
             out.warning("Could not read domain password policy")

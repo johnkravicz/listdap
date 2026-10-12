@@ -22,7 +22,7 @@ Not covered: ESC5, ESC10-ESC16.
 import struct
 from modules.base import BaseModule, ScanContext
 from core.output import Severity, C
-from utils.ldap_helpers import get_attr, get_int, get_list
+from utils.ldap_helpers import get_attr, get_int, get_list, get_raw
 from utils.sids import resolve_sid, bytes_to_sid, is_privileged_sid
 
 # EKU OIDs
@@ -264,9 +264,8 @@ def _template_enrollees(entry, domain_sid: str, actionable_sids=frozenset()):
     via group membership (actionable_sids, from ctx.current_user_sids). This
     makes the ESC verdict user-relative, like certipy -vulnerable.
     """
-    try:
-        raw_sd = entry["nTSecurityDescriptor"].raw_values[0]
-    except Exception:
+    raw_sd = get_raw(entry, "nTSecurityDescriptor")
+    if not raw_sd:
         return [], []
     pairs = _get_enrollment_principals(raw_sd, domain_sid)
     names = [n for (n, _s) in pairs]
@@ -410,13 +409,11 @@ class ADCSModule(BaseModule):
                 (esc3 if low_priv else esc3_info).append(record)
 
             # ESC4: Dangerous template ACL
-            try:
-                raw_sd = entry["nTSecurityDescriptor"].raw_values[0]
+            raw_sd = get_raw(entry, "nTSecurityDescriptor")
+            if raw_sd:
                 acl_issues = _get_template_acl_issues(raw_sd, ctx.domain_sid)
                 if acl_issues:
                     esc4.append({"name": display, "issues": acl_issues})
-            except Exception:
-                pass
 
             # ESC9: NoSecurityExtension flag — issued certs omit the SID-binding
             # security extension, enabling weak-mapping abuse on an auth template.
@@ -594,9 +591,8 @@ class ADCSModule(BaseModule):
         # ---- Fallback: LDAP object DACL (weaker proxy) ----
         if ctx.args.verbose:
             out.debug(f"ESC7: RRP unavailable ({reason}); using LDAP object DACL proxy")
-        try:
-            raw = ca_entry["nTSecurityDescriptor"].raw_values[0]
-        except Exception:
+        raw = get_raw(ca_entry, "nTSecurityDescriptor")
+        if not raw:
             return
         aces = _parse_dacl(raw)
         ca_issues = []

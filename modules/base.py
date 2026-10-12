@@ -7,12 +7,11 @@ from dataclasses import dataclass, field
 from typing import Optional
 from argparse import Namespace
 
-import ldap3
-
 from core.connection import LDAPConnection
 from core.output import Output, QuickWinsCollector
 from utils.dump import DumpManager
 from utils.sids import bytes_to_sid
+from utils.ldap_helpers import get_raw, get_raw_all, get_dn, SCOPE_BASE
 
 
 @dataclass
@@ -49,12 +48,12 @@ class ScanContext:
                 ldap_filter="(objectClass=domain)",
                 attributes=["objectSid"],
                 base=self.base_dn,
-                scope=ldap3.BASE,
+                scope=SCOPE_BASE,
             )
             if entries:
-                raw = entries[0]["objectSid"].raw_values
+                raw = get_raw(entries[0], "objectSid")
                 if raw:
-                    sid = bytes_to_sid(raw[0])
+                    sid = bytes_to_sid(raw)
                     self.conn.dc_info.domain_sid = sid  # cache
         except Exception:
             pass
@@ -83,27 +82,21 @@ class ScanContext:
                     base=self.base_dn,
                 )
                 if res:
-                    try:
-                        raw = res[0]["objectSid"].raw_values
-                        if raw:
-                            sids.add(bytes_to_sid(raw[0]))
-                    except Exception:
-                        pass
-                    dn = res[0].entry_dn
+                    raw = get_raw(res[0], "objectSid")
+                    if raw:
+                        sids.add(bytes_to_sid(raw))
+                    dn = get_dn(res[0])
                     tg = self.conn.search(
                         ldap_filter="(objectClass=*)",
                         attributes=["tokenGroups"],
                         base=dn,
-                        scope=ldap3.BASE,
+                        scope=SCOPE_BASE,
                     )
                     if tg:
-                        try:
-                            for rv in tg[0]["tokenGroups"].raw_values:
-                                s = bytes_to_sid(rv)
-                                if s:
-                                    sids.add(s)
-                        except Exception:
-                            pass
+                        for rv in get_raw_all(tg[0], "tokenGroups"):
+                            s = bytes_to_sid(rv)
+                            if s:
+                                sids.add(s)
         except Exception:
             pass
 

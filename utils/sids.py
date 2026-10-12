@@ -206,6 +206,8 @@ def make_ldap_sid_resolver(conn):
     base_dn = getattr(conn, "base_dn", "") or ""
     domain  = getattr(conn, "domain", "") or ""
 
+    from utils.ldap_helpers import get_attr
+
     def _resolve(sid: str):
         try:
             flt = f"(objectSid={sid_to_ldap_filter(sid)})"
@@ -214,13 +216,10 @@ def make_ldap_sid_resolver(conn):
             return None
         if not entries:
             return None
-        try:
-            sam = entries[0]["sAMAccountName"].value
-        except Exception:
-            return None
+        sam = get_attr(entries[0], "sAMAccountName")
         if not sam:
             return None
-        return f"{domain}\\{sam}" if domain else str(sam)
+        return f"{domain}\\{sam}" if domain else sam
 
     return _resolve
 

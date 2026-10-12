@@ -1,99 +1,156 @@
 """
-Common LDAP query helpers — thin wrappers around ldap3.
+Common LDAP query helpers — built on impacket's LDAP client.
+
+A search returns a list of *records*. A record is a plain dict:
+    { "_dn": "<distinguishedName>", "<attr-lowercased>": [b"val", ...], ... }
+
+Attribute names are lowercased; values are kept as raw bytes. The get_* helpers
+decode them on demand (str / int / list), and get_raw* returns the bytes
+(used for binary attributes: objectSid, nTSecurityDescriptor, …).
 """
 
 from typing import List, Optional, Dict, Any
-import ldap3
-from ldap3.protocol.microsoft import security_descriptor_control
 
-# OWNER (1) + GROUP (2) + DACL (4). SACL (8) is intentionally excluded: reading
-# it requires SeSecurityPrivilege, and requesting it as a low-priv user makes
-# the DC return the security descriptor without the DACL. Without this control
-# the DACL comes back empty for non-admins, breaking ACL-based checks
-# (ESC1/2/3 enrollment rights, ESC4/ESC7 dangerous ACLs, DCSync).
+from impacket.ldap import ldap as _ldap, ldapasn1 as _asn1
+
+# Scope identifiers used by callers (strings — no ldap3 dependency).
+SCOPE_BASE     = "base"
+SCOPE_ONELEVEL = "onelevel"
+SCOPE_SUBTREE  = "subtree"
+
+_SCOPE_MAP = {
+    SCOPE_BASE:     "baseObject",
+    SCOPE_ONELEVEL: "singleLevel",
+    SCOPE_SUBTREE:  "wholeSubtree",
+}
+
+# OWNER (1) + GROUP (2) + DACL (4). SACL (8) is excluded: reading it needs
+# SeSecurityPrivilege, and requesting it as a low-priv user makes the DC return
+# the SD without the DACL. Without this control the DACL comes back empty for
+# non-admins, breaking ACL-based checks (ESC1/2/3 enrollment, ESC4/ESC7, DCSync).
 _SD_FLAGS_OWNER_GROUP_DACL = 0x07
 
 
-def _first(entry, attr: str, default=None):
-    """Extract first value of an ldap3 attribute, or default."""
-    try:
-        v = entry[attr].value
-        if isinstance(v, list):
-            return v[0] if v else default
-        return v if v is not None else default
-    except Exception:
-        return default
+# ---------------------------------------------------------------------------
+# Record parsing
+# ---------------------------------------------------------------------------
 
-
-def _all_values(entry, attr: str) -> list:
-    """Extract all values of an ldap3 attribute as a list."""
-    try:
-        v = entry[attr].value
-        if isinstance(v, list):
-            return v
-        return [v] if v is not None else []
-    except Exception:
-        return []
+def _parse_entries(resp) -> List[Dict[str, Any]]:
+    records = []
+    for item in resp or []:
+        if not isinstance(item, _asn1.SearchResultEntry):
+            continue
+        rec: Dict[str, Any] = {"_dn": str(item["objectName"])}
+        for attribute in item["attributes"]:
+            name = str(attribute["type"]).lower()
+            rec[name] = [bytes(v) for v in attribute["vals"]]
+        records.append(rec)
+    return records
 
 
 def ldap_search(
-    conn: ldap3.Connection,
+    conn,
     base: str,
     ldap_filter: str,
     attributes: List[str],
-    scope=ldap3.SUBTREE,
-) -> List[Any]:
+    scope: str = SCOPE_SUBTREE,
+) -> List[Dict[str, Any]]:
+    """Run an LDAP search via impacket; return a list of records ([] on error).
+
+    - Attaches the SD_FLAGS control when a security descriptor is requested so a
+      non-admin actually receives the DACL.
+    - Pages subtree/one-level searches so large containers are not truncated.
     """
-    Perform an LDAP search and return a list of entries.
-    Handles errors gracefully — returns [] on failure.
-    """
-    # When a security descriptor is requested, attach the SD_FLAGS control so a
-    # non-admin actually receives the DACL (see _SD_FLAGS_OWNER_GROUP_DACL).
-    controls = None
+    controls = []
     if any(a.lower() == "ntsecuritydescriptor" for a in attributes):
-        controls = security_descriptor_control(sdflags=_SD_FLAGS_OWNER_GROUP_DACL)
+        controls.append(_asn1.SDFlagsControl(
+            criticality=True, flags=_SD_FLAGS_OWNER_GROUP_DACL))
+    if scope != SCOPE_BASE:
+        controls.append(_ldap.SimplePagedResultsControl(criticality=True, size=1000))
+
+    scope_obj = _asn1.Scope(_SCOPE_MAP.get(scope, "wholeSubtree"))
 
     try:
-        conn.search(
-            search_base=base,
-            search_filter=ldap_filter,
-            search_scope=scope,
+        resp = conn.search(
+            searchBase=base,
+            scope=scope_obj,
+            searchFilter=ldap_filter,
             attributes=attributes,
-            controls=controls,
+            searchControls=controls or None,
         )
-        return list(conn.entries)
-    except ldap3.core.exceptions.LDAPOperationResult as e:
-        return []
+        return _parse_entries(resp)
+    except _ldap.LDAPSearchError as e:
+        # impacket attaches partial results to the exception for some errors
+        return _parse_entries(getattr(e, "answers", None))
     except Exception:
         return []
 
 
-def get_attr(entry, attr: str, default="") -> str:
-    """Get a string attribute from an ldap3 entry."""
-    v = _first(entry, attr, default)
-    return str(v) if v not in (None, default) else str(default)
+# ---------------------------------------------------------------------------
+# Attribute accessors (operate on a record dict)
+# ---------------------------------------------------------------------------
 
-
-def get_int(entry, attr: str, default: int = 0) -> int:
-    """Get an integer attribute from an ldap3 entry."""
+def _decode(v: bytes) -> str:
     try:
-        return int(_first(entry, attr, default))
+        return v.decode("utf-8")
+    except Exception:
+        return v.decode("latin-1", "replace")
+
+
+def get_attr(rec, attr: str, default: str = "") -> str:
+    """First value of an attribute as a decoded string, or default."""
+    try:
+        vals = rec.get(attr.lower())
+        if vals:
+            return _decode(vals[0])
+    except Exception:
+        pass
+    return default
+
+
+def get_int(rec, attr: str, default: int = 0) -> int:
+    try:
+        return int(get_attr(rec, attr, str(default)))
     except (TypeError, ValueError):
         return default
 
 
-def get_list(entry, attr: str) -> List[str]:
-    """Get a multi-valued attribute as a list of strings."""
-    return [str(v) for v in _all_values(entry, attr) if v is not None]
-
-
-def get_dn(entry) -> str:
-    """Get the distinguished name of an entry."""
+def get_list(rec, attr: str) -> List[str]:
     try:
-        return entry.entry_dn
+        return [_decode(v) for v in rec.get(attr.lower(), [])]
+    except Exception:
+        return []
+
+
+def get_raw(rec, attr: str) -> Optional[bytes]:
+    """First value of an attribute as raw bytes (binary attrs), or None."""
+    try:
+        vals = rec.get(attr.lower())
+        if vals:
+            return vals[0]
+    except Exception:
+        pass
+    return None
+
+
+def get_raw_all(rec, attr: str) -> List[bytes]:
+    """All values of an attribute as raw bytes."""
+    try:
+        return list(rec.get(attr.lower(), []))
+    except Exception:
+        return []
+
+
+def get_dn(rec) -> str:
+    try:
+        return rec.get("_dn", "")
     except Exception:
         return ""
 
+
+# ---------------------------------------------------------------------------
+# DN / domain helpers (unchanged)
+# ---------------------------------------------------------------------------
 
 def domain_to_basedn(domain: str) -> str:
     """Convert 'corp.local' → 'DC=corp,DC=local'."""

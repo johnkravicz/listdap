@@ -10,11 +10,29 @@ banner and via `listdap.py --version`.
 
 ## [Unreleased]
 
-### Planned
-- **Full impacket LDAP backend** (replacing ldap3). Enables NTLM sign/seal and
-  Kerberos binds against DCs that enforce LDAP signing / channel binding, where
-  ldap3 cannot authenticate. Will drop the `ldap3` and `gssapi` dependencies and
-  the temporary `krb5.conf` / SPN-canonicalisation machinery. Targeted for 2.0.0.
+## [2.0.0] - 2026-10-12
+
+Full impacket LDAP backend. listdap now authenticates to DCs that enforce LDAP
+signing / channel binding (e.g. Windows Server 2025 defaults), where the ldap3
+backend could not.
+
+### Changed
+- **LDAP backend rewritten on impacket** (replacing ldap3). NTLM binds use
+  GSS-SPNEGO and are **signed/sealed**, and Kerberos is done in pure Python
+  (derives AES), so binds succeed against signing-enforcing DCs. Search results
+  are native impacket records; the `get_*` helpers and all modules were adapted.
+- Authentication order: explicit ccache/Kerberos → NTLM (signed) →
+  Kerberos from password → SIMPLE → anonymous.
+
+### Added
+- Native paging on subtree searches (the ldap3 backend disabled paging, which
+  could truncate large containers).
+- `get_raw` / `get_raw_all` helpers for binary attributes.
+
+### Removed
+- `ldap3` and `gssapi` dependencies.
+- Temporary `krb5.conf` generation, GSSAPI SPN handling, and the
+  `dns_canonicalize_hostname` workaround — impacket needs none of them.
 
 ## [1.0.0] - 2026-10-12
 

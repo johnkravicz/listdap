@@ -7,8 +7,10 @@ Directory environments. Pure Python 3, authenticated or anonymous.
 
 ## Features
 
-- **Authentication**: Kerberos (GSSAPI) via ccache / `$KRB5CCNAME` / auto-acquired
-  TGT, with NTLM, SIMPLE and anonymous fallbacks. Automatic domain discovery.
+- **Authentication** (impacket): signed NTLM (GSS-SPNEGO) and Kerberos via
+  ccache / `$KRB5CCNAME` / username+password (pure-Python TGT), with SIMPLE and
+  anonymous fallbacks. Works against DCs that enforce LDAP signing / channel
+  binding. Automatic domain discovery.
 - **Enumeration modules**: domain info & FSMO, users, groups, computers, GPOs,
   password policies (incl. FGPP), trusts, delegations.
 - **ACL analysis** (pure-Python security-descriptor parser): DCSync rights and
@@ -39,12 +41,12 @@ See **[docs/example-output.md](docs/example-output.md)** for a plain-text versio
 ## Install
 
 ```bash
-# System prerequisites for the Kerberos GSSAPI bind (Debian/Kali/Ubuntu):
-sudo apt install -y libkrb5-dev krb5-user gcc python3-dev
-
 python3 -m venv venv && source venv/bin/activate
 pip install -r requirements.txt
 ```
+
+No system Kerberos libraries are required — impacket does LDAP signing and
+Kerberos (incl. TGT acquisition) in pure Python.
 
 ## Usage
 
@@ -82,12 +84,13 @@ utils/            LDAP helpers, SID resolution, timestamps, UAC, description heu
 
 ## Dependencies
 
-`ldap3`, `impacket`, `gssapi` — see `requirements.txt`.
+`impacket` only — see `requirements.txt`. Its LDAP client negotiates signing
+(NTLM GSS-SPNEGO) and does Kerberos in pure Python, so listdap works against DCs
+that enforce LDAP signing / channel binding.
 
 ## Notes / limitations
 
-- LDAP paging is disabled by design; very large containers (>1000 objects) may
-  be truncated.
+- Subtree searches are paged (1000/page), so large containers are not truncated.
 - The security-descriptor parser covers the common ACE types, not every
   inherited/complex structure.
 - `lastLogonTimestamp` is replicated and can lag up to ~14 days.

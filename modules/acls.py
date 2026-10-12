@@ -14,7 +14,7 @@ Checks:
 import struct
 from modules.base import BaseModule, ScanContext
 from core.output import Severity, C
-from utils.ldap_helpers import get_attr, get_list
+from utils.ldap_helpers import get_attr, get_list, get_raw, SCOPE_BASE
 from utils.sids import resolve_sid, bytes_to_sid, WELL_KNOWN_SIDS, is_privileged_sid
 
 # -----------------------------------------------------------------------
@@ -211,7 +211,7 @@ class ACLsModule(BaseModule):
             ldap_filter="(objectClass=domain)",
             attributes=["nTSecurityDescriptor"],
             base=ctx.base_dn,
-            scope=__import__("ldap3").BASE,
+            scope=SCOPE_BASE,
         )
 
         if not entries:
@@ -220,9 +220,8 @@ class ACLsModule(BaseModule):
 
         dcsync_accounts = []
 
-        try:
-            raw_sd = entries[0]["nTSecurityDescriptor"].raw_values[0]
-        except (IndexError, KeyError, TypeError):
+        raw_sd = get_raw(entries[0], "nTSecurityDescriptor")
+        if not raw_sd:
             out.warning("Could not parse domain object security descriptor")
             return
 
@@ -300,14 +299,13 @@ class ACLsModule(BaseModule):
                 ldap_filter="(objectClass=*)",
                 attributes=["nTSecurityDescriptor", "distinguishedName"],
                 base=dn,
-                scope=__import__("ldap3").BASE,
+                scope=SCOPE_BASE,
             )
             if not entries:
                 continue
 
-            try:
-                raw_sd = entries[0]["nTSecurityDescriptor"].raw_values[0]
-            except (IndexError, KeyError, TypeError):
+            raw_sd = get_raw(entries[0], "nTSecurityDescriptor")
+            if not raw_sd:
                 continue
 
             aces = _parse_dacl(raw_sd)
