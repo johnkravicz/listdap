@@ -1,0 +1,22 @@
+# Local project instructions — contains lab credentials, never publish
+CLAUDE.md
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# listdap runtime artefacts (may contain creds / loot)
+*.ccache
+*.kirbi
+*.pfx
+*_all_users.txt
+*_spn_users.txt
+*_np_users.txt
+*.log
+
+# Editor / OS
+.DS_Store
+*.swp

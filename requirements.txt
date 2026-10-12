@@ -1,0 +1,10 @@
+# listdap — Python dependencies
+#   Install:  pip install -r requirements.txt
+#
+# System prerequisites (for the Kerberos GSSAPI bind via `gssapi`):
+#   Debian/Kali/Ubuntu:  sudo apt install -y libkrb5-dev krb5-user gcc python3-dev
+#   The `kinit` binary (krb5-user) is also used as a fallback for TGT acquisition.
+
+ldap3>=2.9.1        # LDAP/LDAPS protocol + SASL GSSAPI, NTLM, SIMPLE binds
+impacket>=0.11.0    # Kerberos TGT acquisition + MS-RRP (ESC7 CA security read)
+gssapi>=1.8.0       # GSSAPI/Kerberos bind backend used by ldap3 (needs MIT Kerberos)
