@@ -28,10 +28,11 @@ Directory environments. Pure Python 3, authenticated or anonymous.
 
 ## Example output
 
-A real ADCS run as a compromised `svc_ca` account, flagging **ESC1** with a
-ready-to-run exploitation command (values anonymised):
+A full scan authenticated as a compromised `svc_ca` account — domain, users,
+groups, policies and ACLs — flagging **ESC1** on a template the current
+identity can enroll in, with a ready-to-run exploitation command (anonymised):
 
-![listdap ADCS run as svc_ca flagging ESC1](docs/example-output.svg)
+![Full listdap scan as svc_ca flagging ESC1](docs/example-output.svg)
 
 See **[docs/example-output.md](docs/example-output.md)** for a plain-text version.
 

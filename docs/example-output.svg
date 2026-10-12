@@ -1,83 +1,516 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1586" height="925" viewBox="0 0 1586 925" font-family='ui-monospace,"Cascadia Code","Source Code Pro",Menlo,Consolas,monospace' font-size="14">
-<rect width="1586" height="925" rx="6" fill="#0d1117"/>
-<text x="16.0" y="30" fill="#c9d1d9" xml:space="preserve">  ██╗     ██╗███████╗████████╗██████╗  █████╗ ██████╗ </text>
-<text x="16.0" y="49" fill="#c9d1d9" xml:space="preserve">  ██║     ██║██╔════╝╚══██╔══╝██╔══██╗██╔══██╗██╔══██╗</text>
-<text x="16.0" y="68" fill="#c9d1d9" xml:space="preserve">  ██║     ██║███████╗   ██║   ██║  ██║███████║██████╔╝</text>
-<text x="16.0" y="87" fill="#c9d1d9" xml:space="preserve">  ██║     ██║╚════██║   ██║   ██║  ██║██╔══██║██╔═══╝ </text>
-<text x="16.0" y="106" fill="#c9d1d9" xml:space="preserve">  ███████╗██║███████║   ██║   ██████╔╝██║  ██║██║     </text>
-<text x="16.0" y="125" fill="#c9d1d9" xml:space="preserve">  ╚══════╝╚═╝╚══════╝   ╚═╝   ╚═════╝ ╚═╝  ╚═╝╚═╝     </text>
-<text x="16.0" y="163" fill="#39c5cf" xml:space="preserve">[*]</text>
-<text x="41.2" y="163" fill="#c9d1d9" xml:space="preserve"> Connecting to 10.10.10.10:636 (LDAPS)</text>
-<text x="16.0" y="201" fill="#3fb950" font-weight="bold" xml:space="preserve">  ✔ Connected</text>
-<text x="16.0" y="220" fill="#c9d1d9" xml:space="preserve">    </text>
-<text x="49.6" y="220" fill="#39c5cf" xml:space="preserve">Target:</text>
-<text x="108.4" y="220" fill="#c9d1d9" xml:space="preserve">  10.10.10.10:636</text>
-<text x="16.0" y="239" fill="#c9d1d9" xml:space="preserve">    </text>
-<text x="49.6" y="239" fill="#39c5cf" xml:space="preserve">Auth:</text>
-<text x="91.6" y="239" fill="#c9d1d9" xml:space="preserve">  </text>
-<text x="108.4" y="239" fill="#3fb950" xml:space="preserve">Kerberos (GSSAPI)</text>
-<text x="16.0" y="258" fill="#c9d1d9" xml:space="preserve">    </text>
-<text x="49.6" y="258" fill="#39c5cf" xml:space="preserve">Base DN:</text>
-<text x="116.8" y="258" fill="#c9d1d9" xml:space="preserve">  DC=corp,DC=local</text>
-<text x="16.0" y="296" fill="#58a6ff" font-weight="bold" xml:space="preserve">╔════════════════════════════════════════════════════════════╗</text>
-<text x="16.0" y="315" fill="#58a6ff" font-weight="bold" xml:space="preserve">║                ADCS — CERTIFICATE SERVICES                 ║</text>
-<text x="16.0" y="334" fill="#58a6ff" font-weight="bold" xml:space="preserve">╚════════════════════════════════════════════════════════════╝</text>
-<text x="16.0" y="353" fill="#3fb950" xml:space="preserve">[+]</text>
-<text x="41.2" y="353" fill="#c9d1d9" xml:space="preserve"> 1 Certificate Authority(ies) found</text>
-<text x="16.0" y="372" fill="#39c5cf" xml:space="preserve">[*]</text>
-<text x="41.2" y="372" fill="#c9d1d9" xml:space="preserve"> </text>
-<text x="49.6" y="372" fill="#c9d1d9" font-weight="bold" xml:space="preserve">Certificate Templates</text>
-<text x="226.0" y="372" fill="#c9d1d9" xml:space="preserve">: </text>
-<text x="242.8" y="372" fill="#f0f6fc" font-weight="bold" xml:space="preserve">34</text>
-<text x="259.6" y="372" fill="#c9d1d9" xml:space="preserve"> total</text>
-<text x="16.0" y="410" fill="#39c5cf" font-weight="bold" xml:space="preserve">  ── CA: CORP-CA ──</text>
-<text x="16.0" y="429" fill="#c9d1d9" xml:space="preserve">    </text>
-<text x="49.6" y="429" fill="#39c5cf" xml:space="preserve">Hostname:</text>
-<text x="125.2" y="429" fill="#c9d1d9" xml:space="preserve">  DC01.corp.local</text>
-<text x="16.0" y="448" fill="#c9d1d9" xml:space="preserve">    </text>
-<text x="49.6" y="448" fill="#39c5cf" xml:space="preserve">Published templates:</text>
-<text x="217.6" y="448" fill="#c9d1d9" xml:space="preserve">  12</text>
-<text x="16.0" y="467" fill="#3fb950" xml:space="preserve">[+]</text>
-<text x="41.2" y="467" fill="#c9d1d9" xml:space="preserve"> ESC7: no non-privileged CA management rights on CORP-CA (via RRP)</text>
-<text x="16.0" y="505" fill="#39c5cf" font-weight="bold" xml:space="preserve">  ── ESC1 — Enrollee Supplies Subject + Client Auth EKU ──</text>
-<text x="16.0" y="524" fill="#c9d1d9" xml:space="preserve">    </text>
-<text x="49.6" y="524" fill="#d29922" font-weight="bold" xml:space="preserve">Welcome-Template</text>
-<text x="16.0" y="543" fill="#c9d1d9" xml:space="preserve">      </text>
-<text x="66.4" y="543" fill="#39c5cf" xml:space="preserve">    EKUs:</text>
-<text x="142.0" y="543" fill="#c9d1d9" xml:space="preserve">  1.3.6.1.5.5.7.3.1, 1.3.6.1.5.5.7.3.2</text>
-<text x="16.0" y="562" fill="#c9d1d9" xml:space="preserve">      </text>
-<text x="66.4" y="562" fill="#39c5cf" xml:space="preserve">    Enrollable by:</text>
-<text x="217.6" y="562" fill="#c9d1d9" xml:space="preserve">  corp.local\svc_ca</text>
-<text x="16.0" y="581" fill="#c9d1d9" xml:space="preserve">      </text>
-<text x="66.4" y="581" fill="#39c5cf" xml:space="preserve">    Exploit:</text>
-<text x="167.2" y="581" fill="#c9d1d9" xml:space="preserve">  </text>
-<text x="16.0" y="600" fill="#c9d1d9" xml:space="preserve">        </text>
-<text x="83.2" y="600" fill="#3fb950" xml:space="preserve">certipy-ad req -u &#x27;svc_ca@corp.local&#x27; -p &#x27;P@ssw0rd!&#x27; -dc-ip 10.10.10.10 -ca &#x27;CORP-CA&#x27; -template &#x27;Welcome-Template&#x27; -upn &#x27;Administrator@corp.local&#x27;</text>
-<text x="16.0" y="619" fill="#c9d1d9" xml:space="preserve">        </text>
-<text x="83.2" y="619" fill="#3fb950" xml:space="preserve">certipy-ad auth -pfx administrator.pfx -dc-ip 10.10.10.10</text>
-<text x="16.0" y="657" fill="#39c5cf" font-weight="bold" xml:space="preserve">  ── ESC1 (config) — not enrollable by current identity ──</text>
-<text x="16.0" y="676" fill="#c9d1d9" xml:space="preserve">    </text>
-<text x="49.6" y="676" fill="#c9d1d9" opacity="0.65" xml:space="preserve">Subordinate Certification Authority</text>
-<text x="16.0" y="695" fill="#c9d1d9" xml:space="preserve">      </text>
-<text x="66.4" y="695" fill="#39c5cf" xml:space="preserve">    Enrollment rights:</text>
-<text x="251.2" y="695" fill="#c9d1d9" xml:space="preserve">  Domain Admins, Enterprise Admins</text>
-<text x="16.0" y="714" fill="#39c5cf" xml:space="preserve">[*]</text>
-<text x="41.2" y="714" fill="#c9d1d9" xml:space="preserve"> Above templates match ESC1 config but the current identity cannot enroll — exploitable only after gaining one of the listed identities, or via ESC4 if you can edit the template ACL.</text>
-<text x="16.0" y="752" fill="#58a6ff" font-weight="bold" xml:space="preserve">╔════════════════════════════════════════════════════════════╗</text>
-<text x="16.0" y="771" fill="#58a6ff" font-weight="bold" xml:space="preserve">║                         QUICK WINS                         ║</text>
-<text x="16.0" y="790" fill="#58a6ff" font-weight="bold" xml:space="preserve">╚════════════════════════════════════════════════════════════╝</text>
-<text x="16.0" y="809" fill="#c9d1d9" xml:space="preserve">  </text>
-<text x="32.8" y="809" fill="#ff7b72" font-weight="bold" xml:space="preserve">[CRITICAL]</text>
-<text x="116.8" y="809" fill="#c9d1d9" xml:space="preserve"> </text>
-<text x="125.2" y="809" fill="#c9d1d9" font-weight="bold" xml:space="preserve">ESC1 — 1 vulnerable template(s)</text>
-<text x="16.0" y="828" fill="#c9d1d9" xml:space="preserve">         </text>
-<text x="91.6" y="828" fill="#c9d1d9" opacity="0.65" xml:space="preserve">Allows requesting a certificate with an arbitrary SAN (e.g., Domain Admin UPN).</text>
-<text x="16.0" y="847" fill="#c9d1d9" xml:space="preserve">         </text>
-<text x="91.6" y="847" fill="#c9d1d9" opacity="0.65" xml:space="preserve">Enrollable by a principal the current identity controls:</text>
-<text x="16.0" y="866" fill="#c9d1d9" xml:space="preserve">         </text>
-<text x="91.6" y="866" fill="#c9d1d9" opacity="0.65" xml:space="preserve">  - Welcome-Template  (enrollable by: corp.local\svc_ca)</text>
-<text x="16.0" y="885" fill="#c9d1d9" xml:space="preserve">         </text>
-<text x="91.6" y="885" fill="#c9d1d9" opacity="0.65" xml:space="preserve">      certipy-ad req -u &#x27;svc_ca@corp.local&#x27; -p &#x27;P@ssw0rd!&#x27; -dc-ip 10.10.10.10 -ca &#x27;CORP-CA&#x27; -template &#x27;Welcome-Template&#x27; -upn &#x27;Administrator@corp.local&#x27;</text>
-<text x="16.0" y="904" fill="#c9d1d9" xml:space="preserve">         </text>
-<text x="91.6" y="904" fill="#c9d1d9" opacity="0.65" xml:space="preserve">      certipy-ad auth -pfx administrator.pfx -dc-ip 10.10.10.10</text>
+<svg xmlns="http://www.w3.org/2000/svg" width="2182" height="4057" viewBox="0 0 2182 4057" font-family='ui-monospace,"Cascadia Code","Source Code Pro",Menlo,Consolas,monospace' font-size="13">
+<rect width="2182" height="4057" rx="6" fill="#0d1117"/>
+<text x="16.0" y="29.0" fill="#c9d1d9" xml:space="preserve">  ██╗     ██╗███████╗████████╗██████╗  █████╗ ██████╗ </text>
+<text x="16.0" y="46.5" fill="#c9d1d9" xml:space="preserve">  ██║     ██║██╔════╝╚══██╔══╝██╔══██╗██╔══██╗██╔══██╗</text>
+<text x="16.0" y="64.0" fill="#c9d1d9" xml:space="preserve">  ██║     ██║███████╗   ██║   ██║  ██║███████║██████╔╝</text>
+<text x="16.0" y="81.5" fill="#c9d1d9" xml:space="preserve">  ██║     ██║╚════██║   ██║   ██║  ██║██╔══██║██╔═══╝ </text>
+<text x="16.0" y="99.0" fill="#c9d1d9" xml:space="preserve">  ███████╗██║███████║   ██║   ██████╔╝██║  ██║██║     </text>
+<text x="16.0" y="116.5" fill="#c9d1d9" xml:space="preserve">  ╚══════╝╚═╝╚══════╝   ╚═╝   ╚═════╝ ╚═╝  ╚═╝╚═╝     </text>
+<text x="16.0" y="151.5" fill="#39c5cf" xml:space="preserve">[*]</text>
+<text x="39.5" y="151.5" fill="#c9d1d9" xml:space="preserve"> Connecting to 10.10.10.10:636 (LDAPS)</text>
+<text x="16.0" y="186.5" fill="#3fb950" font-weight="bold" xml:space="preserve">  ✔ Connected</text>
+<text x="16.0" y="204.0" fill="#c9d1d9" xml:space="preserve">    </text>
+<text x="47.3" y="204.0" fill="#39c5cf" xml:space="preserve">Target:</text>
+<text x="102.0" y="204.0" fill="#c9d1d9" xml:space="preserve">  10.10.10.10:636</text>
+<text x="16.0" y="221.5" fill="#c9d1d9" xml:space="preserve">    </text>
+<text x="47.3" y="221.5" fill="#39c5cf" xml:space="preserve">Auth:</text>
+<text x="86.4" y="221.5" fill="#c9d1d9" xml:space="preserve">  </text>
+<text x="102.0" y="221.5" fill="#3fb950" xml:space="preserve">Kerberos (GSSAPI)</text>
+<text x="16.0" y="239.0" fill="#c9d1d9" xml:space="preserve">    </text>
+<text x="47.3" y="239.0" fill="#39c5cf" xml:space="preserve">Base DN:</text>
+<text x="109.8" y="239.0" fill="#c9d1d9" xml:space="preserve">  DC=corp,DC=local</text>
+<text x="16.0" y="274.0" fill="#58a6ff" font-weight="bold" xml:space="preserve">╔════════════════════════════════════════════════════════════╗</text>
+<text x="16.0" y="291.5" fill="#58a6ff" font-weight="bold" xml:space="preserve">║                     DOMAIN INFORMATION                     ║</text>
+<text x="16.0" y="309.0" fill="#58a6ff" font-weight="bold" xml:space="preserve">╚════════════════════════════════════════════════════════════╝</text>
+<text x="16.0" y="326.5" fill="#c9d1d9" xml:space="preserve">    </text>
+<text x="47.3" y="326.5" fill="#39c5cf" xml:space="preserve">Domain:</text>
+<text x="102.0" y="326.5" fill="#c9d1d9" xml:space="preserve">  corp.local</text>
+<text x="16.0" y="344.0" fill="#c9d1d9" xml:space="preserve">    </text>
+<text x="47.3" y="344.0" fill="#39c5cf" xml:space="preserve">Base DN:</text>
+<text x="109.8" y="344.0" fill="#c9d1d9" xml:space="preserve">  DC=corp,DC=local</text>
+<text x="16.0" y="361.5" fill="#c9d1d9" xml:space="preserve">    </text>
+<text x="47.3" y="361.5" fill="#39c5cf" xml:space="preserve">Forest DN:</text>
+<text x="125.5" y="361.5" fill="#c9d1d9" xml:space="preserve">  DC=corp,DC=local</text>
+<text x="16.0" y="379.0" fill="#c9d1d9" xml:space="preserve">    </text>
+<text x="47.3" y="379.0" fill="#39c5cf" xml:space="preserve">DC Hostname:</text>
+<text x="141.1" y="379.0" fill="#c9d1d9" xml:space="preserve">  DC01.corp.local</text>
+<text x="16.0" y="396.5" fill="#c9d1d9" xml:space="preserve">    </text>
+<text x="47.3" y="396.5" fill="#39c5cf" xml:space="preserve">Domain Func. Level:</text>
+<text x="195.9" y="396.5" fill="#c9d1d9" xml:space="preserve">  Windows Server 2016 / 2019 / 2022</text>
+<text x="16.0" y="414.0" fill="#c9d1d9" xml:space="preserve">    </text>
+<text x="47.3" y="414.0" fill="#39c5cf" xml:space="preserve">Forest Func. Level:</text>
+<text x="195.9" y="414.0" fill="#c9d1d9" xml:space="preserve">  Windows Server 2016 / 2019 / 2022</text>
+<text x="16.0" y="431.5" fill="#c9d1d9" xml:space="preserve">    </text>
+<text x="47.3" y="431.5" fill="#39c5cf" xml:space="preserve">Auth Method:</text>
+<text x="141.1" y="431.5" fill="#c9d1d9" xml:space="preserve">  Kerberos (GSSAPI)</text>
+<text x="16.0" y="449.0" fill="#c9d1d9" xml:space="preserve">    </text>
+<text x="47.3" y="449.0" fill="#39c5cf" xml:space="preserve">Auth Note:</text>
+<text x="125.5" y="449.0" fill="#c9d1d9" xml:space="preserve">  TGT acquired via impacket</text>
+<text x="16.0" y="466.5" fill="#c9d1d9" xml:space="preserve">    </text>
+<text x="47.3" y="466.5" fill="#39c5cf" xml:space="preserve">Authenticated as:</text>
+<text x="180.2" y="466.5" fill="#c9d1d9" xml:space="preserve">  corp.local\svc_ca</text>
+<text x="16.0" y="484.0" fill="#c9d1d9" xml:space="preserve">    </text>
+<text x="47.3" y="484.0" fill="#39c5cf" xml:space="preserve">Domain SID:</text>
+<text x="133.3" y="484.0" fill="#c9d1d9" xml:space="preserve">  S-1-5-21-1111111111-2222222222-3333333333</text>
+<text x="16.0" y="501.5" fill="#c9d1d9" xml:space="preserve">    </text>
+<text x="47.3" y="501.5" fill="#39c5cf" xml:space="preserve">Domain Created:</text>
+<text x="164.6" y="501.5" fill="#c9d1d9" xml:space="preserve">  2025-09-13 16:39:42+00:00</text>
+<text x="16.0" y="536.5" fill="#39c5cf" font-weight="bold" xml:space="preserve">  ── FSMO Roles ──</text>
+<text x="16.0" y="554.0" fill="#c9d1d9" xml:space="preserve">    </text>
+<text x="47.3" y="554.0" fill="#39c5cf" xml:space="preserve">PDC Emulator / RID Master:</text>
+<text x="250.6" y="554.0" fill="#c9d1d9" xml:space="preserve">  DC01</text>
+<text x="16.0" y="571.5" fill="#c9d1d9" xml:space="preserve">    </text>
+<text x="47.3" y="571.5" fill="#39c5cf" xml:space="preserve">Infrastructure Master:</text>
+<text x="219.3" y="571.5" fill="#c9d1d9" xml:space="preserve">  DC01</text>
+<text x="16.0" y="589.0" fill="#c9d1d9" xml:space="preserve">    </text>
+<text x="47.3" y="589.0" fill="#39c5cf" xml:space="preserve">Schema Master:</text>
+<text x="156.8" y="589.0" fill="#c9d1d9" xml:space="preserve">  DC01</text>
+<text x="16.0" y="606.5" fill="#c9d1d9" xml:space="preserve">    </text>
+<text x="47.3" y="606.5" fill="#39c5cf" xml:space="preserve">Domain Naming Master:</text>
+<text x="211.5" y="606.5" fill="#c9d1d9" xml:space="preserve">  DC01</text>
+<text x="16.0" y="624.0" fill="#3fb950" xml:space="preserve">[+]</text>
+<text x="39.5" y="624.0" fill="#c9d1d9" xml:space="preserve"> MachineAccountQuota = 0  (safe)</text>
+<text x="16.0" y="659.0" fill="#39c5cf" font-weight="bold" xml:space="preserve">  ── Pre-Windows 2000 Compatible Access ──</text>
+<text x="16.0" y="676.5" fill="#39c5cf" xml:space="preserve">[*]</text>
+<text x="39.5" y="676.5" fill="#c9d1d9" xml:space="preserve"> 2 member(s) in Pre-Windows 2000 Compatible Access group</text>
+<text x="16.0" y="711.5" fill="#58a6ff" font-weight="bold" xml:space="preserve">╔════════════════════════════════════════════════════════════╗</text>
+<text x="16.0" y="729.0" fill="#58a6ff" font-weight="bold" xml:space="preserve">║                           USERS                            ║</text>
+<text x="16.0" y="746.5" fill="#58a6ff" font-weight="bold" xml:space="preserve">╚════════════════════════════════════════════════════════════╝</text>
+<text x="16.0" y="764.0" fill="#39c5cf" xml:space="preserve">[*]</text>
+<text x="39.5" y="764.0" fill="#c9d1d9" xml:space="preserve"> </text>
+<text x="47.3" y="764.0" fill="#c9d1d9" font-weight="bold" xml:space="preserve">Users</text>
+<text x="86.4" y="764.0" fill="#c9d1d9" xml:space="preserve">: </text>
+<text x="102.0" y="764.0" fill="#f0f6fc" font-weight="bold" xml:space="preserve">11</text>
+<text x="117.7" y="764.0" fill="#c9d1d9" xml:space="preserve"> total | </text>
+<text x="188.0" y="764.0" fill="#d29922" xml:space="preserve">2</text>
+<text x="195.9" y="764.0" fill="#c9d1d9" xml:space="preserve"> disabled | </text>
+<text x="289.7" y="764.0" fill="#6e7681" xml:space="preserve">0</text>
+<text x="297.5" y="764.0" fill="#c9d1d9" xml:space="preserve"> locked | </text>
+<text x="375.7" y="764.0" fill="#6e7681" xml:space="preserve">0</text>
+<text x="383.5" y="764.0" fill="#c9d1d9" xml:space="preserve"> AS-REP roastable | </text>
+<text x="539.9" y="764.0" fill="#6e7681" xml:space="preserve">0</text>
+<text x="547.8" y="764.0" fill="#c9d1d9" xml:space="preserve"> Kerberoastable | </text>
+<text x="688.5" y="764.0" fill="#d29922" xml:space="preserve">1</text>
+<text x="696.3" y="764.0" fill="#c9d1d9" xml:space="preserve"> passwd_notreqd | </text>
+<text x="837.1" y="764.0" fill="#6e7681" xml:space="preserve">0</text>
+<text x="844.9" y="764.0" fill="#c9d1d9" xml:space="preserve"> shadow creds | </text>
+<text x="970.0" y="764.0" fill="#d29922" xml:space="preserve">2</text>
+<text x="977.9" y="764.0" fill="#c9d1d9" xml:space="preserve"> adminCount=1</text>
+<text x="16.0" y="799.0" fill="#39c5cf" font-weight="bold" xml:space="preserve">  ── Privileged Users ──</text>
+<text x="16.0" y="816.5" fill="#c9d1d9" xml:space="preserve">    </text>
+<text x="47.3" y="816.5" fill="#c9d1d9" font-weight="bold" xml:space="preserve">Username     </text>
+<text x="148.9" y="816.5" fill="#c9d1d9" xml:space="preserve">  </text>
+<text x="164.6" y="816.5" fill="#c9d1d9" font-weight="bold" xml:space="preserve">Privileged Groups                                                                           </text>
+<text x="884.0" y="816.5" fill="#c9d1d9" xml:space="preserve">  </text>
+<text x="899.7" y="816.5" fill="#c9d1d9" font-weight="bold" xml:space="preserve">Last Logon</text>
+<text x="977.9" y="816.5" fill="#c9d1d9" xml:space="preserve">  </text>
+<text x="993.5" y="816.5" fill="#c9d1d9" font-weight="bold" xml:space="preserve">Description                                           </text>
+<text x="16.0" y="834.0" fill="#c9d1d9" xml:space="preserve">    </text>
+<text x="47.3" y="834.0" fill="#c9d1d9" opacity="0.65" xml:space="preserve">─────────────  ────────────────────────────────────────────────────────────────────────────────────────────  ──────────  ──────────────────────────────────────────────────────</text>
+<text x="16.0" y="851.5" fill="#c9d1d9" xml:space="preserve">    </text>
+<text x="47.3" y="851.5" fill="#ff7b72" xml:space="preserve">Administrator  Group Policy Creator Owners, Domain Admins, Enterprise Admins, Schema Admins, Administrators  unknown     Built-in account for administering the computer/domain</text>
+<text x="16.0" y="886.5" fill="#39c5cf" font-weight="bold" xml:space="preserve">  ── PASSWD_NOTREQD (may have empty password) ──</text>
+<text x="16.0" y="904.0" fill="#c9d1d9" xml:space="preserve">    </text>
+<text x="47.3" y="904.0" fill="#c9d1d9" font-weight="bold" xml:space="preserve">Username</text>
+<text x="109.8" y="904.0" fill="#c9d1d9" xml:space="preserve">  </text>
+<text x="125.5" y="904.0" fill="#c9d1d9" font-weight="bold" xml:space="preserve">UAC Flags                              </text>
+<text x="430.5" y="904.0" fill="#c9d1d9" xml:space="preserve">  </text>
+<text x="446.1" y="904.0" fill="#c9d1d9" font-weight="bold" xml:space="preserve">Description                                             </text>
+<text x="16.0" y="921.5" fill="#c9d1d9" xml:space="preserve">    </text>
+<text x="47.3" y="921.5" fill="#c9d1d9" opacity="0.65" xml:space="preserve">────────  ───────────────────────────────────────  ────────────────────────────────────────────────────────</text>
+<text x="16.0" y="939.0" fill="#c9d1d9" xml:space="preserve">    Guest     DISABLED, PASSWD_NOTREQD, NO_EXPIRE_PWD  Built-in account for guest access to the computer/domain</text>
+<text x="16.0" y="974.0" fill="#39c5cf" font-weight="bold" xml:space="preserve">  ── Inactive / Never Logged-in (&gt;90 days) ──</text>
+<text x="16.0" y="991.5" fill="#c9d1d9" xml:space="preserve">    </text>
+<text x="47.3" y="991.5" fill="#c9d1d9" font-weight="bold" xml:space="preserve">Username  </text>
+<text x="125.5" y="991.5" fill="#c9d1d9" xml:space="preserve">  </text>
+<text x="141.1" y="991.5" fill="#c9d1d9" font-weight="bold" xml:space="preserve">Last Logon</text>
+<text x="219.3" y="991.5" fill="#c9d1d9" xml:space="preserve">  </text>
+<text x="235.0" y="991.5" fill="#c9d1d9" font-weight="bold" xml:space="preserve">Flags                                  </text>
+<text x="539.9" y="991.5" fill="#c9d1d9" xml:space="preserve">  </text>
+<text x="555.6" y="991.5" fill="#c9d1d9" font-weight="bold" xml:space="preserve">Description                                             </text>
+<text x="16.0" y="1009.0" fill="#c9d1d9" xml:space="preserve">    </text>
+<text x="47.3" y="1009.0" fill="#c9d1d9" opacity="0.65" xml:space="preserve">──────────  ──────────  ───────────────────────────────────────  ────────────────────────────────────────────────────────</text>
+<text x="16.0" y="1026.5" fill="#c9d1d9" xml:space="preserve">    Guest       never       DISABLED, PASSWD_NOTREQD, NO_EXPIRE_PWD  Built-in account for guest access to the computer/domain</text>
+<text x="16.0" y="1044.0" fill="#c9d1d9" xml:space="preserve">    krbtgt      never       DISABLED                                 </text>
+<text x="555.6" y="1044.0" fill="#d29922" xml:space="preserve">Key Distribution Center Service Account</text>
+<text x="860.6" y="1044.0" fill="#c9d1d9" xml:space="preserve">                 </text>
+<text x="16.0" y="1061.5" fill="#c9d1d9" xml:space="preserve">    j.crickets  never       NO_EXPIRE_PWD                                                                                    </text>
+<text x="16.0" y="1079.0" fill="#c9d1d9" xml:space="preserve">    e.blanch    never       NO_EXPIRE_PWD                                                                                    </text>
+<text x="16.0" y="1096.5" fill="#c9d1d9" xml:space="preserve">    j.johnson   never       NO_EXPIRE_PWD                                                                                    </text>
+<text x="16.0" y="1114.0" fill="#c9d1d9" xml:space="preserve">    svc_web     never       NO_EXPIRE_PWD                            Web Server in Progress                                  </text>
+<text x="16.0" y="1131.5" fill="#39c5cf" xml:space="preserve">[*]</text>
+<text x="39.5" y="1131.5" fill="#c9d1d9" xml:space="preserve"> 6 inactive/never-logged account(s) — lower risk for password spraying detection</text>
+<text x="16.0" y="1166.5" fill="#39c5cf" font-weight="bold" xml:space="preserve">  ── AdminSDHolder Protected (adminCount=1) ──</text>
+<text x="16.0" y="1184.0" fill="#c9d1d9" xml:space="preserve">    </text>
+<text x="47.3" y="1184.0" fill="#c9d1d9" font-weight="bold" xml:space="preserve">Username     </text>
+<text x="148.9" y="1184.0" fill="#c9d1d9" xml:space="preserve">  </text>
+<text x="164.6" y="1184.0" fill="#c9d1d9" font-weight="bold" xml:space="preserve">UAC Flags    </text>
+<text x="266.2" y="1184.0" fill="#c9d1d9" xml:space="preserve">  </text>
+<text x="281.9" y="1184.0" fill="#c9d1d9" font-weight="bold" xml:space="preserve">Description                                           </text>
+<text x="16.0" y="1201.5" fill="#c9d1d9" xml:space="preserve">    </text>
+<text x="47.3" y="1201.5" fill="#c9d1d9" opacity="0.65" xml:space="preserve">─────────────  ─────────────  ──────────────────────────────────────────────────────</text>
+<text x="16.0" y="1219.0" fill="#c9d1d9" xml:space="preserve">    Administrator  NO_EXPIRE_PWD  Built-in account for administering the computer/domain</text>
+<text x="16.0" y="1236.5" fill="#c9d1d9" xml:space="preserve">    krbtgt         DISABLED       </text>
+<text x="281.9" y="1236.5" fill="#d29922" xml:space="preserve">Key Distribution Center Service Account</text>
+<text x="586.9" y="1236.5" fill="#c9d1d9" xml:space="preserve">               </text>
+<text x="16.0" y="1271.5" fill="#39c5cf" font-weight="bold" xml:space="preserve">  ── All Users ──</text>
+<text x="16.0" y="1289.0" fill="#c9d1d9" xml:space="preserve">    </text>
+<text x="47.3" y="1289.0" fill="#c9d1d9" font-weight="bold" xml:space="preserve">Username     </text>
+<text x="148.9" y="1289.0" fill="#c9d1d9" xml:space="preserve">  </text>
+<text x="164.6" y="1289.0" fill="#c9d1d9" font-weight="bold" xml:space="preserve">Last Logon</text>
+<text x="242.8" y="1289.0" fill="#c9d1d9" xml:space="preserve">  </text>
+<text x="258.4" y="1289.0" fill="#c9d1d9" font-weight="bold" xml:space="preserve">Flags                                  </text>
+<text x="563.4" y="1289.0" fill="#c9d1d9" xml:space="preserve">  </text>
+<text x="579.0" y="1289.0" fill="#c9d1d9" font-weight="bold" xml:space="preserve">Description                                             </text>
+<text x="16.0" y="1306.5" fill="#c9d1d9" xml:space="preserve">    </text>
+<text x="47.3" y="1306.5" fill="#c9d1d9" opacity="0.65" xml:space="preserve">─────────────  ──────────  ───────────────────────────────────────  ────────────────────────────────────────────────────────</text>
+<text x="16.0" y="1324.0" fill="#c9d1d9" xml:space="preserve">    Administrator  unknown     NO_EXPIRE_PWD                            Built-in account for administering the computer/domain  </text>
+<text x="16.0" y="1341.5" fill="#c9d1d9" xml:space="preserve">    </text>
+<text x="47.3" y="1341.5" fill="#ff7b72" xml:space="preserve">Guest          never       DISABLED, PASSWD_NOTREQD, NO_EXPIRE_PWD  Built-in account for guest access to the computer/domain</text>
+<text x="16.0" y="1359.0" fill="#c9d1d9" xml:space="preserve">    </text>
+<text x="47.3" y="1359.0" fill="#ff7b72" xml:space="preserve">krbtgt         never       DISABLED                                 </text>
+<text x="579.0" y="1359.0" fill="#d29922" xml:space="preserve">Key Distribution Center Service Account</text>
+<text x="884.0" y="1359.0" fill="#c9d1d9" xml:space="preserve">                 </text>
+<text x="16.0" y="1376.5" fill="#c9d1d9" xml:space="preserve">    e.hills        unknown     NO_EXPIRE_PWD                                                                                    </text>
+<text x="16.0" y="1394.0" fill="#c9d1d9" xml:space="preserve">    j.crickets     never       NO_EXPIRE_PWD                                                                                    </text>
+<text x="16.0" y="1411.5" fill="#c9d1d9" xml:space="preserve">    e.blanch       never       NO_EXPIRE_PWD                                                                                    </text>
+<text x="16.0" y="1429.0" fill="#c9d1d9" xml:space="preserve">    i.park         unknown     NO_EXPIRE_PWD                            IT Intern                                               </text>
+<text x="16.0" y="1446.5" fill="#c9d1d9" xml:space="preserve">    j.johnson      never       NO_EXPIRE_PWD                                                                                    </text>
+<text x="16.0" y="1464.0" fill="#c9d1d9" xml:space="preserve">    a.harris       unknown     NO_EXPIRE_PWD                                                                                    </text>
+<text x="16.0" y="1481.5" fill="#c9d1d9" xml:space="preserve">    svc_ca         unknown     NO_EXPIRE_PWD                                                                                    </text>
+<text x="16.0" y="1499.0" fill="#c9d1d9" xml:space="preserve">    svc_web        never       NO_EXPIRE_PWD                            Web Server in Progress                                  </text>
+<text x="16.0" y="1534.0" fill="#58a6ff" font-weight="bold" xml:space="preserve">╔════════════════════════════════════════════════════════════╗</text>
+<text x="16.0" y="1551.5" fill="#58a6ff" font-weight="bold" xml:space="preserve">║                           GROUPS                           ║</text>
+<text x="16.0" y="1569.0" fill="#58a6ff" font-weight="bold" xml:space="preserve">╚════════════════════════════════════════════════════════════╝</text>
+<text x="16.0" y="1586.5" fill="#39c5cf" xml:space="preserve">[*]</text>
+<text x="39.5" y="1586.5" fill="#c9d1d9" xml:space="preserve"> </text>
+<text x="47.3" y="1586.5" fill="#c9d1d9" font-weight="bold" xml:space="preserve">Groups</text>
+<text x="94.2" y="1586.5" fill="#c9d1d9" xml:space="preserve">: </text>
+<text x="109.8" y="1586.5" fill="#f0f6fc" font-weight="bold" xml:space="preserve">51</text>
+<text x="125.5" y="1586.5" fill="#c9d1d9" xml:space="preserve"> total | </text>
+<text x="195.9" y="1586.5" fill="#d29922" xml:space="preserve">17</text>
+<text x="211.5" y="1586.5" fill="#c9d1d9" xml:space="preserve"> high-value</text>
+<text x="16.0" y="1621.5" fill="#39c5cf" font-weight="bold" xml:space="preserve">  ── High-Value Groups ──</text>
+<text x="16.0" y="1639.0" fill="#c9d1d9" xml:space="preserve">    </text>
+<text x="47.3" y="1639.0" fill="#d29922" font-weight="bold" xml:space="preserve">Administrators</text>
+<text x="156.8" y="1639.0" fill="#c9d1d9" xml:space="preserve">  [Domain Local Security]  3 member(s)  — </text>
+<text x="485.2" y="1639.0" fill="#c9d1d9" opacity="0.65" xml:space="preserve">Administrators have complete and unrestricted access to the computer/domain</text>
+<text x="16.0" y="1656.5" fill="#c9d1d9" xml:space="preserve">        </text>
+<text x="78.6" y="1656.5" fill="#39c5cf" xml:space="preserve">•</text>
+<text x="86.4" y="1656.5" fill="#c9d1d9" xml:space="preserve"> Domain Admins  </text>
+<text x="211.5" y="1656.5" fill="#6e7681" xml:space="preserve">(CN=Domain Admins,OU=Groups,DC=corp,DC=local)</text>
+<text x="16.0" y="1674.0" fill="#c9d1d9" xml:space="preserve">        </text>
+<text x="78.6" y="1674.0" fill="#39c5cf" xml:space="preserve">•</text>
+<text x="86.4" y="1674.0" fill="#c9d1d9" xml:space="preserve"> Enterprise Admins  </text>
+<text x="242.8" y="1674.0" fill="#6e7681" xml:space="preserve">(CN=Enterprise Admins,OU=Groups,DC=corp,DC=local)</text>
+<text x="16.0" y="1691.5" fill="#c9d1d9" xml:space="preserve">        </text>
+<text x="78.6" y="1691.5" fill="#39c5cf" xml:space="preserve">•</text>
+<text x="86.4" y="1691.5" fill="#c9d1d9" xml:space="preserve"> Administrator  </text>
+<text x="211.5" y="1691.5" fill="#6e7681" xml:space="preserve">(CN=Administrator,CN=Users,DC=corp,DC=local)</text>
+<text x="16.0" y="1709.0" fill="#c9d1d9" xml:space="preserve">    </text>
+<text x="47.3" y="1709.0" fill="#d29922" font-weight="bold" xml:space="preserve">Print Operators</text>
+<text x="164.6" y="1709.0" fill="#c9d1d9" xml:space="preserve">  [Domain Local Security]  0 member(s)  — </text>
+<text x="493.0" y="1709.0" fill="#c9d1d9" opacity="0.65" xml:space="preserve">Members can administer printers installed on domain controllers</text>
+<text x="16.0" y="1726.5" fill="#c9d1d9" xml:space="preserve">    </text>
+<text x="47.3" y="1726.5" fill="#d29922" font-weight="bold" xml:space="preserve">Backup Operators</text>
+<text x="172.4" y="1726.5" fill="#c9d1d9" xml:space="preserve">  [Domain Local Security]  0 member(s)  — </text>
+<text x="500.8" y="1726.5" fill="#c9d1d9" opacity="0.65" xml:space="preserve">Backup Operators can override security restrictions for the sole purpose of backing up or restoring files</text>
+<text x="16.0" y="1744.0" fill="#c9d1d9" xml:space="preserve">    </text>
+<text x="47.3" y="1744.0" fill="#d29922" font-weight="bold" xml:space="preserve">Remote Desktop Users</text>
+<text x="203.7" y="1744.0" fill="#c9d1d9" xml:space="preserve">  [Domain Local Security]  0 member(s)  — </text>
+<text x="532.1" y="1744.0" fill="#c9d1d9" opacity="0.65" xml:space="preserve">Members in this group are granted the right to logon remotely</text>
+<text x="16.0" y="1761.5" fill="#c9d1d9" xml:space="preserve">    </text>
+<text x="47.3" y="1761.5" fill="#d29922" font-weight="bold" xml:space="preserve">Hyper-V Administrators</text>
+<text x="219.3" y="1761.5" fill="#c9d1d9" xml:space="preserve">  [Domain Local Security]  0 member(s)  — </text>
+<text x="547.8" y="1761.5" fill="#c9d1d9" opacity="0.65" xml:space="preserve">Members of this group have complete and unrestricted access to all features of Hyper-V.</text>
+<text x="16.0" y="1779.0" fill="#c9d1d9" xml:space="preserve">    </text>
+<text x="47.3" y="1779.0" fill="#d29922" font-weight="bold" xml:space="preserve">Remote Management Users</text>
+<text x="227.1" y="1779.0" fill="#c9d1d9" xml:space="preserve">  [Domain Local Security]  1 member(s)  — </text>
+<text x="555.6" y="1779.0" fill="#c9d1d9" opacity="0.65" xml:space="preserve">Members of this group can access WMI resources over management protocols (such as WS-Management via the Windows Remote Management service). This applies only to WMI namespaces that grant access to the user.</text>
+<text x="16.0" y="1796.5" fill="#c9d1d9" xml:space="preserve">        </text>
+<text x="78.6" y="1796.5" fill="#39c5cf" xml:space="preserve">•</text>
+<text x="86.4" y="1796.5" fill="#c9d1d9" xml:space="preserve"> Alice Harris  </text>
+<text x="203.7" y="1796.5" fill="#6e7681" xml:space="preserve">(CN=Alice Harris,CN=Users,DC=corp,DC=local)</text>
+<text x="16.0" y="1814.0" fill="#c9d1d9" xml:space="preserve">    </text>
+<text x="47.3" y="1814.0" fill="#d29922" font-weight="bold" xml:space="preserve">Storage Replica Administrators</text>
+<text x="281.9" y="1814.0" fill="#c9d1d9" xml:space="preserve">  [Domain Local Security]  0 member(s)  — </text>
+<text x="610.3" y="1814.0" fill="#c9d1d9" opacity="0.65" xml:space="preserve">Members of this group have complete and unrestricted access to all features of Storage Replica.</text>
+<text x="16.0" y="1831.5" fill="#c9d1d9" xml:space="preserve">    </text>
+<text x="47.3" y="1831.5" fill="#d29922" font-weight="bold" xml:space="preserve">Schema Admins</text>
+<text x="148.9" y="1831.5" fill="#c9d1d9" xml:space="preserve">  [Universal Security]  1 member(s)  — </text>
+<text x="453.9" y="1831.5" fill="#c9d1d9" opacity="0.65" xml:space="preserve">Designated administrators of the schema</text>
+<text x="16.0" y="1849.0" fill="#c9d1d9" xml:space="preserve">        </text>
+<text x="78.6" y="1849.0" fill="#39c5cf" xml:space="preserve">•</text>
+<text x="86.4" y="1849.0" fill="#c9d1d9" xml:space="preserve"> Administrator  </text>
+<text x="211.5" y="1849.0" fill="#6e7681" xml:space="preserve">(CN=Administrator,CN=Users,DC=corp,DC=local)</text>
+<text x="16.0" y="1866.5" fill="#c9d1d9" xml:space="preserve">    </text>
+<text x="47.3" y="1866.5" fill="#d29922" font-weight="bold" xml:space="preserve">Enterprise Admins</text>
+<text x="180.2" y="1866.5" fill="#c9d1d9" xml:space="preserve">  [Universal Security]  1 member(s)  — </text>
+<text x="485.2" y="1866.5" fill="#c9d1d9" opacity="0.65" xml:space="preserve">Designated administrators of the enterprise</text>
+<text x="16.0" y="1884.0" fill="#c9d1d9" xml:space="preserve">        </text>
+<text x="78.6" y="1884.0" fill="#39c5cf" xml:space="preserve">•</text>
+<text x="86.4" y="1884.0" fill="#c9d1d9" xml:space="preserve"> Administrator  </text>
+<text x="211.5" y="1884.0" fill="#6e7681" xml:space="preserve">(CN=Administrator,CN=Users,DC=corp,DC=local)</text>
+<text x="16.0" y="1901.5" fill="#c9d1d9" xml:space="preserve">    </text>
+<text x="47.3" y="1901.5" fill="#d29922" font-weight="bold" xml:space="preserve">Domain Admins</text>
+<text x="148.9" y="1901.5" fill="#c9d1d9" xml:space="preserve">  [Global Security]  1 member(s)  — </text>
+<text x="430.5" y="1901.5" fill="#c9d1d9" opacity="0.65" xml:space="preserve">Designated administrators of the domain</text>
+<text x="16.0" y="1919.0" fill="#c9d1d9" xml:space="preserve">        </text>
+<text x="78.6" y="1919.0" fill="#39c5cf" xml:space="preserve">•</text>
+<text x="86.4" y="1919.0" fill="#c9d1d9" xml:space="preserve"> Administrator  </text>
+<text x="211.5" y="1919.0" fill="#6e7681" xml:space="preserve">(CN=Administrator,CN=Users,DC=corp,DC=local)</text>
+<text x="16.0" y="1936.5" fill="#c9d1d9" xml:space="preserve">    </text>
+<text x="47.3" y="1936.5" fill="#d29922" font-weight="bold" xml:space="preserve">Group Policy Creator Owners</text>
+<text x="258.4" y="1936.5" fill="#c9d1d9" xml:space="preserve">  [Global Security]  1 member(s)  — </text>
+<text x="539.9" y="1936.5" fill="#c9d1d9" opacity="0.65" xml:space="preserve">Members in this group can modify group policy for the domain</text>
+<text x="16.0" y="1954.0" fill="#c9d1d9" xml:space="preserve">        </text>
+<text x="78.6" y="1954.0" fill="#39c5cf" xml:space="preserve">•</text>
+<text x="86.4" y="1954.0" fill="#c9d1d9" xml:space="preserve"> Administrator  </text>
+<text x="211.5" y="1954.0" fill="#6e7681" xml:space="preserve">(CN=Administrator,CN=Users,DC=corp,DC=local)</text>
+<text x="16.0" y="1971.5" fill="#c9d1d9" xml:space="preserve">    </text>
+<text x="47.3" y="1971.5" fill="#d29922" font-weight="bold" xml:space="preserve">Server Operators</text>
+<text x="172.4" y="1971.5" fill="#c9d1d9" xml:space="preserve">  [Domain Local Security]  0 member(s)  — </text>
+<text x="500.8" y="1971.5" fill="#c9d1d9" opacity="0.65" xml:space="preserve">Members can administer domain servers</text>
+<text x="16.0" y="1989.0" fill="#c9d1d9" xml:space="preserve">    </text>
+<text x="47.3" y="1989.0" fill="#d29922" font-weight="bold" xml:space="preserve">Account Operators</text>
+<text x="180.2" y="1989.0" fill="#c9d1d9" xml:space="preserve">  [Domain Local Security]  0 member(s)  — </text>
+<text x="508.7" y="1989.0" fill="#c9d1d9" opacity="0.65" xml:space="preserve">Members can administer domain user and group accounts</text>
+<text x="16.0" y="2006.5" fill="#c9d1d9" xml:space="preserve">    </text>
+<text x="47.3" y="2006.5" fill="#d29922" font-weight="bold" xml:space="preserve">Protected Users</text>
+<text x="164.6" y="2006.5" fill="#c9d1d9" xml:space="preserve">  [Global Security]  0 member(s)  — </text>
+<text x="446.1" y="2006.5" fill="#c9d1d9" opacity="0.65" xml:space="preserve">Members of this group are afforded additional protections against authentication security threats. See http://go.microsoft.com/fwlink/?LinkId=298939 for more information.</text>
+<text x="16.0" y="2024.0" fill="#c9d1d9" xml:space="preserve">    </text>
+<text x="47.3" y="2024.0" fill="#d29922" font-weight="bold" xml:space="preserve">Key Admins</text>
+<text x="125.5" y="2024.0" fill="#c9d1d9" xml:space="preserve">  [Global Security]  0 member(s)  — </text>
+<text x="407.0" y="2024.0" fill="#c9d1d9" opacity="0.65" xml:space="preserve">Members of this group can perform administrative actions on key objects within the domain.</text>
+<text x="16.0" y="2041.5" fill="#c9d1d9" xml:space="preserve">    </text>
+<text x="47.3" y="2041.5" fill="#d29922" font-weight="bold" xml:space="preserve">Enterprise Key Admins</text>
+<text x="211.5" y="2041.5" fill="#c9d1d9" xml:space="preserve">  [Universal Security]  0 member(s)  — </text>
+<text x="516.5" y="2041.5" fill="#c9d1d9" opacity="0.65" xml:space="preserve">Members of this group can perform administrative actions on key objects within the forest.</text>
+<text x="16.0" y="2059.0" fill="#c9d1d9" xml:space="preserve">    </text>
+<text x="47.3" y="2059.0" fill="#d29922" font-weight="bold" xml:space="preserve">DnsAdmins</text>
+<text x="117.7" y="2059.0" fill="#c9d1d9" xml:space="preserve">  [Domain Local Security]  0 member(s)  — </text>
+<text x="446.1" y="2059.0" fill="#c9d1d9" opacity="0.65" xml:space="preserve">DNS Administrators Group</text>
+<text x="16.0" y="2094.0" fill="#58a6ff" font-weight="bold" xml:space="preserve">╔════════════════════════════════════════════════════════════╗</text>
+<text x="16.0" y="2111.5" fill="#58a6ff" font-weight="bold" xml:space="preserve">║                         COMPUTERS                          ║</text>
+<text x="16.0" y="2129.0" fill="#58a6ff" font-weight="bold" xml:space="preserve">╚════════════════════════════════════════════════════════════╝</text>
+<text x="16.0" y="2146.5" fill="#39c5cf" xml:space="preserve">[*]</text>
+<text x="39.5" y="2146.5" fill="#c9d1d9" xml:space="preserve"> </text>
+<text x="47.3" y="2146.5" fill="#c9d1d9" font-weight="bold" xml:space="preserve">Computers</text>
+<text x="117.7" y="2146.5" fill="#c9d1d9" xml:space="preserve">: </text>
+<text x="133.3" y="2146.5" fill="#f0f6fc" font-weight="bold" xml:space="preserve">1</text>
+<text x="141.1" y="2146.5" fill="#c9d1d9" xml:space="preserve"> total | </text>
+<text x="211.5" y="2146.5" fill="#d29922" xml:space="preserve">1</text>
+<text x="219.3" y="2146.5" fill="#c9d1d9" xml:space="preserve"> DCs | </text>
+<text x="274.1" y="2146.5" fill="#6e7681" xml:space="preserve">0</text>
+<text x="281.9" y="2146.5" fill="#c9d1d9" xml:space="preserve"> EOL OS | </text>
+<text x="360.1" y="2146.5" fill="#6e7681" xml:space="preserve">0</text>
+<text x="367.9" y="2146.5" fill="#c9d1d9" xml:space="preserve"> unconstrained deleg | </text>
+<text x="547.8" y="2146.5" fill="#6e7681" xml:space="preserve">0</text>
+<text x="555.6" y="2146.5" fill="#c9d1d9" xml:space="preserve"> constrained deleg | </text>
+<text x="719.8" y="2146.5" fill="#6e7681" xml:space="preserve">0</text>
+<text x="727.6" y="2146.5" fill="#c9d1d9" xml:space="preserve"> shadow creds</text>
+<text x="16.0" y="2181.5" fill="#39c5cf" font-weight="bold" xml:space="preserve">  ── Domain Controllers ──</text>
+<text x="16.0" y="2199.0" fill="#c9d1d9" xml:space="preserve">    </text>
+<text x="47.3" y="2199.0" fill="#c9d1d9" font-weight="bold" xml:space="preserve">Name</text>
+<text x="78.6" y="2199.0" fill="#c9d1d9" xml:space="preserve">  </text>
+<text x="94.2" y="2199.0" fill="#c9d1d9" font-weight="bold" xml:space="preserve">DNS               </text>
+<text x="235.0" y="2199.0" fill="#c9d1d9" xml:space="preserve">  </text>
+<text x="250.6" y="2199.0" fill="#c9d1d9" font-weight="bold" xml:space="preserve">OS                                     </text>
+<text x="555.6" y="2199.0" fill="#c9d1d9" xml:space="preserve">  </text>
+<text x="571.2" y="2199.0" fill="#c9d1d9" font-weight="bold" xml:space="preserve">Last Logon</text>
+<text x="16.0" y="2216.5" fill="#c9d1d9" xml:space="preserve">    </text>
+<text x="47.3" y="2216.5" fill="#c9d1d9" opacity="0.65" xml:space="preserve">────  ──────────────────  ───────────────────────────────────────  ──────────</text>
+<text x="16.0" y="2234.0" fill="#c9d1d9" xml:space="preserve">    </text>
+<text x="47.3" y="2234.0" fill="#39c5cf" xml:space="preserve">DC01  DC01.corp.local  Windows Server 2022 Standard Evaluation  unknown   </text>
+<text x="16.0" y="2269.0" fill="#58a6ff" font-weight="bold" xml:space="preserve">╔════════════════════════════════════════════════════════════╗</text>
+<text x="16.0" y="2286.5" fill="#58a6ff" font-weight="bold" xml:space="preserve">║                    GROUP POLICY OBJECTS                    ║</text>
+<text x="16.0" y="2304.0" fill="#58a6ff" font-weight="bold" xml:space="preserve">╚════════════════════════════════════════════════════════════╝</text>
+<text x="16.0" y="2321.5" fill="#39c5cf" xml:space="preserve">[*]</text>
+<text x="39.5" y="2321.5" fill="#c9d1d9" xml:space="preserve"> </text>
+<text x="47.3" y="2321.5" fill="#c9d1d9" font-weight="bold" xml:space="preserve">GPOs</text>
+<text x="78.6" y="2321.5" fill="#c9d1d9" xml:space="preserve">: </text>
+<text x="94.2" y="2321.5" fill="#f0f6fc" font-weight="bold" xml:space="preserve">2</text>
+<text x="102.0" y="2321.5" fill="#c9d1d9" xml:space="preserve"> total | </text>
+<text x="172.4" y="2321.5" fill="#d29922" xml:space="preserve">2</text>
+<text x="180.2" y="2321.5" fill="#c9d1d9" xml:space="preserve"> notable</text>
+<text x="16.0" y="2356.5" fill="#39c5cf" font-weight="bold" xml:space="preserve">  ── Notable GPOs ──</text>
+<text x="16.0" y="2374.0" fill="#c9d1d9" xml:space="preserve">    </text>
+<text x="47.3" y="2374.0" fill="#c9d1d9" font-weight="bold" xml:space="preserve">Name                             </text>
+<text x="305.3" y="2374.0" fill="#c9d1d9" xml:space="preserve">  </text>
+<text x="321.0" y="2374.0" fill="#c9d1d9" font-weight="bold" xml:space="preserve">Path                                                                                </text>
+<text x="977.9" y="2374.0" fill="#c9d1d9" xml:space="preserve">  </text>
+<text x="993.5" y="2374.0" fill="#c9d1d9" font-weight="bold" xml:space="preserve">Status </text>
+<text x="16.0" y="2391.5" fill="#c9d1d9" xml:space="preserve">    </text>
+<text x="47.3" y="2391.5" fill="#c9d1d9" opacity="0.65" xml:space="preserve">─────────────────────────────────  ────────────────────────────────────────────────────────────────────────────────────  ───────</text>
+<text x="16.0" y="2409.0" fill="#c9d1d9" xml:space="preserve">    </text>
+<text x="47.3" y="2409.0" fill="#39c5cf" xml:space="preserve">Default Domain Policy              \\corp.local\sysvol\corp.local\Policies\{31B2F340-016D-11D2-945F-00C04FB984F9}  enabled</text>
+<text x="16.0" y="2426.5" fill="#c9d1d9" xml:space="preserve">    </text>
+<text x="47.3" y="2426.5" fill="#39c5cf" xml:space="preserve">Default Domain Controllers Policy  \\corp.local\sysvol\corp.local\Policies\{6AC1786C-016F-11D2-945F-00C04fB984F9}  enabled</text>
+<text x="16.0" y="2461.5" fill="#58a6ff" font-weight="bold" xml:space="preserve">╔════════════════════════════════════════════════════════════╗</text>
+<text x="16.0" y="2479.0" fill="#58a6ff" font-weight="bold" xml:space="preserve">║                     PASSWORD POLICIES                      ║</text>
+<text x="16.0" y="2496.5" fill="#58a6ff" font-weight="bold" xml:space="preserve">╚════════════════════════════════════════════════════════════╝</text>
+<text x="16.0" y="2531.5" fill="#39c5cf" font-weight="bold" xml:space="preserve">  ── Default Domain Password Policy ──</text>
+<text x="16.0" y="2549.0" fill="#c9d1d9" xml:space="preserve">    </text>
+<text x="47.3" y="2549.0" fill="#39c5cf" xml:space="preserve">Min. Password Length:</text>
+<text x="211.5" y="2549.0" fill="#c9d1d9" xml:space="preserve">  7</text>
+<text x="16.0" y="2566.5" fill="#c9d1d9" xml:space="preserve">    </text>
+<text x="47.3" y="2566.5" fill="#39c5cf" xml:space="preserve">Password History:</text>
+<text x="180.2" y="2566.5" fill="#c9d1d9" xml:space="preserve">  24 passwords remembered</text>
+<text x="16.0" y="2584.0" fill="#c9d1d9" xml:space="preserve">    </text>
+<text x="47.3" y="2584.0" fill="#39c5cf" xml:space="preserve">Max. Password Age:</text>
+<text x="188.0" y="2584.0" fill="#c9d1d9" xml:space="preserve">  unknown</text>
+<text x="16.0" y="2601.5" fill="#c9d1d9" xml:space="preserve">    </text>
+<text x="47.3" y="2601.5" fill="#39c5cf" xml:space="preserve">Complexity:</text>
+<text x="133.3" y="2601.5" fill="#c9d1d9" xml:space="preserve">  No complexity requirement</text>
+<text x="16.0" y="2619.0" fill="#c9d1d9" xml:space="preserve">    </text>
+<text x="47.3" y="2619.0" fill="#39c5cf" xml:space="preserve">Lockout Threshold:</text>
+<text x="188.0" y="2619.0" fill="#c9d1d9" xml:space="preserve">  0 (disabled)</text>
+<text x="16.0" y="2636.5" fill="#c9d1d9" xml:space="preserve">    </text>
+<text x="47.3" y="2636.5" fill="#39c5cf" xml:space="preserve">Lockout Duration:</text>
+<text x="180.2" y="2636.5" fill="#c9d1d9" xml:space="preserve">  unknown</text>
+<text x="16.0" y="2654.0" fill="#c9d1d9" xml:space="preserve">    </text>
+<text x="47.3" y="2654.0" fill="#39c5cf" xml:space="preserve">Lockout Obs. Window:</text>
+<text x="203.7" y="2654.0" fill="#c9d1d9" xml:space="preserve">  unknown</text>
+<text x="16.0" y="2689.0" fill="#39c5cf" font-weight="bold" xml:space="preserve">  ── Spray Planning ──</text>
+<text x="16.0" y="2706.5" fill="#3fb950" xml:space="preserve">[+]</text>
+<text x="39.5" y="2706.5" fill="#c9d1d9" xml:space="preserve"> No lockout threshold — unlimited spraying possible (be loud!)</text>
+<text x="16.0" y="2741.5" fill="#58a6ff" font-weight="bold" xml:space="preserve">╔════════════════════════════════════════════════════════════╗</text>
+<text x="16.0" y="2759.0" fill="#58a6ff" font-weight="bold" xml:space="preserve">║                       DOMAIN TRUSTS                        ║</text>
+<text x="16.0" y="2776.5" fill="#58a6ff" font-weight="bold" xml:space="preserve">╚════════════════════════════════════════════════════════════╝</text>
+<text x="16.0" y="2794.0" fill="#39c5cf" xml:space="preserve">[*]</text>
+<text x="39.5" y="2794.0" fill="#c9d1d9" xml:space="preserve"> No trusts found</text>
+<text x="16.0" y="2829.0" fill="#58a6ff" font-weight="bold" xml:space="preserve">╔════════════════════════════════════════════════════════════╗</text>
+<text x="16.0" y="2846.5" fill="#58a6ff" font-weight="bold" xml:space="preserve">║                        DELEGATIONS                         ║</text>
+<text x="16.0" y="2864.0" fill="#58a6ff" font-weight="bold" xml:space="preserve">╚════════════════════════════════════════════════════════════╝</text>
+<text x="16.0" y="2881.5" fill="#39c5cf" xml:space="preserve">[*]</text>
+<text x="39.5" y="2881.5" fill="#c9d1d9" xml:space="preserve"> </text>
+<text x="47.3" y="2881.5" fill="#c9d1d9" font-weight="bold" xml:space="preserve">Delegation findings</text>
+<text x="195.9" y="2881.5" fill="#c9d1d9" xml:space="preserve">: </text>
+<text x="211.5" y="2881.5" fill="#f0f6fc" font-weight="bold" xml:space="preserve">0</text>
+<text x="219.3" y="2881.5" fill="#c9d1d9" xml:space="preserve"> total | </text>
+<text x="289.7" y="2881.5" fill="#6e7681" xml:space="preserve">0</text>
+<text x="297.5" y="2881.5" fill="#c9d1d9" xml:space="preserve"> unconstrained | </text>
+<text x="430.5" y="2881.5" fill="#6e7681" xml:space="preserve">0</text>
+<text x="438.3" y="2881.5" fill="#c9d1d9" xml:space="preserve"> constrained | </text>
+<text x="555.6" y="2881.5" fill="#6e7681" xml:space="preserve">0</text>
+<text x="563.4" y="2881.5" fill="#c9d1d9" xml:space="preserve"> RBCD</text>
+<text x="16.0" y="2916.5" fill="#58a6ff" font-weight="bold" xml:space="preserve">╔════════════════════════════════════════════════════════════╗</text>
+<text x="16.0" y="2934.0" fill="#58a6ff" font-weight="bold" xml:space="preserve">║                ACLs — SENSITIVE PERMISSIONS                ║</text>
+<text x="16.0" y="2951.5" fill="#58a6ff" font-weight="bold" xml:space="preserve">╚════════════════════════════════════════════════════════════╝</text>
+<text x="16.0" y="2986.5" fill="#39c5cf" font-weight="bold" xml:space="preserve">  ── DCSync Rights (DS-Replication-Get-Changes-All) ──</text>
+<text x="16.0" y="3004.0" fill="#3fb950" xml:space="preserve">[+]</text>
+<text x="39.5" y="3004.0" fill="#c9d1d9" xml:space="preserve"> No unexpected DCSync rights detected</text>
+<text x="16.0" y="3039.0" fill="#39c5cf" font-weight="bold" xml:space="preserve">  ── Dangerous Permissions on Sensitive Objects ──</text>
+<text x="16.0" y="3056.5" fill="#3fb950" xml:space="preserve">[+]</text>
+<text x="39.5" y="3056.5" fill="#c9d1d9" xml:space="preserve"> No dangerous permissions detected on sensitive objects</text>
+<text x="16.0" y="3091.5" fill="#58a6ff" font-weight="bold" xml:space="preserve">╔════════════════════════════════════════════════════════════╗</text>
+<text x="16.0" y="3109.0" fill="#58a6ff" font-weight="bold" xml:space="preserve">║                            LAPS                            ║</text>
+<text x="16.0" y="3126.5" fill="#58a6ff" font-weight="bold" xml:space="preserve">╚════════════════════════════════════════════════════════════╝</text>
+<text x="16.0" y="3161.5" fill="#58a6ff" font-weight="bold" xml:space="preserve">╔════════════════════════════════════════════════════════════╗</text>
+<text x="16.0" y="3179.0" fill="#58a6ff" font-weight="bold" xml:space="preserve">║                ADCS — CERTIFICATE SERVICES                 ║</text>
+<text x="16.0" y="3196.5" fill="#58a6ff" font-weight="bold" xml:space="preserve">╚════════════════════════════════════════════════════════════╝</text>
+<text x="16.0" y="3214.0" fill="#3fb950" xml:space="preserve">[+]</text>
+<text x="39.5" y="3214.0" fill="#c9d1d9" xml:space="preserve"> 1 Certificate Authority(ies) found</text>
+<text x="16.0" y="3231.5" fill="#39c5cf" xml:space="preserve">[*]</text>
+<text x="39.5" y="3231.5" fill="#c9d1d9" xml:space="preserve"> </text>
+<text x="47.3" y="3231.5" fill="#c9d1d9" font-weight="bold" xml:space="preserve">Certificate Templates</text>
+<text x="211.5" y="3231.5" fill="#c9d1d9" xml:space="preserve">: </text>
+<text x="227.1" y="3231.5" fill="#f0f6fc" font-weight="bold" xml:space="preserve">34</text>
+<text x="242.8" y="3231.5" fill="#c9d1d9" xml:space="preserve"> total</text>
+<text x="16.0" y="3266.5" fill="#39c5cf" font-weight="bold" xml:space="preserve">  ── CA: CORP-CA ──</text>
+<text x="16.0" y="3284.0" fill="#c9d1d9" xml:space="preserve">    </text>
+<text x="47.3" y="3284.0" fill="#39c5cf" xml:space="preserve">Hostname:</text>
+<text x="117.7" y="3284.0" fill="#c9d1d9" xml:space="preserve">  DC01.corp.local</text>
+<text x="16.0" y="3301.5" fill="#c9d1d9" xml:space="preserve">    </text>
+<text x="47.3" y="3301.5" fill="#39c5cf" xml:space="preserve">Published templates:</text>
+<text x="203.7" y="3301.5" fill="#c9d1d9" xml:space="preserve">  12</text>
+<text x="16.0" y="3336.5" fill="#39c5cf" font-weight="bold" xml:space="preserve">  ── ESC1 — Enrollee Supplies Subject + Client Auth EKU ──</text>
+<text x="16.0" y="3354.0" fill="#c9d1d9" xml:space="preserve">    </text>
+<text x="47.3" y="3354.0" fill="#d29922" font-weight="bold" xml:space="preserve">Welcome-Template</text>
+<text x="16.0" y="3371.5" fill="#c9d1d9" xml:space="preserve">      </text>
+<text x="62.9" y="3371.5" fill="#39c5cf" xml:space="preserve">    EKUs:</text>
+<text x="133.3" y="3371.5" fill="#c9d1d9" xml:space="preserve">  1.3.6.1.5.5.7.3.1, 1.3.6.1.5.5.7.3.2</text>
+<text x="16.0" y="3389.0" fill="#c9d1d9" xml:space="preserve">      </text>
+<text x="62.9" y="3389.0" fill="#39c5cf" xml:space="preserve">    Enrollable by:</text>
+<text x="203.7" y="3389.0" fill="#c9d1d9" xml:space="preserve">  corp.local\svc_ca</text>
+<text x="16.0" y="3406.5" fill="#c9d1d9" xml:space="preserve">      </text>
+<text x="62.9" y="3406.5" fill="#39c5cf" xml:space="preserve">    Exploit:</text>
+<text x="156.8" y="3406.5" fill="#c9d1d9" xml:space="preserve">  </text>
+<text x="16.0" y="3424.0" fill="#c9d1d9" xml:space="preserve">        </text>
+<text x="78.6" y="3424.0" fill="#3fb950" xml:space="preserve">certipy-ad req -u &#x27;svc_ca@corp.local&#x27; -p &#x27;P@ssw0rd!&#x27; -dc-ip 10.10.10.10 -ca &#x27;CORP-CA&#x27; -template &#x27;Welcome-Template&#x27; -upn &#x27;Administrator@corp.local&#x27;</text>
+<text x="16.0" y="3441.5" fill="#c9d1d9" xml:space="preserve">        </text>
+<text x="78.6" y="3441.5" fill="#3fb950" xml:space="preserve">certipy-ad auth -pfx administrator.pfx -dc-ip 10.10.10.10</text>
+<text x="16.0" y="3476.5" fill="#39c5cf" font-weight="bold" xml:space="preserve">  ── ESC1 (config) — not enrollable by current identity ──</text>
+<text x="16.0" y="3494.0" fill="#c9d1d9" xml:space="preserve">    </text>
+<text x="47.3" y="3494.0" fill="#c9d1d9" opacity="0.65" xml:space="preserve">Subordinate Certification Authority</text>
+<text x="16.0" y="3511.5" fill="#c9d1d9" xml:space="preserve">      </text>
+<text x="62.9" y="3511.5" fill="#39c5cf" xml:space="preserve">    Enrollment rights:</text>
+<text x="235.0" y="3511.5" fill="#c9d1d9" xml:space="preserve">  Domain Admins, Enterprise Admins</text>
+<text x="16.0" y="3529.0" fill="#39c5cf" xml:space="preserve">[*]</text>
+<text x="39.5" y="3529.0" fill="#c9d1d9" xml:space="preserve"> Above templates match ESC1 config but the current identity cannot enroll — exploitable only after gaining one of the listed identities, or via ESC4 if you can edit the template ACL.</text>
+<text x="16.0" y="3564.0" fill="#58a6ff" font-weight="bold" xml:space="preserve">╔════════════════════════════════════════════════════════════╗</text>
+<text x="16.0" y="3581.5" fill="#58a6ff" font-weight="bold" xml:space="preserve">║                     SHADOW CREDENTIALS                     ║</text>
+<text x="16.0" y="3599.0" fill="#58a6ff" font-weight="bold" xml:space="preserve">╚════════════════════════════════════════════════════════════╝</text>
+<text x="16.0" y="3616.5" fill="#3fb950" xml:space="preserve">[+]</text>
+<text x="39.5" y="3616.5" fill="#c9d1d9" xml:space="preserve"> No objects with msDS-KeyCredentialLink found</text>
+<text x="16.0" y="3651.5" fill="#58a6ff" font-weight="bold" xml:space="preserve">╔════════════════════════════════════════════════════════════╗</text>
+<text x="16.0" y="3669.0" fill="#58a6ff" font-weight="bold" xml:space="preserve">║                         QUICK WINS                         ║</text>
+<text x="16.0" y="3686.5" fill="#58a6ff" font-weight="bold" xml:space="preserve">╚════════════════════════════════════════════════════════════╝</text>
+<text x="16.0" y="3704.0" fill="#c9d1d9" xml:space="preserve">  </text>
+<text x="31.6" y="3704.0" fill="#ff7b72" font-weight="bold" xml:space="preserve">[CRITICAL]</text>
+<text x="109.8" y="3704.0" fill="#c9d1d9" xml:space="preserve"> </text>
+<text x="117.7" y="3704.0" fill="#c9d1d9" font-weight="bold" xml:space="preserve">ESC1 — 1 vulnerable template(s)</text>
+<text x="16.0" y="3721.5" fill="#c9d1d9" xml:space="preserve">         </text>
+<text x="86.4" y="3721.5" fill="#c9d1d9" opacity="0.65" xml:space="preserve">Allows requesting a certificate with an arbitrary SAN (e.g., Domain Admin UPN).</text>
+<text x="16.0" y="3739.0" fill="#c9d1d9" xml:space="preserve">         </text>
+<text x="86.4" y="3739.0" fill="#c9d1d9" opacity="0.65" xml:space="preserve">Enrollable by a principal the current identity controls:</text>
+<text x="16.0" y="3756.5" fill="#c9d1d9" xml:space="preserve">         </text>
+<text x="86.4" y="3756.5" fill="#c9d1d9" opacity="0.65" xml:space="preserve">  - Welcome-Template  (enrollable by: corp.local\svc_ca)</text>
+<text x="16.0" y="3774.0" fill="#c9d1d9" xml:space="preserve">         </text>
+<text x="86.4" y="3774.0" fill="#c9d1d9" opacity="0.65" xml:space="preserve">      certipy-ad req -u &#x27;svc_ca@corp.local&#x27; -p &#x27;P@ssw0rd!&#x27; -dc-ip 10.10.10.10 -ca &#x27;CORP-CA&#x27; -template &#x27;Welcome-Template&#x27; -upn &#x27;Administrator@corp.local&#x27;</text>
+<text x="16.0" y="3791.5" fill="#c9d1d9" xml:space="preserve">         </text>
+<text x="86.4" y="3791.5" fill="#c9d1d9" opacity="0.65" xml:space="preserve">      certipy-ad auth -pfx administrator.pfx -dc-ip 10.10.10.10</text>
+<text x="16.0" y="3809.0" fill="#c9d1d9" xml:space="preserve">  </text>
+<text x="31.6" y="3809.0" fill="#d29922" font-weight="bold" xml:space="preserve">[HIGH]</text>
+<text x="78.6" y="3809.0" fill="#c9d1d9" xml:space="preserve"> </text>
+<text x="86.4" y="3809.0" fill="#c9d1d9" font-weight="bold" xml:space="preserve">No account lockout policy</text>
+<text x="16.0" y="3826.5" fill="#c9d1d9" xml:space="preserve">         </text>
+<text x="86.4" y="3826.5" fill="#c9d1d9" opacity="0.65" xml:space="preserve">Unlimited password spraying / brute-force is possible without locking accounts.</text>
+<text x="16.0" y="3844.0" fill="#c9d1d9" xml:space="preserve">  </text>
+<text x="31.6" y="3844.0" fill="#39c5cf" font-weight="bold" xml:space="preserve">[MEDIUM]</text>
+<text x="94.2" y="3844.0" fill="#c9d1d9" xml:space="preserve"> </text>
+<text x="102.0" y="3844.0" fill="#c9d1d9" font-weight="bold" xml:space="preserve">PASSWD_NOTREQD — 1 account(s)</text>
+<text x="16.0" y="3861.5" fill="#c9d1d9" xml:space="preserve">         </text>
+<text x="86.4" y="3861.5" fill="#c9d1d9" opacity="0.65" xml:space="preserve">These accounts may have empty passwords. Test with: netexec smb ... -u &lt;user&gt; -p &#x27;&#x27;</text>
+<text x="16.0" y="3879.0" fill="#c9d1d9" xml:space="preserve">  </text>
+<text x="31.6" y="3879.0" fill="#39c5cf" font-weight="bold" xml:space="preserve">[MEDIUM]</text>
+<text x="94.2" y="3879.0" fill="#c9d1d9" xml:space="preserve"> </text>
+<text x="102.0" y="3879.0" fill="#c9d1d9" font-weight="bold" xml:space="preserve">Weak minimum password length (7)</text>
+<text x="16.0" y="3896.5" fill="#c9d1d9" xml:space="preserve">         </text>
+<text x="86.4" y="3896.5" fill="#c9d1d9" opacity="0.65" xml:space="preserve">Short passwords are easier to crack after a hash dump.</text>
+<text x="16.0" y="3914.0" fill="#c9d1d9" xml:space="preserve">  </text>
+<text x="31.6" y="3914.0" fill="#39c5cf" font-weight="bold" xml:space="preserve">[MEDIUM]</text>
+<text x="94.2" y="3914.0" fill="#c9d1d9" xml:space="preserve"> </text>
+<text x="102.0" y="3914.0" fill="#c9d1d9" font-weight="bold" xml:space="preserve">Password complexity disabled</text>
+<text x="16.0" y="3931.5" fill="#c9d1d9" xml:space="preserve">         </text>
+<text x="86.4" y="3931.5" fill="#c9d1d9" opacity="0.65" xml:space="preserve">Users may set simple dictionary passwords.</text>
+<text x="16.0" y="3949.0" fill="#c9d1d9" xml:space="preserve">  </text>
+<text x="31.6" y="3949.0" fill="#6e7681" font-weight="bold" xml:space="preserve">[INFO]</text>
+<text x="78.6" y="3949.0" fill="#c9d1d9" xml:space="preserve"> </text>
+<text x="86.4" y="3949.0" fill="#c9d1d9" font-weight="bold" xml:space="preserve">Schema Admins: 1 member(s)</text>
+<text x="16.0" y="3966.5" fill="#c9d1d9" xml:space="preserve">         </text>
+<text x="86.4" y="3966.5" fill="#c9d1d9" opacity="0.65" xml:space="preserve">Administrator</text>
+<text x="16.0" y="3984.0" fill="#c9d1d9" xml:space="preserve">  </text>
+<text x="31.6" y="3984.0" fill="#6e7681" font-weight="bold" xml:space="preserve">[INFO]</text>
+<text x="78.6" y="3984.0" fill="#c9d1d9" xml:space="preserve"> </text>
+<text x="86.4" y="3984.0" fill="#c9d1d9" font-weight="bold" xml:space="preserve">Enterprise Admins: 1 member(s)</text>
+<text x="16.0" y="4001.5" fill="#c9d1d9" xml:space="preserve">         </text>
+<text x="86.4" y="4001.5" fill="#c9d1d9" opacity="0.65" xml:space="preserve">Administrator</text>
+<text x="16.0" y="4019.0" fill="#c9d1d9" xml:space="preserve">  </text>
+<text x="31.6" y="4019.0" fill="#6e7681" font-weight="bold" xml:space="preserve">[INFO]</text>
+<text x="78.6" y="4019.0" fill="#c9d1d9" xml:space="preserve"> </text>
+<text x="86.4" y="4019.0" fill="#c9d1d9" font-weight="bold" xml:space="preserve">Domain Admins: 1 member(s)</text>
+<text x="16.0" y="4036.5" fill="#c9d1d9" xml:space="preserve">         </text>
+<text x="86.4" y="4036.5" fill="#c9d1d9" opacity="0.65" xml:space="preserve">Administrator</text>
 </svg>
