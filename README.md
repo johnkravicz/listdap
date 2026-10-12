@@ -110,6 +110,12 @@ it with no warranty (see [LICENSE](LICENSE)).
 By using listdap you agree that you have the necessary authorization for any
 environment you point it at.
 
+## Versioning
+
+listdap follows [Semantic Versioning](https://semver.org/). The current version
+is shown in the banner and via `listdap.py --version`; see
+[CHANGELOG.md](CHANGELOG.md) for the revision history.
+
 ## License
 
 Released under the [MIT License](LICENSE). © 2026 johnkravicz.

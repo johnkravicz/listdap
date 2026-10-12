@@ -30,6 +30,8 @@ _HERE = os.path.dirname(os.path.abspath(__file__))
 if _HERE not in sys.path:
     sys.path.insert(0, _HERE)
 
+__version__ = "1.0.0"
+
 from core.connection import connect
 from core.auth import AuthError
 from core.output import Output, QuickWinsCollector
@@ -79,6 +81,9 @@ def build_parser() -> argparse.ArgumentParser:
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=_epilog(),
     )
+
+    p.add_argument("-V", "--version", action="version",
+                   version=f"%(prog)s {__version__}")
 
     # Target
     tgt = p.add_argument_group("Target")
@@ -142,6 +147,7 @@ def main() -> int:
     print("  ██║     ██║╚════██║   ██║   ██║  ██║██╔══██║██╔═══╝ ")
     print("  ███████╗██║███████║   ██║   ██████╔╝██║  ██║██║     ")
     print("  ╚══════╝╚═╝╚══════╝   ╚═╝   ╚═════╝ ╚═╝  ╚═╝╚═╝     ")
+    print(f"  LDAP enumeration for offensive assessments · v{__version__}")
     print()
 
     # Resolve port (GC takes priority if --gc)
