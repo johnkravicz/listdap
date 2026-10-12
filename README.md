@@ -28,9 +28,12 @@ Directory environments. Pure Python 3, authenticated or anonymous.
 
 ## Example output
 
-See **[docs/example-output.md](docs/example-output.md)** — a real ADCS run as a
-compromised `svc_ca` account, flagging **ESC1** with a ready-to-run exploitation
-command. GitHub renders the terminal colors inline.
+A real ADCS run as a compromised `svc_ca` account, flagging **ESC1** with a
+ready-to-run exploitation command (values anonymised):
+
+![listdap ADCS run as svc_ca flagging ESC1](docs/example-output.svg)
+
+See **[docs/example-output.md](docs/example-output.md)** for a plain-text version.
 
 ## Install
 
