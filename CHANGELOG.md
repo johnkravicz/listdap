@@ -14,6 +14,18 @@ banner and via `listdap.py --version`.
 - `-U` / `--user-file FILE`: write all enumerated domain users (one login per
   line) to an exact path, ready to feed to netexec (`nxc ... -u FILE`). Can be
   combined with `--dump`; both reuse the same enumerated user set.
+- acls: **outbound control check** — flags objects (users/groups/computers/gMSA)
+  over which the *authenticated account* itself holds a dangerous right
+  (GenericAll, WriteDACL, WriteOwner, GenericWrite, Write-KeyCredentialLink,
+  Write-member/Self-Membership, Write-SPN, Write-AllowedToActOnBehalfOf,
+  ForceChangePassword, AllExtendedRights). Each finding carries a ready-to-run
+  takeover command (`utils/exploit_cmds.acl_abuse`). Already-privileged and
+  contextual SIDs are filtered out to avoid noise.
+
+### Fixed
+- acls: the new outbound-control check recognises the **expanded full-control
+  mask** (`0x000F01FF`), not just the GENERIC_ALL bit — a real "Full Control"
+  ACE is usually stored expanded and the generic-bit-only test missed it.
 
 ## [2.1.0] - 2026-10-12
 
