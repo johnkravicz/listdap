@@ -131,6 +131,8 @@ def connect(
     domain:      str  = "",
     username:    str  = "",
     password:    str  = "",
+    lmhash:      str  = "",
+    nthash:      str  = "",
     ccache:      str  = "",
     no_kerberos: bool = False,
     use_tls:     bool = False,
@@ -143,8 +145,8 @@ def connect(
 
     auth = Authenticator(
         host=host, port=port, use_tls=use_tls, domain=domain,
-        username=username, password=password, ccache=ccache,
-        no_kerberos=no_kerberos, dc_ip=dc_ip or host,
+        username=username, password=password, lmhash=lmhash, nthash=nthash,
+        ccache=ccache, no_kerberos=no_kerberos, dc_ip=dc_ip or host,
     )
     conn, auth_result = auth.authenticate()
     dc_info = _extract_dc_info(auth, host)

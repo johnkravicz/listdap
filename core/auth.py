@@ -90,6 +90,8 @@ class Authenticator:
         domain:      str = "",
         username:    str = "",
         password:    str = "",
+        lmhash:      str = "",
+        nthash:      str = "",
         ccache:      str = "",
         no_kerberos: bool = False,
         dc_ip:       str = "",
@@ -100,6 +102,8 @@ class Authenticator:
         self.domain      = domain
         self.username    = username
         self.password    = password
+        self.lmhash      = lmhash
+        self.nthash      = nthash
         self.ccache      = ccache
         self.no_kerberos = no_kerberos
         self.dc_ip       = dc_ip or host
@@ -154,7 +158,9 @@ class Authenticator:
             from utils.ldap_helpers import domain_to_basedn
             self.base_dn = domain_to_basedn(self.domain)
 
-        has_creds = bool(self.username)
+        has_creds  = bool(self.username)
+        has_secret = bool(self.password or self.nthash)  # password or NT hash (PtH)
+        pth        = bool(self.nthash and not self.password)
         ccache = self.ccache or os.environ.get("KRB5CCNAME", "")
 
         # 1. Kerberos via explicit ccache / $KRB5CCNAME
@@ -169,26 +175,28 @@ class Authenticator:
                 krb_skip.append(f"Kerberos (ccache) failed: {e}")
                 errors.append(str(e))
 
-        # 2. NTLM (signed)
-        if has_creds and self.password:
+        # 2. NTLM (signed) — pass-the-hash when an NT hash was supplied
+        if has_creds and has_secret:
             try:
                 conn = self._ntlm_bind()
+                note = "GSS-SPNEGO, signed (pass-the-hash)" if pth else "GSS-SPNEGO, signed"
                 return conn, AuthResult(AuthType.NTLM, self.username, self.domain,
-                                        note="GSS-SPNEGO, signed",
-                                        fallback_reasons=krb_skip)
+                                        note=note, fallback_reasons=krb_skip)
             except Exception as e:
                 errors.append(f"NTLM failed: {e}")
 
-        # 3. Kerberos from username + password (impacket derives AES)
-        if has_creds and self.password and not self.no_kerberos:
+        # 3. Kerberos from username + password/NT hash (impacket derives the key)
+        if has_creds and has_secret and not self.no_kerberos:
             try:
                 conn = self._kerberos_bind(use_cache=False)
+                note = ("TGT acquired via impacket (RC4/NT hash)" if pth
+                        else "TGT acquired via impacket (AES)")
                 return conn, AuthResult(AuthType.KERBEROS, self.username, self.domain,
-                                        note="TGT acquired via impacket (AES)")
+                                        note=note)
             except Exception as e:
-                errors.append(f"Kerberos (password) failed: {e}")
+                errors.append(f"Kerberos ({'hash' if pth else 'password'}) failed: {e}")
 
-        # 4. SIMPLE bind
+        # 4. SIMPLE bind (cleartext — password only, never a hash)
         if has_creds and self.password:
             try:
                 conn = self._simple_bind()
@@ -203,7 +211,7 @@ class Authenticator:
             if has_creds:
                 reasons = [
                     "Authenticated bind failed with the supplied credentials — "
-                    "check the username/password/domain.",
+                    "check the username/password/hash/domain.",
                 ] + [f"[attempt] {e}" for e in errors]
             return conn, AuthResult(AuthType.ANONYMOUS, fallback_reasons=reasons)
         except Exception as e:
@@ -214,7 +222,9 @@ class Authenticator:
     # -- binds ---------------------------------------------------------------
     def _ntlm_bind(self):
         conn = self._new_conn()
-        conn.login(self.username, self.password, self.domain)  # GSS-SPNEGO, signed
+        # GSS-SPNEGO, signed. With lmhash/nthash this is pass-the-hash.
+        conn.login(self.username, self.password, self.domain,
+                   lmhash=self.lmhash, nthash=self.nthash)
         return conn
 
     def _simple_bind(self):
@@ -230,6 +240,8 @@ class Authenticator:
             self.username,
             "" if use_cache else self.password,
             self.domain,
+            lmhash="" if use_cache else self.lmhash,
+            nthash="" if use_cache else self.nthash,
             kdcHost=self.dc_ip,
             useCache=use_cache,
         )

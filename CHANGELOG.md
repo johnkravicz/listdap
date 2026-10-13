@@ -10,7 +10,13 @@ banner and via `listdap.py --version`.
 
 ## [Unreleased]
 
+## [2.2.0] - 2026-10-13
+
 ### Added
+- `-H` / `--hashes [LM:]NT`: **pass-the-hash** authentication. Binds via signed
+  NTLM (GSS-SPNEGO) with the NT hash, with a Kerberos-from-hash (RC4) fallback.
+  Accepts `LMHASH:NTHASH`, `:NTHASH` or a bare `NTHASH`. Generated Quick Win
+  commands switch to `-hashes` / `-H` automatically when no password is in use.
 - `-U` / `--user-file FILE`: write all enumerated domain users (one login per
   line) to an exact path, ready to feed to netexec (`nxc ... -u FILE`). Can be
   combined with `--dump`; both reuse the same enumerated user set.

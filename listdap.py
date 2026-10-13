@@ -30,7 +30,7 @@ _HERE = os.path.dirname(os.path.abspath(__file__))
 if _HERE not in sys.path:
     sys.path.insert(0, _HERE)
 
-__version__ = "2.1.0"
+__version__ = "2.2.0"
 
 from core.connection import connect
 from core.auth import AuthError
@@ -99,6 +99,8 @@ def build_parser() -> argparse.ArgumentParser:
     auth = p.add_argument_group("Authentication")
     auth.add_argument("-u", "--username", metavar="USER",   help="Username")
     auth.add_argument("-p", "--password", metavar="PASS",   help="Password")
+    auth.add_argument("-H", "--hashes",   metavar="[LM:]NT",
+                      help="NTLM hash for pass-the-hash (LMHASH:NTHASH or just NTHASH)")
     auth.add_argument("--ccache",         metavar="FILE",   help="Path to Kerberos ccache file")
     auth.add_argument("--no-kerberos",    action="store_true",
                       help="Skip Kerberos, use NTLM directly")
@@ -136,6 +138,25 @@ def _epilog() -> str:
 # Main
 # ---------------------------------------------------------------------------
 
+_BLANK_LM = "aad3b435b51404eeaad3b435b51404ee"  # NTLM hash of an empty LM secret
+
+
+def _parse_hashes(raw: str) -> tuple[str, str]:
+    """Parse an impacket-style hash string into (lmhash, nthash).
+
+    Accepts 'LMHASH:NTHASH', ':NTHASH' or a bare 'NTHASH'. Missing/blank LM is
+    substituted with the well-known empty-LM hash. Raises ValueError on a
+    malformed (non-hex / wrong-length) hash.
+    """
+    raw = raw.strip()
+    lm, _, nt = raw.rpartition(":") if ":" in raw else ("", "", raw)
+    lm = lm or _BLANK_LM
+    for label, h in (("LM", lm), ("NT", nt)):
+        if len(h) != 32 or any(c not in "0123456789abcdefABCDEF" for c in h):
+            raise ValueError(f"{label} hash must be 32 hex characters (got {h!r})")
+    return lm.lower(), nt.lower()
+
+
 def main() -> int:
     parser  = build_parser()
     args    = parser.parse_args()
@@ -164,6 +185,15 @@ def main() -> int:
     # Determine domain
     domain = args.domain or ""
 
+    # Pass-the-hash: parse -H into LM/NT (stored on args for exploit_cmds too)
+    args.lmhash = args.nthash = ""
+    if args.hashes:
+        try:
+            args.lmhash, args.nthash = _parse_hashes(args.hashes)
+        except ValueError as e:
+            out.error(f"Invalid --hashes: {e}")
+            return 1
+
     # Connect
     out.info(f"Connecting to {args.dc}:{port} ({'LDAPS' if args.ldaps else 'LDAP'})")
 
@@ -173,6 +203,8 @@ def main() -> int:
             domain=domain,
             username=args.username or "",
             password=args.password or "",
+            lmhash=args.lmhash,
+            nthash=args.nthash,
             ccache=args.ccache or "",
             no_kerberos=args.no_kerberos,
             use_tls=args.ldaps,
