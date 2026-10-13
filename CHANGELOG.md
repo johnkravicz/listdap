@@ -10,6 +10,11 @@ banner and via `listdap.py --version`.
 
 ## [Unreleased]
 
+### Added
+- `-U` / `--user-file FILE`: write all enumerated domain users (one login per
+  line) to an exact path, ready to feed to netexec (`nxc ... -u FILE`). Can be
+  combined with `--dump`; both reuse the same enumerated user set.
+
 ## [2.1.0] - 2026-10-12
 
 ### Added

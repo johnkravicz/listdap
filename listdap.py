@@ -115,6 +115,9 @@ def build_parser() -> argparse.ArgumentParser:
     out = p.add_argument_group("Output")
     out.add_argument("--dump",    metavar="PREFIX",
                      help="Dump user lists to PREFIX_all_users.txt, PREFIX_spn_users.txt, PREFIX_np_users.txt")
+    out.add_argument("-U", "--user-file", metavar="FILE",
+                     help="Write all domain users (one login per line) to FILE, "
+                          "ready for `nxc ... -u FILE`")
     out.add_argument("-v", "--verbose", action="store_true", help="Verbose output")
     out.add_argument("--inactive-days", type=int, default=90, metavar="DAYS",
                      help="Days threshold for inactive accounts (default: 90)")
@@ -223,8 +226,8 @@ def main() -> int:
     else:
         selected = ALL_MODULES
 
-    # Dump manager
-    dump = DumpManager(args.dump) if args.dump else None
+    # Dump manager (needed for --dump prefixed lists and/or --user-file)
+    dump = DumpManager(args.dump) if (args.dump or args.user_file) else None
 
     # Scan context
     quick_wins = QuickWinsCollector()
@@ -259,7 +262,13 @@ def main() -> int:
     # Dump files
     if dump:
         print()
-        written = dump.write_files()
+        written = []
+        if args.dump:
+            written += dump.write_files()
+        if args.user_file:
+            uf = dump.write_user_file(args.user_file)
+            if uf:
+                written.append(uf)
         if written:
             out.success("Dump files written:")
             for f in written:
