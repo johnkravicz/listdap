@@ -65,6 +65,105 @@ class C:
 
 
 # ---------------------------------------------------------------------------
+# Shell-command syntax highlighting (for Quick Wins + section command blocks)
+# ---------------------------------------------------------------------------
+
+#: First tokens that mark a line as a runnable command (plus the "impacket-"
+#: prefix, matched separately). Anything else is treated as prose and left dim.
+_CMD_STARTERS = frozenset({
+    "certipy-ad", "certipy", "nxc", "netexec", "coercer", "hashcat", "bloodyAD",
+    "python3", "export", "printf", "sudo", "kinit", "getTGT", "secretsdump",
+    "evil-winrm", "smbclient", "ldapsearch", "crackmapexec",
+})
+
+# colors
+_CMD_C = C.GREEN + C.BOLD   # command
+_OPT_C = C.YELLOW           # -x / --xx options
+_VAL_C = C.CYAN             # option values / arguments / quoted strings
+_CMT_C = C.GREY             # comments
+
+
+def _is_command_line(stripped: str) -> bool:
+    if not stripped:
+        return False
+    tok = stripped.split(None, 1)[0]
+    return tok.startswith("impacket-") or tok in _CMD_STARTERS
+
+
+def _tokenize_cmd(s: str):
+    """Yield (text, is_space) chunks, keeping quoted spans ('…' / "…") intact."""
+    i, n = 0, len(s)
+    while i < n:
+        if s[i].isspace():
+            j = i
+            while j < n and s[j].isspace():
+                j += 1
+            yield s[i:j], True
+            i = j
+        else:
+            j, quote = i, None
+            while j < n:
+                c = s[j]
+                if quote:
+                    if c == quote:
+                        quote = None
+                    j += 1
+                elif c in "'\"":
+                    quote = c
+                    j += 1
+                elif c.isspace():
+                    break
+                else:
+                    j += 1
+            yield s[i:j], False
+            i = j
+
+
+def highlight_command(line: str) -> str:
+    """Syntax-highlight a single line: command / options / values / comments.
+
+    Non-command prose is returned dimmed, so command lines visually pop out of a
+    Quick Win's descriptive text. Whole-line and trailing inline comments
+    (starting with '#') are greyed.
+    """
+    if not line.strip():
+        return line
+    indent = line[:len(line) - len(line.lstrip())]
+    stripped = line.strip()
+
+    if stripped.startswith("#"):
+        return f"{indent}{_CMT_C}{stripped}{C.RESET}"
+
+    if not _is_command_line(stripped):
+        return C.dim(line)           # prose — unchanged dim look
+
+    out = [indent]
+    first_seen = False
+    comment = False
+    for text, is_space in _tokenize_cmd(line.lstrip()):
+        if comment:
+            out.append(text)
+            continue
+        if is_space:
+            out.append(text)
+            continue
+        if text.startswith("#"):     # start of a trailing inline comment
+            comment = True
+            out.append(f"{_CMT_C}{text}")
+            continue
+        if not first_seen:
+            out.append(f"{_CMD_C}{text}{C.RESET}")
+            first_seen = True
+        elif text.startswith("-"):
+            out.append(f"{_OPT_C}{text}{C.RESET}")
+        else:
+            out.append(f"{_VAL_C}{text}{C.RESET}")
+    if comment:
+        out.append(C.RESET)
+    return "".join(out)
+
+
+# ---------------------------------------------------------------------------
 # Severity
 # ---------------------------------------------------------------------------
 
@@ -123,7 +222,7 @@ class QuickWinsCollector:
             print(f"  {label} {C.bold(f.title)}")
             if f.detail:
                 for line in f.detail.splitlines():
-                    print(f"         {C.dim(line)}")
+                    print(f"         {highlight_command(line)}")
 
 
 # ---------------------------------------------------------------------------

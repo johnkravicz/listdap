@@ -21,7 +21,7 @@ Not covered: ESC5, ESC10-ESC16.
 
 import struct
 from modules.base import BaseModule, ScanContext
-from core.output import Severity, C
+from core.output import Severity, C, highlight_command
 from utils.ldap_helpers import get_attr, get_int, get_list, get_raw
 from utils.sids import resolve_sid, bytes_to_sid, is_privileged_sid
 
@@ -783,7 +783,7 @@ class ADCSModule(BaseModule):
             if item.get("cmd"):
                 out.kv("    Exploit", "", indent=6)
                 for cmd_line in item["cmd"].split("\n"):
-                    print(f"        {C.GREEN}{cmd_line}{C.RESET}")
+                    print(f"        {highlight_command(cmd_line)}")
 
         # Synthesis: per template, the actionable principal + the ready command.
         lines = []
