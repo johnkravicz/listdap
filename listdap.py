@@ -30,7 +30,7 @@ _HERE = os.path.dirname(os.path.abspath(__file__))
 if _HERE not in sys.path:
     sys.path.insert(0, _HERE)
 
-__version__ = "2.2.0"
+__version__ = "2.3.0"
 
 from core.connection import connect
 from core.auth import AuthError
@@ -51,6 +51,7 @@ from modules.acls        import ACLsModule
 from modules.laps        import LAPSModule
 from modules.adcs        import ADCSModule
 from modules.shadow      import ShadowModule
+from modules.rpc         import RPCModule
 
 ALL_MODULES = [
     DomainModule(),
@@ -65,6 +66,7 @@ ALL_MODULES = [
     LAPSModule(),
     ADCSModule(),
     ShadowModule(),
+    RPCModule(),
 ]
 
 MODULE_MAP = {m.name: m for m in ALL_MODULES}
@@ -111,6 +113,16 @@ def build_parser() -> argparse.ArgumentParser:
         "--modules", metavar="MOD1,MOD2",
         help="Comma-separated list of modules to run (default: all). "
              "Available: " + ", ".join(MODULE_MAP.keys()),
+    )
+    mods.add_argument(
+        "--rpc", action="store_true",
+        help="Force RPC enumeration (SAMR/LSAT/SRVSVC/WKSSVC/EPM) even when "
+             "LDAP enumeration succeeded. By default RPC runs only when the "
+             "LDAP bind is anonymous or returns no directory objects.",
+    )
+    mods.add_argument(
+        "--no-rpc", action="store_true",
+        help="Never run RPC enumeration (disables the LDAP-dry auto-trigger).",
     )
 
     # Output

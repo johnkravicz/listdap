@@ -22,6 +22,10 @@ class ScanContext:
     args:        Namespace
     dump:        Optional[DumpManager] = None
     _current_user_sids: Optional[frozenset] = None
+    #: Count of identity objects the LDAP modules managed to read. Stays 0 when
+    #: the directory is unreadable (anonymous/restricted bind) — the signal the
+    #: RPC module uses to auto-trigger SAMR/LSAT as a gap-filler.
+    ldap_identity_count: int = 0
 
     @property
     def base_dn(self) -> str:

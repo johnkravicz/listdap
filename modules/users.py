@@ -97,6 +97,7 @@ class UsersModule(BaseModule):
         if not entries:
             out.warning("No users found (check permissions)")
             return
+        ctx.ldap_identity_count += len(entries)
 
         # --- Categorize ---
         all_users       = []

@@ -10,6 +10,40 @@ banner and via `listdap.py --version`.
 
 ## [Unreleased]
 
+## [2.3.0] - 2026-10-14
+
+### Added
+- **RPC enumeration module** (`rpc`) — the opportunistic complement to the
+  LDAP modules, for the common case where the LDAP bind reads the rootDSE but
+  not the directory objects (anonymous / RestrictAnonymous) while RPC over SMB
+  still leaks the account database. `utils/rpc.py` provides a DCE/RPC transport
+  (mirroring `utils/ca_rrp.py`) that reuses the LDAP-side credentials
+  (password / pass-the-hash / Kerberos ccache). Pipes covered:
+  - **SAMR** (`\samr`) — users (with account-control flags, pwd-last-set and
+    descriptions), groups, local aliases, and the domain password policy.
+  - **LSAT** (`\lsarpc`) — LSA policy, account-domain SID, trusted domains, and
+    **RID cycling** as a fallback when SAMR is blocked but name lookups are not.
+  - **SRVSVC** (`\srvsvc`) — shares and sessions.
+  - **WKSSVC** (`\wkssvc`) — logged-on users.
+  - **EPM** (endpoint mapper, tcp/135) — a summarised dump of the registered
+    RPC attack surface (distinct services, with notable ones surfaced).
+- Trigger model: RPC runs **automatically** when the LDAP bind is anonymous or
+  returns no identity objects; `--rpc` forces it even when LDAP succeeded, and
+  `--no-rpc` disables it. SAMR descriptions are run through the credential
+  highlight heuristic, and SAMR-discovered users feed `--dump` / `--user-file`.
+- Quick Wins from RPC: "LDAP unreadable but SAMR enumerates N users" (headline),
+  cleartext-credential-in-description, AS-REP-roastable (credential-free
+  `GetNPUsers -no-pass`), PASSWD_NOTREQD empty-password, and password-spray when
+  the SAMR-read lockout threshold is 0.
+
+### Notes
+- Each RPC pipe degrades gracefully and independently: on a hardened DC it is
+  normal for SAMR null to succeed while LSAT/SRVSVC/WKSSVC return
+  STATUS_ACCESS_DENIED — these are reported as notes, never fatal.
+- A null SAMR/LSAT session requires a **non-empty domain** in the SMB
+  credentials (an empty domain is rejected with STATUS_INVALID_PARAMETER); the
+  discovered domain is threaded through automatically.
+
 ## [2.2.0] - 2026-10-13
 
 ### Added
