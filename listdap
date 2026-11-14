@@ -1,0 +1,180 @@
+#!/usr/bin/env bash
+#
+# listdap launcher — runs listdap.py, setting up a Python virtual environment
+# with its dependencies the first time it is needed.
+#
+# Usage:
+#   ./listdap [options...]     run listdap (same options as `python3 listdap.py`)
+#   ./listdap --reinstall      rebuild the virtual environment, then exit
+#
+# Behaviour:
+#   * If the system python3 can already import the required deps (e.g. Kali,
+#     where python3-impacket is packaged), listdap runs directly, no venv.
+#   * Otherwise a local .venv/ is created next to this script, the deps from
+#     requirements.txt are installed into it, and listdap runs from it.
+#   * The venv is reused on later runs; it is refreshed only when
+#     requirements.txt changes (tracked by a stored hash).
+#
+# Override with environment variables:
+#   LISTDAP_FORCE_VENV=1   ignore any system deps and always use the venv
+#   LISTDAP_PYTHON=python3.12   pick the interpreter used to build the venv
+
+set -euo pipefail
+
+# --- locate ourselves (resolving symlinks) ----------------------------------
+SOURCE=${BASH_SOURCE[0]}
+while [ -L "$SOURCE" ]; do
+    DIR=$(cd -P "$(dirname "$SOURCE")" >/dev/null 2>&1 && pwd)
+    SOURCE=$(readlink "$SOURCE")
+    [[ $SOURCE != /* ]] && SOURCE=$DIR/$SOURCE
+done
+ROOT=$(cd -P "$(dirname "$SOURCE")" >/dev/null 2>&1 && pwd)
+
+REQ="$ROOT/requirements.txt"
+ENTRY="$ROOT/listdap.py"
+MIN_PY_MINOR=8   # minimum Python 3.x supported
+
+# Preferred venv location is beside the script. Some filesystems (e.g.
+# VirtualBox shared folders) refuse the symlinks venv creates, so we fall
+# back to a per-repo venv under the user's cache directory.
+VENV_PRIMARY="$ROOT/.venv"
+CACHE_BASE="${XDG_CACHE_HOME:-$HOME/.cache}/listdap"
+VENV_FALLBACK="$CACHE_BASE/venv-$(printf '%s' "$ROOT" | cksum | cut -d' ' -f1)"
+
+# Use whichever venv already exists; otherwise default to the preferred one.
+if   [ -x "$VENV_PRIMARY/bin/python" ]; then VENV="$VENV_PRIMARY"
+elif [ -x "$VENV_FALLBACK/bin/python" ]; then VENV="$VENV_FALLBACK"
+else VENV="$VENV_PRIMARY"
+fi
+STAMP="$VENV/.requirements.sha256"
+
+PY=${LISTDAP_PYTHON:-python3}
+
+err()  { printf '\033[31m[listdap]\033[0m %s\n' "$*" >&2; }
+info() { printf '\033[36m[listdap]\033[0m %s\n' "$*" >&2; }
+
+# --- sanity: interpreter present and recent enough ---------------------------
+if ! command -v "$PY" >/dev/null 2>&1; then
+    err "Python interpreter '$PY' not found. Install Python 3.$MIN_PY_MINOR+ (or set LISTDAP_PYTHON)."
+    exit 1
+fi
+if ! "$PY" -c "import sys; raise SystemExit(0 if sys.version_info >= (3, $MIN_PY_MINOR) else 1)"; then
+    err "Python 3.$MIN_PY_MINOR or newer is required ($("$PY" -c 'import sys;print("%d.%d"%sys.version_info[:2])') found)."
+    exit 1
+fi
+
+# hash of requirements.txt, to detect dependency changes
+req_hash() {
+    [ -f "$REQ" ] || { echo "no-requirements"; return; }
+    if command -v sha256sum >/dev/null 2>&1; then
+        sha256sum "$REQ" | awk '{print $1}'
+    else
+        "$PY" - "$REQ" <<'PY'
+import hashlib, sys
+print(hashlib.sha256(open(sys.argv[1], "rb").read()).hexdigest())
+PY
+    fi
+}
+
+# does the given interpreter already satisfy requirements.txt?
+deps_ok() {
+    "$1" - "$REQ" <<'PY' 2>/dev/null
+import sys
+try:
+    from importlib.metadata import version, PackageNotFoundError
+    from packaging.requirements import Requirement
+except Exception:
+    # Fall back to a plain import check of the top-level package.
+    try:
+        import impacket  # noqa: F401
+        sys.exit(0)
+    except Exception:
+        sys.exit(1)
+
+ok = True
+for raw in open(sys.argv[1]):
+    line = raw.split("#", 1)[0].strip()
+    if not line:
+        continue
+    try:
+        req = Requirement(line)
+        installed = version(req.name)
+        if req.specifier and installed not in req.specifier:
+            ok = False
+    except PackageNotFoundError:
+        ok = False
+    except Exception:
+        # Unparseable line — be lenient, let a top-level import decide.
+        pass
+sys.exit(0 if ok else 1)
+PY
+}
+
+# Try to create a venv at $1; return 0 on success. Captures errors to $2.
+venv_make_at() {
+    "$PY" -m venv --copies "$1" 2>"$2"
+}
+
+build_venv() {
+    local errf; errf=$(mktemp "${TMPDIR:-/tmp}/listdap_venv.XXXXXX")
+    info "Creating virtual environment in $VENV_PRIMARY ..."
+    # --copies: shared folders (e.g. VirtualBox vboxsf) reject symlinks.
+    if venv_make_at "$VENV_PRIMARY" "$errf"; then
+        VENV="$VENV_PRIMARY"
+    elif grep -qiE 'ensurepip|No module named venv' "$errf"; then
+        err "Could not create the virtual environment:"
+        sed 's/^/    /' "$errf" >&2
+        err "The venv module is missing. On Debian/Ubuntu install it with:"
+        err "    sudo apt install python3-venv"
+        rm -f "$errf"; exit 1
+    else
+        # Likely a filesystem that rejects symlinks (e.g. a shared folder).
+        info "Primary location unusable ($(tr -d '\n' <"$errf" | tail -c 80))."
+        info "Falling back to $VENV_FALLBACK ..."
+        rm -rf "$VENV_PRIMARY"
+        mkdir -p "$CACHE_BASE"
+        if venv_make_at "$VENV_FALLBACK" "$errf"; then
+            VENV="$VENV_FALLBACK"
+        else
+            err "Could not create the virtual environment:"
+            sed 's/^/    /' "$errf" >&2
+            rm -f "$errf"; exit 1
+        fi
+    fi
+    rm -f "$errf"
+    STAMP="$VENV/.requirements.sha256"
+    local vpy="$VENV/bin/python"
+    info "Installing dependencies from requirements.txt ..."
+    "$vpy" -m pip install --upgrade pip >/dev/null 2>&1 || true
+    if ! "$vpy" -m pip install -r "$REQ"; then
+        err "Dependency installation failed. Check network access / proxy settings."
+        exit 1
+    fi
+    req_hash > "$STAMP"
+    info "Environment ready."
+}
+
+# --- handle --reinstall ------------------------------------------------------
+if [ "${1:-}" = "--reinstall" ]; then
+    rm -rf "$VENV_PRIMARY" "$VENV_FALLBACK"
+    build_venv
+    info "Done. Run ./listdap with your usual options."
+    exit 0
+fi
+
+# --- decide how to run -------------------------------------------------------
+if [ "${LISTDAP_FORCE_VENV:-0}" != "1" ] && deps_ok "$PY"; then
+    # System interpreter already has everything (e.g. Kali). Run directly.
+    exec "$PY" "$ENTRY" "$@"
+fi
+
+# Need the venv. Build or refresh it if necessary.
+if [ ! -x "$VENV/bin/python" ]; then
+    build_venv
+elif [ ! -f "$STAMP" ] || [ "$(cat "$STAMP" 2>/dev/null)" != "$(req_hash)" ]; then
+    info "requirements.txt changed — updating the virtual environment ..."
+    "$VENV/bin/python" -m pip install -r "$REQ" && req_hash > "$STAMP" \
+        || { err "Update failed; run ./listdap --reinstall to rebuild."; exit 1; }
+fi
+
+exec "$VENV/bin/python" "$ENTRY" "$@"

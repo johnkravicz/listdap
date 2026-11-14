@@ -10,6 +10,15 @@ banner and via `listdap.py --version`.
 
 ## [Unreleased]
 
+### Added
+- **Self-bootstrapping launcher** (`./listdap`) — runs listdap directly when
+  the system Python already has impacket (e.g. Kali's `python3-impacket`), and
+  otherwise creates a local `.venv/` from `requirements.txt` and reuses it on
+  later runs (refreshed only when `requirements.txt` changes). Falls back to a
+  per-repo venv under `~/.cache/listdap/` when the checkout lives on a
+  filesystem that rejects symlinks (e.g. a VirtualBox shared folder). Knobs:
+  `--reinstall`, `LISTDAP_FORCE_VENV=1`, `LISTDAP_PYTHON=<interpreter>`.
+
 ## [2.3.0] - 2026-10-14
 
 ### Added

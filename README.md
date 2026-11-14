@@ -40,6 +40,31 @@ See **[docs/example-output.md](docs/example-output.md)** for a plain-text versio
 
 ## Install
 
+The only dependency is **impacket**. On Kali it is already packaged
+(`python3-impacket`), so you can run `python3 listdap.py` straight away.
+
+On any other system, use the bundled launcher — it sets up a virtual
+environment with the dependencies the first time it runs, then reuses it:
+
+```bash
+./listdap -dc <DC_IP> -u <user> -p '<password>'
+```
+
+The launcher runs listdap directly if the system Python already has impacket,
+and otherwise builds a `.venv/` beside the script (falling back to
+`~/.cache/listdap/` when the repo lives on a filesystem that rejects symlinks,
+e.g. a VirtualBox shared folder). It refreshes the environment only when
+`requirements.txt` changes. Useful knobs:
+
+```bash
+./listdap --reinstall              # rebuild the virtual environment
+LISTDAP_FORCE_VENV=1 ./listdap …   # ignore system deps, always use the venv
+LISTDAP_PYTHON=python3.12 ./listdap --reinstall   # pick the interpreter
+```
+
+On Debian/Ubuntu the launcher needs the `venv` module: `sudo apt install
+python3-venv`. Prefer a manual environment instead? That still works:
+
 ```bash
 python3 -m venv venv && source venv/bin/activate
 pip install -r requirements.txt
