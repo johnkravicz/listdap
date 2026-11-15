@@ -10,6 +10,29 @@ banner and via `listdap.py --version`.
 
 ## [Unreleased]
 
+## [2.7.0] - 2026-11-15
+
+### Added
+- **sIDHistory module** (`sidhistory`) — enumerates objects whose `sIDHistory`
+  attribute is populated (one `(sIDHistory=*)` LDAP search, multi-valued binary
+  SIDs). Each SID is resolved and classified:
+  - **Privileged SID** (Domain Admins, Administrators, Enterprise Admins, RID
+    500/512/519, high-value builtins) → **CRITICAL**: the SID is injected into the
+    token at logon like a group membership, so the account is effectively
+    privileged while appearing unprivileged (mimikatz/DCShadow sid-history
+    persistence IOC). Quick Win notes the DCSync path for a controlled account.
+  - **Foreign-domain SID** (`S-1-5-21-…` not from the current domain) → **HIGH**:
+    cross-domain migration artifact or SID-history injection across a trust
+    (impactful where SID filtering / quarantine is not enforced).
+  - Same-domain non-privileged SIDs are shown as benign migration artifacts.
+  - Reuses `is_privileged_sid` / `is_high_value_sid` / `resolve_sid`; covers
+    users, computers, groups and trust accounts.
+
+### Notes
+- ⚠️ **Not yet validated live** — unit-tested against mocked records (privileged,
+  foreign and benign sIDHistory values), but never run against a real DC with
+  populated sIDHistory.
+
 ## [2.6.0] - 2026-11-15
 
 ### Added
