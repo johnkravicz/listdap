@@ -10,6 +10,31 @@ banner and via `listdap.py --version`.
 
 ## [Unreleased]
 
+## [2.13.0] - 2026-11-15
+
+### Added
+- **GPO edit-rights / linked-scope abuse analysis** (gpo module). The module
+  moves beyond inventory to the actual attack surface — a GPO is a code-execution
+  primitive over everything it is linked to:
+  - **Edit rights.** Reads each `groupPolicyContainer` `nTSecurityDescriptor` and
+    flags non-privileged principals holding a write right (GenericWrite /
+    GenericAll / WriteDACL / WriteOwner / WriteProperty) → they can push a
+    scheduled task / startup script / immediate task (SharpGPOAbuse, pyGPOAbuse).
+    Already-privileged trustees and the default full-control principals
+    (SYSTEM / Creator Owner / BUILTIN\Administrators / Enterprise DCs) are
+    filtered out; a right held by the current identity is marked `(you)`.
+  - **Linked-scope severity.** Parses `gPLink` on OU / domain / site objects
+    (across the domain NC and the configuration NC) to find where each GPO
+    applies, and sets severity by blast radius: **domain root** or the **Domain
+    Controllers OU** → CRITICAL; any other OU or a site → HIGH; editable but
+    linked nowhere → MEDIUM (latent). Disabled links are shown as such.
+  - Quick Wins carry ready-to-run **pyGPOAbuse** (Linux) and **SharpGPOAbuse**
+    (Windows) commands filled with the GPO id / name and the session creds.
+  - Reuses `modules.acls._parse_dacl` and `utils.sids` privilege filtering.
+  - ⚠️ **NOT VALIDATED LIVE**: the edit-rights / linked-scope analysis is
+    unit-tested against synthetic descriptors only (plain inventory was validated
+    earlier).
+
 ## [2.12.0] - 2026-11-15
 
 ### Added
