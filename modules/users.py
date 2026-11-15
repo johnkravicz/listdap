@@ -27,6 +27,19 @@ _ATTRS = [
     "msDS-KeyCredentialLink",
 ]
 
+# Free-text attributes (besides description) that commonly leak secrets — run
+# through the same credential heuristic as description. `info` is the ADUC
+# "Notes" field (a frequent offender); extensionAttribute1-15 are Exchange
+# custom attributes often (ab)used to store misc data, including passwords.
+_FREETEXT_ATTRS = ["info", "comment"] + [f"extensionAttribute{i}" for i in range(1, 16)]
+
+# Attributes whose entire value IS (often) a secret — when present & readable
+# they are a finding in themselves (userPassword is only populated when the
+# domain enables it; it may hold cleartext or a {SCHEME}-prefixed hash).
+_PASSWORD_ATTRS = ["userPassword", "unixUserPassword"]
+
+_ATTRS = _ATTRS + _FREETEXT_ATTRS + _PASSWORD_ATTRS
+
 # High-privilege groups (partial DN match, case-insensitive)
 _PRIV_GROUPS = [
     "domain admins",
@@ -142,6 +155,7 @@ class UsersModule(BaseModule):
                 "desc_sev":    desc_sev,        # HIGH / MEDIUM / LOW / None
                 "admin_count": get_int(entry, "adminCount"),
                 "key_cred":    kc,
+                "extra_creds": self._scan_cred_attrs(entry),
             }
             all_users.append(user)
 
@@ -183,8 +197,11 @@ class UsersModule(BaseModule):
                 if days >= inactive_days:
                     inactive.append(user)
 
-        # --- Quick Wins: credentials found in descriptions ---
+        # --- Quick Wins: credentials found in descriptions + other attributes ---
         self._qw_desc_credentials(ctx, all_users)
+        self._qw_other_attr_credentials(ctx, all_users)
+
+        attr_cred_users = [u for u in all_users if u.get("extra_creds")]
 
         # --- Summary counter ---
         out.counter("Users", len(all_users), {
@@ -194,8 +211,18 @@ class UsersModule(BaseModule):
             "Kerberoastable":  len(kerberoastable),
             "passwd_notreqd":  len(passwd_notreqd),
             "shadow creds":    len(shadow_creds),
+            "secrets in attrs": len(attr_cred_users),
             "adminCount=1":    len(admin_count),
         })
+
+        # --- Secrets found in attributes other than description ---
+        if attr_cred_users:
+            out.subsection("Secrets in attributes (info / comment / extensionAttribute / userPassword)")
+            rows = []
+            for u in attr_cred_users:
+                for fc in u["extra_creds"]:
+                    rows.append([u["sam"], fc["attr"], fc["display"]])
+            out.table(["Username", "Attribute", "Value"], rows, indent=4)
 
         # Build a sam→user lookup for highlight closures
         _umap = {u["sam"]: u for u in all_users}
@@ -390,3 +417,87 @@ class UsersModule(BaseModule):
                     f"Full description:   {raw_desc}\n"
                     f"\nRe-run authenticated:\n  {C.CYAN}{cmd}{C.RESET}",
                 )
+
+    @staticmethod
+    def _scan_cred_attrs(entry) -> list:
+        """Scan free-text + password attributes (besides description) for secrets.
+
+        Returns a list of dicts: {attr, raw, sev, display, pwd_attr?, hashed?}.
+        Only HIGH/MEDIUM free-text findings are kept (LOW keyword-only is dropped
+        to limit noise); password attributes are always a finding when present.
+        """
+        found = []
+        for attr in _FREETEXT_ATTRS:
+            val = get_attr(entry, attr)
+            if not val:
+                continue
+            display, sev = analyze_description(val)
+            if sev in (DESC_HIGH, DESC_MEDIUM):
+                found.append({"attr": attr, "raw": val, "sev": sev, "display": display})
+        for attr in _PASSWORD_ATTRS:
+            for val in get_list(entry, attr):
+                if not val:
+                    continue
+                hashed = val.startswith("{")
+                found.append({
+                    "attr": attr, "raw": val, "sev": DESC_HIGH,
+                    "pwd_attr": True, "hashed": hashed,
+                    "display": (f"{C.YELLOW}{val}{C.RESET}" if hashed
+                                else f"{C.RED}{C.BOLD}{val}{C.RESET}"),
+                })
+        return found
+
+    @staticmethod
+    def _qw_other_attr_credentials(ctx: ScanContext, all_users: list) -> None:
+        """Quick Wins for secrets found in attributes other than description:
+        info / comment / extensionAttribute1-15 / userPassword / unixUserPassword."""
+        dc      = ctx.conn.dc_info
+        dc_ip   = getattr(ctx.args, "dc", dc.ip or dc.hostname)
+        domain  = ctx.domain or dc.domain
+        ldaps   = getattr(ctx.args, "ldaps", False)
+        proto   = "--ldaps " if ldaps else ""
+
+        for u in all_users:
+            for fc in u.get("extra_creds", []):
+                sam, attr, raw = u["sam"], fc["attr"], fc["raw"]
+
+                # userPassword / unixUserPassword: the whole value is the secret.
+                if fc.get("pwd_attr"):
+                    if fc.get("hashed"):
+                        ctx.quick_wins.add(
+                            Severity.HIGH,
+                            f"Password hash in {attr} — {sam}",
+                            f"{attr} holds a hashed secret: {raw}\n"
+                            "Crack it offline (scheme is in the {…} prefix → hashcat/john).",
+                        )
+                    else:
+                        cmd = (f"python3 listdap.py -d {domain} -dc {dc_ip} "
+                               f"{proto}-u {sam} -p '{raw}'")
+                        ctx.quick_wins.add(
+                            Severity.CRITICAL,
+                            f"Cleartext credential in {attr} — {sam}",
+                            f"Password: {C.RED}{C.BOLD}{raw}{C.RESET}\n"
+                            f"\nRe-run authenticated:\n  {C.CYAN}{cmd}{C.RESET}",
+                        )
+                    continue
+
+                # Free-text attrs: extract keyword+value / hash candidates.
+                creds = extract_credentials(raw)
+                for cred in creds:
+                    cmd = (f"python3 listdap.py -d {domain} -dc {dc_ip} "
+                           f"{proto}-u {sam} -p '{cred}'")
+                    ctx.quick_wins.add(
+                        Severity.CRITICAL,
+                        f"Cleartext credential in {attr} — {sam}",
+                        f"Password candidate: {C.RED}{C.BOLD}{cred}{C.RESET}\n"
+                        f"Full {attr}:   {raw}\n"
+                        f"\nRe-run authenticated:\n  {C.CYAN}{cmd}{C.RESET}",
+                    )
+                if not creds:
+                    # Flagged as sensitive but no cleanly-extractable token.
+                    sev = Severity.HIGH if fc["sev"] == DESC_HIGH else Severity.MEDIUM
+                    ctx.quick_wins.add(
+                        sev,
+                        f"Sensitive data in {attr} — {sam}",
+                        f"{attr}: {raw}",
+                    )

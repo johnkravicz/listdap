@@ -27,13 +27,15 @@ _CRED_VALUE_RE = re.compile(
     re.IGNORECASE,
 )
 
-# Standalone password-like token: 8+ chars with complexity
-# (upper + lower + digit, or letters + special chars)
+# Standalone password-like token: 8+ chars with complexity (upper + lower +
+# digit). The complexity lookaheads are bounded to the token by excluding
+# whitespace ([^…\s]*) — otherwise `\D*\d` would cross spaces and satisfy the
+# digit requirement from a *later* word, flagging plain words like "Password".
 _PWD_STANDALONE_RE = re.compile(
-    r"\b(?=[A-Za-z\d!@#$%^&*()\-_+=.]{8,})"
-    r"(?=(?:[^A-Z]*[A-Z]){1})"   # at least 1 upper
-    r"(?=(?:[^a-z]*[a-z]){1})"   # at least 1 lower
-    r"(?=(?:\D*\d){1})"          # at least 1 digit
+    r"\b(?=[A-Za-z\d!@#$%^&*()\-_+=.]{8,}\b)"
+    r"(?=[^A-Z\s]*[A-Z])"        # at least 1 upper, within the token
+    r"(?=[^a-z\s]*[a-z])"        # at least 1 lower, within the token
+    r"(?=[^\d\s]*\d)"            # at least 1 digit, within the token
     r"[A-Za-z\d!@#$%^&*()\-_+=.]{8,}\b"
 )
 
@@ -158,11 +160,30 @@ def analyze_description(desc: str) -> tuple[str, Optional[str]]:
     return "".join(result), overall
 
 
+# A captured "value" that is itself just a credential keyword (e.g. matching
+# "Default password: ..." → "password") or a common filler word (e.g. "Password
+# for backup: ..." → "for") is noise, not the secret. Drop it so the
+# standalone-token scan supplies the real value next to it.
+_BARE_KW_RE = re.compile(r"^(?:" + _CRED_KW + r")$", re.IGNORECASE)
+_STOPWORDS = {
+    "for", "the", "is", "are", "was", "to", "a", "an", "of", "in", "on", "with",
+    "by", "and", "or", "set", "your", "this", "that", "user", "account", "here",
+    "it", "as", "be", "at", "use", "using", "via", "new", "old",
+}
+
+
 def extract_credentials(desc: str) -> list[str]:
     """
     Extract raw credential values from a description string.
     Returns a list of candidate password/hash strings (no ANSI codes).
-    Only returns HIGH-confidence findings (keyword+value or hash).
+
+    High-confidence sources, merged and de-duplicated:
+      * standalone complex tokens (8+ chars, upper+lower+digit) — password-shaped
+        by construction, so always collected (robust to odd phrasing);
+      * keyword+value matches, with the captured value dropped when it is itself
+        a credential keyword or a common filler word (so "Password for backup: X"
+        yields X, not "for");
+      * hash-like strings.
     """
     if not desc:
         return []
@@ -170,27 +191,25 @@ def extract_credentials(desc: str) -> list[str]:
     found = []
     seen  = set()
 
-    # Credential keyword + value
+    def _add(val):
+        if val and val not in seen:
+            seen.add(val)
+            found.append(val)
+
+    # Standalone password-like tokens (most reliable — password-shaped).
+    for m in _PWD_STANDALONE_RE.finditer(desc):
+        _add(m.group(0))
+
+    # Credential keyword + value (skip keyword-only / filler-word captures).
     for m in _CRED_VALUE_RE.finditer(desc):
         val = m.group(1).strip(".,;:\"'")
-        if val and val not in seen:
-            found.append(val)
-            seen.add(val)
+        if not val or _BARE_KW_RE.match(val) or val.lower() in _STOPWORDS:
+            continue
+        _add(val)
 
-    # Hash-like strings
+    # Hash-like strings.
     for m in _HASH_RE.finditer(desc):
-        val = m.group(0)
-        if val not in seen:
-            found.append(val)
-            seen.add(val)
-
-    # Standalone password-like tokens (only if no keyword match above)
-    if not found:
-        for m in _PWD_STANDALONE_RE.finditer(desc):
-            val = m.group(0)
-            if val not in seen:
-                found.append(val)
-                seen.add(val)
+        _add(m.group(0))
 
     return found
 

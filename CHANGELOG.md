@@ -10,6 +10,37 @@ banner and via `listdap.py --version`.
 
 ## [Unreleased]
 
+## [2.8.0] - 2026-11-15
+
+### Added
+- **Credential scanning beyond `description`.** The users module now runs the
+  credential heuristic over more attributes:
+  - free-text: **`info`** (the ADUC "Notes" field — a frequent offender),
+    **`comment`**, and **`extensionAttribute1-15`** (Exchange custom attributes);
+  - password-bearing: **`userPassword`** and **`unixUserPassword`**, whose entire
+    value is treated as the secret (cleartext → CRITICAL with a ready re-run
+    command; `{SCHEME}`-prefixed hash → HIGH with a crack-offline note).
+  A new **"Secrets in attributes"** subsection lists every hit (user / attribute /
+  highlighted value), the summary counter gains a `secrets in attrs` count, and
+  each finding yields a Quick Win mirroring the existing description flow.
+
+### Changed
+- **More reliable credential extraction** (`utils/highlight.py`,
+  `extract_credentials`): standalone password-shaped tokens (8+ chars,
+  upper+lower+digit) are now always collected and merged with keyword+value
+  matches, and captured values that are themselves a credential keyword or a
+  common filler word are dropped. So `"Default password: Sup3rP@ss123"` yields
+  `Sup3rP@ss123` (not `password`) and `"Password for backup: X"` yields `X` (not
+  `for`).
+
+### Fixed
+- **Standalone-password regex over-matching** (`_PWD_STANDALONE_RE`): the
+  complexity lookaheads (`\D*\d`, `[^A-Z]*[A-Z]`, …) were unbounded and crossed
+  whitespace, so a plain word like `Password` matched whenever a digit appeared
+  anywhere later in the string. The lookaheads are now bounded to the token
+  (whitespace-excluding), fixing false positives in both highlighting and
+  extraction.
+
 ## [2.7.0] - 2026-11-15
 
 ### Added
