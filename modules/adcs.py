@@ -6,6 +6,9 @@ ESC1  — Enrollee supplies Subject (SAN) + Client Auth EKU
 ESC2  — Any Purpose EKU (or no EKU) — can act as any cert
 ESC3  — Certificate Request Agent EKU — can enroll on behalf of others
 ESC4  — Template has dangerous ACL (GenericWrite / WriteDACL / WriteOwner)
+ESC5  — Dangerous ACL on a PKI infrastructure object (NTAuthCertificates, the
+        PKI containers, or the CA host computer object) held by a non-privileged
+        principal → CA / forest compromise. Pure LDAP DACL read.
 ESC6  — CA has EDITF_ATTRIBUTESUBJECTALTNAME2 flag set (CA-level SAN)
 ESC7  — Non-privileged ManageCA / ManageCertificates on the CA.
         Primary source is the CA host registry Security descriptor read over
@@ -19,29 +22,38 @@ ESC13 — Template carries an issuance policy (msPKI-Certificate-Policy) whose O
         object is linked to an AD group via msDS-OIDToGroupLink. Enrolling (when
         the template also allows client auth) puts the linked group's SID in the
         PKINIT PAC → membership without ever joining the group.
+ESC14 — Account carries a WEAK explicit certificate mapping (altSecurityIdentities
+        subject/issuer/email based). LDAP finds the mapping surface; real
+        exploitability depends on the DC StrongCertificateBindingEnforcement
+        registry value (not in LDAP) — the Quick Win carries the confirm command.
 ESC15 — EKUwu (CVE-2024-49019): a schema V1 template where the enrollee supplies
         the subject. V1 templates copy an attacker-supplied Application Policies
         extension from the CSR, so a Client-Auth (or Cert-Request-Agent) policy
         can be injected into a cert whose nominal EKU forbids it.
 
-Not covered: ESC5, ESC10-ESC12, ESC14, ESC16.
+Not covered: ESC10-ESC12, ESC16.
 
-⚠️ NOT VALIDATED LIVE: ESC13 and ESC15 (added in v2.4.0) were implemented and
-   unit-tested against mocked records, but never run against a real DC with a
-   genuine ESC13/ESC15 misconfiguration. Before trusting a (non-)finding,
-   confirm the ESC13 OID-container read filter
-   (&(objectClass=msPKI-Enterprise-Oid)(msDS-OIDToGroupLink=*)) and the ESC15
-   schema-version gate against certipy's output on a live target.
+⚠️ NOT VALIDATED LIVE: ESC13/ESC15 (v2.4.0) and ESC5/ESC14 (v2.5.0) were
+   implemented and unit-tested against mocked records, but never run against a
+   real DC with a genuine misconfiguration. Before trusting a (non-)finding,
+   confirm against certipy on a live target: the ESC13 OID-container read filter
+   (&(objectClass=msPKI-Enterprise-Oid)(msDS-OIDToGroupLink=*)), the ESC15
+   schema-version gate, the ESC5 object DN list, and the ESC14
+   altSecurityIdentities weak/strong classification.
 """
 
 import struct
 from modules.base import BaseModule, ScanContext
 from core.output import Severity, C, highlight_command
-from utils.ldap_helpers import get_attr, get_int, get_list, get_raw
+from utils.ldap_helpers import (
+    get_attr, get_int, get_list, get_raw, get_dn, SCOPE_BASE,
+)
 from utils.sids import (
     resolve_sid, bytes_to_sid, is_privileged_sid, is_high_value_sid,
 )
-from utils.ldap_helpers import SCOPE_BASE
+
+# altSecurityIdentities attribute schemaIDGUID (ESC14 property-write ACE match)
+ALTSECID_ATTR_GUID = "00fbf30c-91fe-11d1-aebc-0000f80367c1"
 
 # EKU OIDs
 EKU_CLIENT_AUTH      = "1.3.6.1.5.5.7.3.2"
@@ -355,7 +367,7 @@ def _build_oid_group_map(ctx, config_dn: str) -> dict:
 
 class ADCSModule(BaseModule):
     name        = "adcs"
-    description = "ADCS PKI enumeration and ESC1-ESC9/ESC13/ESC15 misconfiguration detection"
+    description = "ADCS PKI enumeration and ESC1-ESC9/ESC13/ESC14/ESC15 misconfiguration detection"
 
     def run(self, ctx: ScanContext) -> None:
         out = ctx.out
@@ -631,9 +643,15 @@ class ADCSModule(BaseModule):
                 + "\n".join(t["name"] for t in esc4),
             )
 
+        # ESC5 (PKI object ACLs) and ESC14 (weak explicit cert mapping) — both
+        # LDAP-only. ⚠️ NOT VALIDATED LIVE (v2.5.0): unit-tested on mocked data,
+        # never confirmed against a real ESC5/ESC14-misconfigured DC.
+        esc5_found  = self._check_esc5(ctx, config_dn, ca_entries)
+        esc14_found = self._check_esc14(ctx)
+
         if not (esc1 or esc1_info or esc2 or esc2_info or esc3 or esc3_info
                 or esc4 or esc9 or esc9_info or esc13 or esc13_info
-                or esc15 or esc15_info):
+                or esc15 or esc15_info or esc5_found or esc14_found):
             out.success("No template ESC misconfigurations detected on published templates")
 
     def _show_ca(self, ctx: ScanContext, ca_entry, config_dn: str) -> None:
@@ -780,6 +798,210 @@ class ADCSModule(BaseModule):
                 "Principals: " + ", ".join(n for n, _s, _r in ca_issues) + "\n"
                 f"Confirm over RRP: certipy-ad find {auth} -stdout -text",
             )
+
+    # ------------------------------------------------------------------
+    # ESC5 — dangerous ACLs on PKI-related AD objects (LDAP-only)
+    # ------------------------------------------------------------------
+    @staticmethod
+    def _read_sd(ctx, dn: str):
+        """Base-scope read of an object's nTSecurityDescriptor (SD_FLAGS auto)."""
+        try:
+            entries = ctx.conn.search(
+                "(objectClass=*)", ["nTSecurityDescriptor"],
+                base=dn, scope=SCOPE_BASE,
+            )
+        except Exception:
+            return None
+        if not entries:
+            return None
+        return get_raw(entries[0], "nTSecurityDescriptor")
+
+    @staticmethod
+    def _find_computer_dn(ctx, dns: str) -> str:
+        """Resolve a CA host FQDN to its AD computer object DN."""
+        host = dns.split(".")[0]
+        try:
+            entries = ctx.conn.search(
+                f"(&(objectClass=computer)(|(dNSHostName={dns})(sAMAccountName={host}$)))",
+                ["sAMAccountName"],
+            )
+        except Exception:
+            return ""
+        return get_dn(entries[0]) if entries else ""
+
+    def _check_esc5(self, ctx: ScanContext, config_dn: str, ca_entries) -> bool:
+        """ESC5 — takeover rights held by a NON-privileged principal over a PKI
+        infrastructure object (container, NTAuthCertificates, or the CA host
+        computer object) → full PKI / forest compromise. Pure LDAP DACL read.
+
+        Returns True if any finding was reported.
+        """
+        out = ctx.out
+        pks = f"CN=Public Key Services,CN=Services,{config_dn}"
+        targets = [
+            (f"CN=NTAuthCertificates,{pks}",
+             "NTAuthCertificates — publish a rogue CA cert → forge any auth",
+             Severity.CRITICAL),
+            (f"CN=Certificate Templates,{pks}",
+             "Certificate Templates container — create/edit templates (→ ESC1)",
+             Severity.HIGH),
+            (f"CN=Enrollment Services,{pks}",
+             "Enrollment Services container — publish templates / add a CA",
+             Severity.HIGH),
+            (f"CN=OID,{pks}",
+             "OID container — create a group-linked issuance policy (→ ESC13)",
+             Severity.HIGH),
+            (pks,
+             "Public Key Services container — parent of all PKI objects",
+             Severity.HIGH),
+        ]
+        seen_hosts = set()
+        for ca in ca_entries:
+            dns = get_attr(ca, "dNSHostName")
+            if not dns or dns.lower() in seen_hosts:
+                continue
+            seen_hosts.add(dns.lower())
+            comp_dn = self._find_computer_dn(ctx, dns)
+            if comp_dn:
+                targets.append(
+                    (comp_dn, f"CA host computer {dns} — own the box, own the CA",
+                     Severity.CRITICAL))
+
+        findings = []
+        worst = Severity.HIGH
+        for dn, label, sev in targets:
+            raw = self._read_sd(ctx, dn)
+            if raw is None:
+                continue
+            issues = _get_template_acl_issues(raw, ctx.domain_sid)
+            if issues:
+                findings.append((dn, label, sev, issues))
+                if sev == Severity.CRITICAL:
+                    worst = Severity.CRITICAL
+
+        if not findings:
+            return False
+
+        out.subsection("ESC5 — Dangerous ACL on PKI objects")
+        for dn, label, _sev, issues in findings:
+            print(f"\n    {C.YELLOW}{label}{C.RESET}")
+            out.kv("    Object", dn, indent=6)
+            out.table(["Principal", "SID", "Right"],
+                      [[n, s, r] for (n, s, r) in issues],
+                      highlight_fn=lambda r: C.RED, indent=8)
+
+        detail = []
+        for dn, label, _sev, issues in findings:
+            who = ", ".join(n for (n, _s, _r) in issues)
+            detail.append(f"  - {label}\n      {dn}\n      controlled by: {who}")
+        ctx.quick_wins.add(
+            worst,
+            f"ESC5 — non-privileged control over {len(findings)} PKI object(s)",
+            "A non-privileged principal can take over PKI infrastructure "
+            "object(s) → CA / forest compromise:\n" + "\n".join(detail) + "\n"
+            f"Confirm & map the PKI: certipy-ad find {self._cp_auth(ctx)} -stdout -text",
+        )
+        return True
+
+    # ------------------------------------------------------------------
+    # ESC14 — weak explicit certificate mapping (altSecurityIdentities)
+    # ------------------------------------------------------------------
+    @staticmethod
+    def _classify_altsecid(value: str) -> str:
+        """Classify an altSecurityIdentities mapping as 'strong' or 'weak'.
+
+        Strong = bound to the certificate's key or serial (not spoofable from the
+        subject alone): X509:<SKI>…, X509:<SHA1-PUKEY>…, X509:<I>…<SR>… (serial).
+        Weak   = subject-only (<S>), issuer+subject (<I>…<S>…), or RFC822 email.
+        """
+        v = value.lower()
+        if "<ski>" in v or "<sha1-pukey>" in v or "<sr>" in v:
+            return "strong"
+        if "<s>" in v or "<rfc822>" in v or "<i>" in v:
+            return "weak"
+        return "weak"   # unknown/legacy form → treat as weak (conservative)
+
+    def _check_esc14(self, ctx: ScanContext) -> bool:
+        """ESC14 — accounts carrying a WEAK explicit certificate mapping.
+
+        LDAP-only detection of the mapping surface. Whether it is actually
+        abusable depends on the DC's StrongCertificateBindingEnforcement (a
+        registry value, not in LDAP) — the Quick Win carries the command to
+        confirm it. Returns True if any finding was reported.
+        """
+        out = ctx.out
+        try:
+            entries = ctx.conn.search(
+                "(altSecurityIdentities=*)",
+                ["sAMAccountName", "altSecurityIdentities", "objectSid", "adminCount"],
+            )
+        except Exception as e:
+            if ctx.args.verbose:
+                out.debug(f"ESC14: altSecurityIdentities search failed: {e}")
+            return False
+
+        weak = []
+        for e in entries:
+            sam  = get_attr(e, "sAMAccountName") or get_dn(e)
+            sid  = bytes_to_sid(get_raw(e, "objectSid") or b"")
+            vals = get_list(e, "altSecurityIdentities")
+            weak_vals = [v for v in vals if self._classify_altsecid(v) == "weak"]
+            if not weak_vals:
+                continue
+            priv = (is_privileged_sid(sid, ctx.domain_sid)
+                    or is_high_value_sid(sid, ctx.domain_sid)
+                    or get_int(e, "adminCount") == 1)
+            weak.append((sam, sid, weak_vals, priv))
+
+        if not weak:
+            return False
+
+        out.subsection("ESC14 — Weak explicit certificate mapping (altSecurityIdentities)")
+        for sam, _sid, vals, priv in weak:
+            tag = f"{C.RED}[priv]{C.RESET} " if priv else ""
+            print(f"    {tag}{C.YELLOW}{sam}{C.RESET}")
+            for v in vals:
+                out.kv("    Mapping", v, indent=6)
+
+        any_priv = any(p for (_s, _sid, _v, p) in weak)
+        sev = Severity.CRITICAL if any_priv else Severity.MEDIUM
+
+        a      = ctx.args
+        user   = (getattr(a, "username", "") or "").split("@")[0]
+        pw     = getattr(a, "password", "") or ""
+        domain = ctx.domain or (getattr(a, "domain", "") or "")
+        dc     = getattr(a, "dc", "") or ""
+        reg_tgt = f"{domain}/{user}{(':' + pw) if pw else ''}@{dc}"
+        names  = ", ".join(s for (s, _sid, _v, _p) in weak)
+
+        confirm = (
+            "# Confirm exploitability — read the DC KDC strong-mapping enforcement "
+            "(remote registry; usually needs admin):\n"
+            f"impacket-reg '{reg_tgt}' query "
+            "-keyName 'HKLM\\SYSTEM\\CurrentControlSet\\Services\\Kdc' "
+            "-v StrongCertificateBindingEnforcement\n"
+            "#   0 disabled / 1 compatibility  → weak mappings honored (EXPLOITABLE)\n"
+            "#   2 full enforcement            → weak mappings rejected (NOT exploitable)\n"
+            "# Schannel side (TLS client-cert auth):\n"
+            f"impacket-reg '{reg_tgt}' query "
+            "-keyName 'HKLM\\SYSTEM\\CurrentControlSet\\Control\\SecurityProviders\\Schannel' "
+            "-v CertificateMappingMethods\n"
+            "# Functional confirmation as low-priv (no admin): obtain a cert matching "
+            "a weak mapping and authenticate as the victim:\n"
+            f"#   certipy-ad auth -pfx <matching-cert>.pfx -dc-ip {dc} -domain {domain}"
+        )
+        ctx.quick_wins.add(
+            sev,
+            f"ESC14 — weak explicit cert mapping on {len(weak)} account(s)",
+            "Account(s) carry a weak altSecurityIdentities mapping "
+            "(subject / issuer+subject / RFC822-email based). An attacker who "
+            "obtains a certificate matching the mapping authenticates AS that "
+            "account — critical when the account is privileged.\n"
+            f"Accounts: {names}\n" + confirm + "\n"
+            "# Setup vector (who can SET altSecurityIdentities on a victim) is an "
+            "ACL finding — see the ACLs module / certipy-ad find.",
+        )
+        return True
 
     # ------------------------------------------------------------------
     # ESC8 — web enrollment (NTLM relay target)

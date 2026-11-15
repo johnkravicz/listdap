@@ -10,6 +10,41 @@ banner and via `listdap.py --version`.
 
 ## [Unreleased]
 
+## [2.5.0] - 2026-11-15
+
+### Added
+- **ADCS ESC5 detection** (LDAP-only) — takeover rights (GenericAll / WriteDACL /
+  WriteOwner / GenericWrite) held by a **non-privileged** principal over a PKI
+  infrastructure object. Reads the `nTSecurityDescriptor` (base scope, SD_FLAGS
+  auto-attached) of `CN=NTAuthCertificates`, the `CN=Certificate Templates`,
+  `CN=Enrollment Services` and `CN=OID` containers, the `CN=Public Key Services`
+  parent, and each CA's **host computer object** (resolved from `dNSHostName`),
+  reusing the existing DACL parser. Control of NTAuthCertificates or the CA host
+  is **CRITICAL** (rogue-CA / box takeover → forge any auth); the containers are
+  HIGH. Quick Win points at `certipy-ad find` to map the PKI.
+- **ADCS ESC14 detection** (LDAP-only surface) — accounts carrying a **weak
+  explicit certificate mapping** in `altSecurityIdentities` (subject-only,
+  issuer+subject, or RFC822-email — as opposed to the strong SKI / SHA1-PUKEY /
+  issuer+serial forms). Privileged victims (`is_privileged_sid` /
+  `is_high_value_sid` / `adminCount=1`) raise the finding to **CRITICAL**, others
+  MEDIUM. The Quick Win carries the **confirmation command**: an `impacket-reg`
+  read of the DC's `StrongCertificateBindingEnforcement` (0/1 = weak mappings
+  honored → exploitable; 2 = full enforcement) and the Schannel
+  `CertificateMappingMethods`, plus a low-priv functional confirmation via
+  `certipy-ad auth`.
+- Coverage is now ESC1-ESC9, ESC13, ESC14, ESC15 (still not covered: ESC10-ESC12,
+  ESC16).
+
+### Notes
+- ⚠️ **ESC5 and ESC14 are not yet validated live** — implemented and unit-tested
+  against mocked SDs / records (crafted security descriptor, mapping classifier),
+  but never run against a real DC carrying a genuine ESC5/ESC14 misconfiguration.
+- ESC14 exploitability depends on a DC **registry** value LDAP cannot read; the
+  emitted `impacket-reg` confirmation generally needs remote-registry/admin
+  rights, so as a low-priv attacker the functional `certipy-ad auth` test is the
+  reliable confirmation. A listdap-native check (RRP value read, mirroring
+  `utils/ca_rrp.py`) is feasible but deferred for the same admin-rights reason.
+
 ## [2.4.0] - 2026-11-15
 
 ### Added
