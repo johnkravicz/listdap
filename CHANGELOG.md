@@ -10,7 +10,38 @@ banner and via `listdap.py --version`.
 
 ## [Unreleased]
 
+## [2.4.0] - 2026-11-15
+
 ### Added
+- **ADCS ESC13 detection** — a certificate template whose issuance policy
+  (`msPKI-Certificate-Policy`) references an OID object linked to an AD group via
+  `msDS-OIDToGroupLink`. When the template also allows client authentication,
+  enrolling puts the linked group's SID into the PKINIT PAC, granting that group's
+  membership without ever joining it. The module reads the OID container
+  (`CN=OID,CN=Public Key Services,CN=Services,…`) once, builds the OID→group map,
+  resolves each linked group's SID/name, and raises the finding to **CRITICAL**
+  when the linked group is privileged/high-value (otherwise HIGH). Identity-
+  relative like ESC1/ESC9: reported actionable only when the current identity can
+  enrol. Quick Win emits `certipy-ad req … && certipy-ad auth …` (no SAN needed).
+- **ADCS ESC15 detection** — EKUwu (CVE-2024-49019): a schema **V1** template
+  (`msPKI-Template-Schema-Version` ≤ 1) where the enrollee supplies the subject
+  (`ENROLLEE_SUPPLIES_SUBJECT`), published and enrollable by a low-priv principal.
+  V1 templates copy an attacker-supplied Application Policies extension from the
+  CSR, so a Client-Authentication (or Certificate-Request-Agent) policy can be
+  injected into a cert whose nominal EKU forbids it. Severity **CRITICAL**. Quick
+  Win emits both the direct `-application-policies 'Client Authentication'`
+  impersonation and the Certificate-Request-Agent / on-behalf-of variant.
+- Coverage is now ESC1-ESC4, ESC6-ESC9, ESC13, ESC15 (still not covered: ESC5,
+  ESC10-ESC12, ESC14, ESC16).
+
+### Notes
+- ⚠️ **ESC13 and ESC15 are not yet validated live** — implemented and unit-tested
+  against mocked template records, but never run against a real DC carrying a
+  genuine ESC13/ESC15 misconfiguration. Confirm the ESC13 OID-container read and
+  the ESC15 schema-version gate against certipy on a live target before relying
+  on a (non-)finding.
+
+### Added (prior, unreleased)
 - **Self-bootstrapping launcher** (`./listdap`) — runs listdap directly when
   the system Python already has impacket (e.g. Kali's `python3-impacket`), and
   otherwise creates a local `.venv/` from `requirements.txt` and reuses it on

