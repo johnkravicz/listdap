@@ -10,6 +10,25 @@ banner and via `listdap.py --version`.
 
 ## [Unreleased]
 
+## [2.9.0] - 2026-11-15
+
+### Added
+- **BitLocker module** (`bitlocker`) — searches for `msFVE-RecoveryInformation`
+  objects (the recovery info a machine escrows to AD under its computer object)
+  and reports the 48-digit `msFVE-RecoveryPassword` wherever the DC returns it
+  (i.e. wherever the current identity may read it — over-permissioned OUs /
+  delegations routinely expose it to low-priv users). A readable key is
+  **CRITICAL** → offline access to the volume; the Quick Win carries the
+  `manage-bde -unlock` and `dislocker` commands. The computer name is derived
+  from the recovery object's parent DN. When objects exist but the password is
+  withheld, the module still inventories which machines escrow BitLocker and
+  notes that reading needs Domain Admins / a delegated read.
+
+### Notes
+- ⚠️ **Not yet validated live** — unit-tested against mocked records (readable,
+  withheld and empty), but never run against a real DC holding
+  msFVE-RecoveryInformation.
+
 ## [2.8.0] - 2026-11-15
 
 ### Added

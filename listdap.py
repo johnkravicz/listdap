@@ -30,7 +30,7 @@ _HERE = os.path.dirname(os.path.abspath(__file__))
 if _HERE not in sys.path:
     sys.path.insert(0, _HERE)
 
-__version__ = "2.8.0"
+__version__ = "2.9.0"
 
 from core.connection import connect
 from core.auth import AuthError
@@ -51,6 +51,7 @@ from modules.gmsa        import GMSAModule
 from modules.sidhistory  import SIDHistoryModule
 from modules.acls        import ACLsModule
 from modules.laps        import LAPSModule
+from modules.bitlocker   import BitLockerModule
 from modules.adcs        import ADCSModule
 from modules.shadow      import ShadowModule
 from modules.rpc         import RPCModule
@@ -68,6 +69,7 @@ ALL_MODULES = [
     SIDHistoryModule(),
     ACLsModule(),
     LAPSModule(),
+    BitLockerModule(),
     ADCSModule(),
     ShadowModule(),
     RPCModule(),
