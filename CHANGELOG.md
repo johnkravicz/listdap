@@ -10,6 +10,37 @@ banner and via `listdap.py --version`.
 
 ## [Unreleased]
 
+## [2.6.0] - 2026-11-15
+
+### Added
+- **gMSA / dMSA module** (`gmsa`) — new identity-relative module for Group and
+  Delegated Managed Service Accounts, with two LDAP-native wins:
+  - **Managed-password read → pass-the-hash.** A DC returns the constructed
+    `msDS-ManagedPassword` blob only to principals in the account's
+    `msDS-GroupMSAMembership` security descriptor. When the current identity is
+    authorised, the module parses the MSDS-MANAGEDPASSWORD_BLOB (`utils/gmsa.py`)
+    and derives the **NT hash** (MD4 over the raw UTF-16LE current-password
+    buffer) → CRITICAL Quick Win with ready PtH commands (`nxc -H`,
+    `secretsdump -hashes`, `listdap -H`). The membership SD is parsed (reusing
+    the ACLs DACL parser) to report *who* may read the password even when the
+    blob is not returned on this bind — flagging when the **current identity is
+    authorised** (retrieve via `nxc --gmsa` / `gMSADumper`) and when a **broad
+    low-priv principal** (Domain Users / Authenticated Users) can read it.
+  - **dMSA / BadSuccessor (Server 2025).** Inventories delegated MSAs, decodes
+    `msDS-DelegatedMSAState`, and follows `msDS-ManagedAccountPrecededByLink` to
+    the superseded account — **CRITICAL** when it supersedes a privileged account
+    (authenticating as the dMSA inherits its migrated KERB key list / privileges).
+  - A managed account that is itself in a privileged group raises recovered-
+    password findings to domain-impact. gMSA/dMSA accounts feed
+    `ctx.ldap_identity_count` but are kept out of human-login dumps (they are `$`
+    machine-class accounts).
+
+### Notes
+- ⚠️ **Not yet validated live** — the module and the MSDS-MANAGEDPASSWORD_BLOB
+  parser are unit-tested against mocked records and a synthetic blob (NT-hash
+  derivation verified against a direct MD4), but never run against a real
+  gMSA/dMSA-bearing DC.
+
 ## [2.5.0] - 2026-11-15
 
 ### Added
