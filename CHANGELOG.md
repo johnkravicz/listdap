@@ -10,6 +10,34 @@ banner and via `listdap.py --version`.
 
 ## [Unreleased]
 
+## [2.12.0] - 2026-11-15
+
+### Added
+- **ADIDNS module** (`adidns`) — AD-integrated DNS enumeration and spoofing
+  surface, pure LDAP against the DNS application partitions
+  (`DC=DomainDnsZones,…`, `DC=ForestDnsZones,…`, legacy `CN=MicrosoftDNS,CN=System,…`):
+  - **Recon.** Parses the binary `dnsRecord` attribute of every `dnsNode`
+    (`utils/dnsrecord.py`: A / AAAA / CNAME / NS / PTR / MX / SRV / TXT / SOA /
+    DNAME) → full internal name→IP map, services, and hosts absent from the
+    computers module — no DNS query, no zone transfer. INFO Quick Win with the
+    host list.
+  - **Zone Create-Child (spoofing).** Reads each zone's DACL and flags
+    Create-Child / GenericWrite / GenericAll granted to a non-privileged
+    trustee → the identity can add arbitrary records (NTLM coercion / relay).
+    **HIGH** when the trustee is broad (Everyone / Authenticated Users / Domain
+    Users / Domain Computers — the common default), MEDIUM for a group-scoped
+    trustee. Notes a missing `wpad` record as a direct spoofing target. Quick
+    Win emits ready-to-run `dnstool.py` (dirkjanm) and `Powermad` commands.
+  - **Writable existing records (hijack).** Reads each `dnsNode` DACL and flags
+    records writable (GenericAll / WriteDACL / WriteOwner / GenericWrite /
+    WriteProperty) by a non-privileged principal → an existing name can be
+    overwritten (redirect a server's A record). **HIGH**, with a `dnstool.py
+    --action modify` Quick Win.
+  - Reuses `modules.acls._parse_dacl` for DACL parsing and the shared
+    `utils.sids` privilege filtering; registered after `trusts`.
+  - ⚠️ **NOT VALIDATED LIVE**: implemented and unit-tested against mocked
+    records / synthetic descriptors, never run against a real DC.
+
 ## [2.11.0] - 2026-11-15
 
 ### Added
