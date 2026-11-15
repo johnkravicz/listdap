@@ -13,6 +13,7 @@ from utils.uac import (
     UAC_NO_EXPIRE_PWD, UAC_TRUSTED_DELEG, UAC_TRUSTED_TO_AUTH, UAC_PWD_EXPIRED,
 )
 from utils.timestamp import filetime_to_str, days_since_filetime
+from utils.enctypes import enctypes_summary, weakness as enc_weakness, has_rc4, has_des
 
 # LDAP filter: user accounts only (exclude computers)
 _USER_FILTER = "(&(objectCategory=person)(objectClass=user))"
@@ -156,7 +157,10 @@ class UsersModule(BaseModule):
                 "admin_count": get_int(entry, "adminCount"),
                 "key_cred":    kc,
                 "extra_creds": self._scan_cred_attrs(entry),
+                "enc":         get_int(entry, "msDS-SupportedEncryptionTypes"),
             }
+            user["enc_summary"] = enctypes_summary(user["enc"])
+            user["enc_weak"]    = enc_weakness(user["enc"])
             all_users.append(user)
 
             # Dump
@@ -262,8 +266,8 @@ class UsersModule(BaseModule):
         # --- AS-REP roastable ---
         if asrep:
             out.subsection("AS-REP Roastable (no pre-auth required)")
-            rows = [[u["sam"], u["description"]] for u in asrep]
-            out.table(["Username", "Description"], rows,
+            rows = [[u["sam"], self._enc_cell(u), u["description"]] for u in asrep]
+            out.table(["Username", "Enc", "Description"], rows,
                       highlight_fn=lambda r: _row_color(r[0], C.RED))
             ctx.quick_wins.add(
                 Severity.CRITICAL,
@@ -280,8 +284,8 @@ class UsersModule(BaseModule):
                 spn_str = " | ".join(u["spns"][:3])
                 if len(u["spns"]) > 3:
                     spn_str += f" (+{len(u['spns'])-3})"
-                rows.append([u["sam"], spn_str, u["description"]])
-            out.table(["Username", "SPNs", "Description"], rows,
+                rows.append([u["sam"], spn_str, self._enc_cell(u), u["description"]])
+            out.table(["Username", "SPNs", "Enc", "Description"], rows,
                       highlight_fn=lambda r: _row_color(r[0], C.YELLOW))
             ctx.quick_wins.add(
                 Severity.HIGH,
@@ -347,6 +351,9 @@ class UsersModule(BaseModule):
             rows = [[u["sam"], uac_summary(u["uac"]) or "-", u["description"]] for u in admin_count]
             out.table(["Username", "UAC Flags", "Description"], rows,
                       highlight_fn=lambda r: _row_color(r[0]))
+
+        # --- Weak Kerberos encryption (msDS-SupportedEncryptionTypes) ---
+        self._report_enctypes(ctx, all_users, kerberoastable, asrep)
 
         # --- All users (always shown) ---
         out.subsection("All Users")
@@ -501,3 +508,67 @@ class UsersModule(BaseModule):
                         f"Sensitive data in {attr} — {sam}",
                         f"{attr}: {raw}",
                     )
+
+    @staticmethod
+    def _enc_cell(u: dict) -> str:
+        """Coloured msDS-SupportedEncryptionTypes summary for a table cell:
+        red when DES is enabled, yellow when RC4 is reachable, plain for AES-only."""
+        summary = u.get("enc_summary", "")
+        enc     = u.get("enc", 0)
+        if has_des(enc):
+            return f"{C.RED}{C.BOLD}{summary}{C.RESET}"
+        if u.get("enc_weak"):          # RC4-only / RC4+AES / RC4-default
+            return f"{C.YELLOW}{summary}{C.RESET}"
+        return summary
+
+    @staticmethod
+    def _report_enctypes(ctx: ScanContext, all_users: list,
+                         kerberoastable: list, asrep: list) -> None:
+        """Flag accounts with weak Kerberos encryption (DES enabled, or RC4
+        reachable on a roastable account → fast crack / downgrade)."""
+        out = ctx.out
+
+        des = [u for u in all_users
+               if has_des(u["enc"]) and not uac_has(u["uac"], UAC_DISABLED)]
+        # RC4-reachable accounts that are actually roastable (SPN or no-preauth):
+        # that is where RC4 directly buys a fast-cracking hash.
+        roastable = {u["sam"]: u for u in kerberoastable}
+        roastable.update({u["sam"]: u for u in asrep})
+        rc4_roast = [u for u in roastable.values()
+                     if u["enc_weak"] in ("RC4-only", "RC4+AES", "RC4-default")]
+
+        if not des and not rc4_roast:
+            return
+
+        out.subsection("Weak Kerberos Encryption (msDS-SupportedEncryptionTypes)")
+
+        if des:
+            print(f"    {C.RED}{C.BOLD}DES enabled{C.RESET} (trivially crackable):")
+            out.table(["Username", "Supported etypes"],
+                      [[u["sam"], u["enc_summary"]] for u in des],
+                      highlight_fn=lambda r: C.RED, indent=6)
+            ctx.quick_wins.add(
+                Severity.HIGH,
+                f"DES Kerberos encryption enabled on {len(des)} account(s)",
+                "These accounts advertise DES — any Kerberos material for them is "
+                "trivially crackable (and DES-only breaks modern defaults):\n  "
+                + ", ".join(u["sam"] for u in des)
+                + "\nRoast/crack as usual; the recovered key is near-instant to break.",
+            )
+
+        if rc4_roast:
+            print(f"    {C.YELLOW}RC4-reachable + roastable{C.RESET} "
+                  f"(fast-cracking hash / AES downgrade):")
+            out.table(["Username", "Roast", "Supported etypes"],
+                      [[u["sam"],
+                        "SPN" if u["spns"] else ("AS-REP" if uac_has(u["uac"], UAC_NO_PREAUTH) else "-"),
+                        u["enc_summary"]] for u in rc4_roast],
+                      highlight_fn=lambda r: C.YELLOW, indent=6)
+            ctx.quick_wins.add(
+                Severity.MEDIUM,
+                f"RC4 Kerberos surface on {len(rc4_roast)} roastable account(s)",
+                "Roastable accounts that still accept RC4: request an RC4 ticket to "
+                "get an etype-23 hash (hashcat -m 13100 / -m 18200, fast) instead of "
+                "slow AES — a downgrade even when AES is also supported:\n  "
+                + ", ".join(u["sam"] for u in rc4_roast),
+            )

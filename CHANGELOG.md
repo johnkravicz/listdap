@@ -10,6 +10,20 @@ banner and via `listdap.py --version`.
 
 ## [Unreleased]
 
+## [2.10.0] - 2026-11-15
+
+### Added
+- **Kerberos encryption-type decoding** (`utils/enctypes.py`) — the users module
+  now decodes `msDS-SupportedEncryptionTypes` (previously fetched but unused):
+  - the Kerberoastable and AS-REP tables gain an **Enc** column, coloured red for
+    DES and yellow when RC4 is reachable;
+  - a new **"Weak Kerberos Encryption"** subsection lists **DES-enabled** accounts
+    (→ HIGH Quick Win: Kerberos material trivially crackable) and **RC4-reachable
+    roastable** accounts (→ MEDIUM Quick Win: request an etype-23 ticket for a
+    fast `-m 13100`/`-m 18200` crack, a downgrade even when AES is also allowed);
+  - classification (`weakness()`): DES / RC4-only / RC4+AES / RC4-default (attribute
+    unset → RC4 fallback) / strong (AES-only); disabled accounts are excluded.
+
 ## [2.9.0] - 2026-11-15
 
 ### Added
