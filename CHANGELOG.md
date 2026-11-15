@@ -10,6 +10,27 @@ banner and via `listdap.py --version`.
 
 ## [Unreleased]
 
+## [2.11.0] - 2026-11-15
+
+### Added
+- **Richer trustAttributes analysis** (trusts module):
+  - new flag **`TRUST_ATTRIBUTE_CROSS_ORGANIZATION_ENABLE_TGT_DELEGATION`
+    (0x800)** decoded, and **TGT-delegation analysis**: explicit-enable → HIGH
+    (cross-forest unconstrained-delegation path), a forest trust with neither
+    enable nor the `NO_TGT_DELEGATION` guard → MEDIUM (confirm the DC is patched);
+  - **`USES_RC4_ENCRYPTION` (0x80)** → MEDIUM: the inter-realm trust key is
+    RC4/NT-hash-derived, easing inter-realm TGT forgery once the trust key is
+    dumped;
+  - unknown high bits are now appended to the decoded string as a hex remainder.
+
+### Changed
+- **More accurate SID-filtering detection.** The previous heuristic flagged any
+  outbound/bidirectional non-within-forest trust, over-reporting forest trusts
+  (which enforce SID filtering by default). It now applies only to **external**
+  trusts (quarantine bit absent → filtering off → SID-history injection), with
+  forest trusts handled by the TGT-delegation / forest-pivot findings instead.
+  Dangerous trusts (TGT delegation enabled) are highlighted red in the table.
+
 ## [2.10.0] - 2026-11-15
 
 ### Added
