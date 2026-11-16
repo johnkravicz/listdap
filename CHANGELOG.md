@@ -10,6 +10,36 @@ banner and via `listdap.py --version`.
 
 ## [Unreleased]
 
+## [2.15.0] - 2026-11-16
+
+### Added
+- **Shadow-admin escalation analysis** (groups module). The module moves from
+  listing high-value groups to explaining — and weaponising — what membership
+  grants, for the privileges most audits overlook:
+  - **SID/RID-driven catalog.** Privileged groups are matched by **objectSid /
+    RID** (robust to renaming and locale) with a sAMAccountName fallback for the
+    RID-less ones (DnsAdmins, Exchange, DHCP…). A non-empty group yields a Quick
+    Win at its severity with the concrete escalation path and an abuse command:
+    DnsAdmins → DLL into the DNS service → SYSTEM on a DC; Backup Operators →
+    SeBackupPrivilege → SAM/NTDS read (DCSync-equiv); Server Operators → service
+    → SYSTEM; Print Operators → SeLoadDriverPrivilege; Account Operators → reset
+    passwords / add to unprotected privileged groups; Schema Admins → schema SD
+    persistence; Exchange Windows Permissions → domain WriteDACL → DCSync;
+    Key/Enterprise Key Admins → Shadow Credentials.
+  - **Core vs shadow tier.** Expected-populated groups (Domain Admins / Enterprise
+    Admins / Administrators) are reported as an INFO roster, not an alarm; the
+    overlooked groups drive the severity-ranked Quick Wins.
+  - **Member resolution.** Nested groups and **foreign (cross-domain) members**
+    (ForeignSecurityPrincipals) are flagged; a foreign member notes the escalation
+    is reachable across a trust.
+  - **`member;range=` retrieval.** Groups with more than ~1500 members (where AD
+    truncates `member` to a ranged attribute) are now fully paged, instead of
+    silently losing members past the first chunk.
+
+### Changed
+- The groups module no longer matches privileged groups by name alone (fragile to
+  renamed / localized groups) — the escalation catalog is SID/RID-first.
+
 ## [2.14.0] - 2026-11-16
 
 ### Added
