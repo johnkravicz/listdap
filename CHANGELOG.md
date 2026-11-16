@@ -10,6 +10,14 @@ banner and via `listdap.py --version`.
 
 ## [Unreleased]
 
+## [2.19.4] - 2026-11-16
+
+### Fixed (live validation)
+
+- **BitLocker Recovery GUID display** (bitlocker module). `msFVE-RecoveryGuid` is a
+  binary GUID; it was read with `get_attr` and rendered as garbled bytes. It is now
+  read raw and formatted as a GUID string (e.g. `75b0fb3d-44fb-4919-941e-94a5dd4dc7fd`).
+
 ## [2.19.3] - 2026-11-16
 
 ### Fixed (live validation)

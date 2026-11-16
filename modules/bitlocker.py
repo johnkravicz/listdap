@@ -18,9 +18,19 @@ which machines escrow BitLocker and notes that reading needs delegated rights.
    records, but never run against a real DC holding msFVE-RecoveryInformation.
 """
 
+import struct
+
 from modules.base import BaseModule, ScanContext
 from core.output import Severity, C
-from utils.ldap_helpers import get_attr, get_dn
+from utils.ldap_helpers import get_attr, get_raw, get_dn
+
+
+def _fmt_guid(raw: bytes) -> str:
+    """Format a 16-byte binary GUID (msFVE-RecoveryGuid) as a GUID string."""
+    if not raw or len(raw) < 16:
+        return ""
+    a, b, c = struct.unpack_from("<IHH", raw, 0)
+    return f"{a:08x}-{b:04x}-{c:04x}-{raw[8:10].hex()}-{raw[10:16].hex()}"
 
 _FILTER = "(objectClass=msFVE-RecoveryInformation)"
 
@@ -64,7 +74,7 @@ class BitLockerModule(BaseModule):
         rows = []
         for e in entries:
             comp = _computer_from_dn(get_dn(e))
-            guid = get_attr(e, "msFVE-RecoveryGuid")
+            guid = _fmt_guid(get_raw(e, "msFVE-RecoveryGuid"))
             when = (get_attr(e, "whenCreated") or "")[:8]   # YYYYMMDD
             pw   = get_attr(e, "msFVE-RecoveryPassword")
             if pw:
