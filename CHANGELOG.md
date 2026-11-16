@@ -10,6 +10,17 @@ banner and via `listdap.py --version`.
 
 ## [Unreleased]
 
+## [2.19.3] - 2026-11-16
+
+### Fixed (live validation)
+
+- **ESC8 web-enrollment probe — hostname fallback** (adcs module). The probe
+  targeted only the CA's `dNSHostName`, which an attacker box that doesn't use the
+  domain's DNS cannot resolve, so a reachable `/certsrv/` was missed. It now
+  probes the CA FQDN first (correct Host header) and **falls back to the `-dc` IP**
+  (the enrollment host for a DC-hosted CA). Validated: `/certsrv/` on the DC IP is
+  now reported as ESC8.
+
 ## [2.19.2] - 2026-11-16
 
 ### Fixed (live validation)

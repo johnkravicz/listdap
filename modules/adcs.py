@@ -1015,7 +1015,22 @@ class ADCSModule(BaseModule):
         http_decl = [s for s in enroll_servers if "http" in s.lower()]
 
         # Active probe of /certsrv/ on the CA host (HTTP first = best relay).
-        probed = _probe_web_enrollment(dns) if dns else []
+        # Try the CA FQDN first (correct Host header), then fall back to the -dc
+        # IP: an attacker box often can't resolve the domain's DNS, and for a
+        # DC-hosted CA the -dc IP is the enrollment host. (If the CA is a separate
+        # server its FQDN still has to resolve; the IP fallback covers the common
+        # DC-hosted case.)
+        hosts = []
+        if dns:
+            hosts.append(dns)
+        dc_ip = getattr(ctx.args, "dc", "") or ""
+        if dc_ip and dc_ip not in hosts:
+            hosts.append(dc_ip)
+        probed = []
+        for h in hosts:
+            probed = _probe_web_enrollment(h)
+            if probed:
+                break
 
         if not probed and not http_decl:
             return
