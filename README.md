@@ -30,11 +30,13 @@ Directory environments. Pure Python 3, authenticated or anonymous.
 
 ## Example output
 
-A full scan authenticated as a compromised `svc_ca` account — domain, users,
-groups, policies and ACLs — flagging **ESC1** on a template the current
-identity can enroll in, with a ready-to-run exploitation command (anonymised):
+A full authenticated scan against a lab Windows Server 2025 DC — users, groups,
+policies, ACLs, delegations, ADIDNS, GPOs, gMSA/dMSA, LAPS, BitLocker, Shadow
+Credentials, trusts, foreign principals and the full **ADCS ESC1–ESC15**
+analysis — surfacing **55 prioritised findings**, each with a ready-to-run
+exploitation command (anonymised):
 
-![Full listdap scan as svc_ca flagging ESC1](docs/example-output.svg)
+![Full listdap scan flagging 55 findings across the lab](docs/example-output.svg)
 
 See **[docs/example-output.md](docs/example-output.md)** for a plain-text version.
 

