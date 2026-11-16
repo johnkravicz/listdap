@@ -10,6 +10,27 @@ banner and via `listdap.py --version`.
 
 ## [Unreleased]
 
+## [2.18.0] - 2026-11-16
+
+### Added
+- **Shadow Credentials parsing & risk scoring** (shadow module + `utils/keycred.py`).
+  Instead of only flagging that `msDS-KeyCredentialLink` is set, the module now:
+  - **parses the KEYCREDENTIALLINK_BLOB** (MS-ADTS 2.2.20, DN-Binary) → key id,
+    **creation time**, device GUID, usage (NGC/FIDO), source (AD/AzureAD). The
+    creation time is the tell that separates a planted backdoor from a Windows
+    Hello for Business key;
+  - **risk-scores each object** by target sensitivity: a key on krbtgt / a DC
+    (UAC SERVER_TRUST) / an adminCount=1 or privileged-group account → **CRITICAL**
+    persistence IOC; on a computer account → **HIGH** (Shadow-Credentials / RBCD
+    artifact); on a plain user → **MEDIUM** (likely WHfB — verify the device/time);
+  - emits one Quick Win per risk tier with the parsed per-key creation times, and
+    a detail table (Object / Kind / Key created / Usage / Device / Risk).
+
+### Changed
+- The users module no longer raises its own (flat HIGH) Shadow-Credentials Quick
+  Win — it keeps the inline flag and points to the SHADOW CREDENTIALS section,
+  which now owns the parsed, risk-scored findings (no more duplicate finding).
+
 ## [2.17.0] - 2026-11-16
 
 ### Added

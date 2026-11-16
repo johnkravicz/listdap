@@ -317,19 +317,15 @@ class UsersModule(BaseModule):
                 + exploit_cmds.kerberoast(ctx),
             )
 
-        # --- Shadow credentials ---
+        # --- Shadow credentials (inline flag; the `shadow` module parses &
+        #     risk-scores these — no Quick Win here to avoid duplication) ---
         if shadow_creds:
             out.subsection("Shadow Credentials (msDS-KeyCredentialLink)")
             rows = [[u["sam"], str(len(u["key_cred"])) + " key(s)"] for u in shadow_creds]
             out.table(["Username", "Key Credentials"], rows,
                       highlight_fn=lambda r: C.YELLOW)
-            ctx.quick_wins.add(
-                Severity.HIGH,
-                f"Shadow Credentials set on {len(shadow_creds)} account(s)",
-                "May indicate persistence backdoor or RBCD setup. Accounts: "
-                + ", ".join(u["sam"] for u in shadow_creds) + "\n"
-                + exploit_cmds.shadow_creds(ctx, shadow_creds[0]["sam"]),
-            )
+            out.info("See the SHADOW CREDENTIALS section for parsed key detail "
+                     "(creation time / device) and risk scoring.")
 
         # --- PASSWD_NOTREQD ---
         if passwd_notreqd:
