@@ -74,6 +74,9 @@ _PRIV_RID = {
           "Forest-wide key-credential write → Shadow Credentials on any account.",
           "certipy-ad shadow auto -u '<member>@{dom}' -p '<password>' "
           "-account <target> -dc-ip {dc}"),
+    525: ("Protected Users", "INFO",
+          "Defensive group (hardens members' Kerberos: no NTLM/RC4/delegation). "
+          "Note which privileged accounts are NOT in it.", ""),
 }
 
 # Builtin groups (S-1-5-32-*)
@@ -105,6 +108,8 @@ _PRIV_BUILTIN = {
     "S-1-5-32-554": ("Pre-Windows 2000 Compatible Access", "HIGH",
           "If this group contains Everyone / Anonymous, large parts of AD become "
           "readable without authentication (legacy anonymous enumeration).", ""),
+    "S-1-5-32-580": ("Remote Management Users", "MEDIUM",
+          "WinRM access to member hosts → lateral movement with a member's creds.", ""),
 }
 
 # RID-less groups matched by sAMAccountName substring (lowercased).
@@ -130,11 +135,9 @@ _PRIV_BY_NAME = [
           "DNS records created by members are left unsecured (no owner ACL) → any "
           "user can overwrite them (ADIDNS spoofing; cross-check the adidns module).",
           "")),
-    ("remote management users", ("Remote Management Users", "MEDIUM",
-          "WinRM access to member hosts → lateral movement with a member's creds.", "")),
-    ("protected users", ("Protected Users", "INFO",
-          "Defensive group (hardens members' Kerberos: no NTLM/RC4/delegation). "
-          "Note which privileged accounts are NOT in it.", "")),
+    # NB: Protected Users (RID 525) and Remote Management Users (S-1-5-32-580) are
+    # matched by SID/RID above (locale-proof) — their display names are localized on
+    # non-English Windows, so a name match would miss them.
 ]
 
 

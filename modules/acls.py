@@ -375,12 +375,23 @@ class ACLsModule(BaseModule):
         domain_sid = ctx.domain_sid
         base_dn    = ctx.base_dn
 
+        # AdminSDHolder / krbtgt CNs are not localized; the privileged GROUP CNs are
+        # ("Domain Admins" → "Admins du domaine" on a FR DC), so resolve those from
+        # their SID/RID via the <SID=…> DN instead of hardcoding an English CN.
         targets = {
-            "Domain object":         base_dn,
-            "Domain Admins group":   f"CN=Domain Admins,CN=Users,{base_dn}",
-            "AdminSDHolder":         f"CN=AdminSDHolder,CN=System,{base_dn}",
-            "krbtgt":                f"CN=krbtgt,CN=Users,{base_dn}",
+            "Domain object":   base_dn,
+            "AdminSDHolder":   f"CN=AdminSDHolder,CN=System,{base_dn}",
+            "krbtgt":          f"CN=krbtgt,CN=Users,{base_dn}",
         }
+        if domain_sid:
+            for rid, label in ((512, "Domain Admins group"),
+                               (519, "Enterprise Admins group")):
+                gdn = self._dn_by_sid(ctx, f"{domain_sid}-{rid}")
+                if gdn:
+                    targets[label] = gdn
+        adm = self._dn_by_sid(ctx, "S-1-5-32-544")   # BUILTIN\Administrators
+        if adm:
+            targets["Administrators group"] = adm
 
         any_finding = False
 
@@ -435,6 +446,19 @@ class ACLsModule(BaseModule):
 
         if not any_finding:
             out.success("No dangerous permissions detected on sensitive objects")
+
+    @staticmethod
+    def _dn_by_sid(ctx: ScanContext, sid: str):
+        """Resolve an object's DN from its SID via the <SID=…> base DN (locale-
+        proof; binary objectSid filters don't work under impacket)."""
+        try:
+            res = ctx.conn.search("(objectClass=*)", ["distinguishedName"],
+                                  base=f"<SID={sid}>", scope=SCOPE_BASE)
+            if res:
+                return get_dn(res[0]) or get_attr(res[0], "distinguishedName") or None
+        except Exception:
+            pass
+        return None
 
     def _check_current_user_rights(self, ctx: ScanContext) -> None:
         """Find objects over which the *authenticated account* holds dangerous

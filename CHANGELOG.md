@@ -10,6 +10,24 @@ banner and via `listdap.py --version`.
 
 ## [Unreleased]
 
+## [2.19.1] - 2026-11-16
+
+### Fixed (locale independence — found & validated on a French Windows Server 2025 DC)
+
+Privileged-group / sensitive-object identification must not depend on English
+display names (localized on non-English Windows, e.g. "Domain Admins" →
+"Admins du domaine"):
+
+- **acls module** — the "dangerous permissions on sensitive objects" check
+  hardcoded `CN=Domain Admins,CN=Users,…`, which does not exist on a localized DC,
+  so the Domain Admins ACL check was silently skipped. The privileged groups
+  (Domain Admins / Enterprise Admins / Administrators) are now resolved from their
+  **SID/RID via the `<SID=…>` DN**. Validated: a WriteDACL granted to a low-priv
+  user on `CN=Admins du domaine` is now reported.
+- **groups module** — **Protected Users** (RID 525) and **Remote Management Users**
+  (`S-1-5-32-580`) were matched by English name; they are now in the SID/RID
+  catalog, so they are detected regardless of locale.
+
 ## [2.19.0] - 2026-11-16
 
 ### Fixed / Changed (live validation against a Windows Server 2025 lab DC)
