@@ -141,6 +141,17 @@ class PoliciesModule(BaseModule):
                 "Password complexity disabled",
                 "Users may set simple dictionary passwords.",
             )
+        if pwd_props & 0x10:  # DOMAIN_PASSWORD_STORE_CLEARTEXT
+            from utils import exploit_cmds
+            ctx.quick_wins.add(
+                Severity.HIGH,
+                "Reversible password encryption enabled DOMAIN-WIDE",
+                "pwdProperties has DOMAIN_PASSWORD_STORE_CLEARTEXT (0x10) set, so "
+                "EVERY account stores its password reversibly (RC4 under the SYSKEY). "
+                "A DCSync / secretsdump then recovers CLEARTEXT passwords, not just NT "
+                "hashes (see the 'ClearText' section of the output).\n"
+                + exploit_cmds.dcsync(ctx),
+            )
 
     def _fgpp(self, ctx: ScanContext) -> None:
         out     = ctx.out

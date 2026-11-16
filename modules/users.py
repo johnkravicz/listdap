@@ -4,14 +4,31 @@ Users module — full user enumeration with pentest-relevant attributes.
 
 from modules.base import BaseModule, ScanContext
 from core.output import Severity, C
-from utils.ldap_helpers import get_attr, get_int, get_list
+from utils.ldap_helpers import get_attr, get_int, get_list, get_raw, get_dn
 from utils import exploit_cmds
 from utils.highlight import analyze_description, extract_credentials, HIGH as DESC_HIGH, MEDIUM as DESC_MEDIUM
+from utils.sids import bytes_to_sid
 from utils.uac import (
     uac_has, uac_summary,
     UAC_DISABLED, UAC_LOCKOUT, UAC_NO_PREAUTH, UAC_PASSWD_NOTREQD,
     UAC_NO_EXPIRE_PWD, UAC_TRUSTED_DELEG, UAC_TRUSTED_TO_AUTH, UAC_PWD_EXPIRED,
+    UAC_REVERSIBLE_PWD,
 )
+
+# AdminSDHolder-protected groups (SDProp stamps adminCount=1 on their transitive
+# members). Domain-relative RIDs + builtin SIDs. Used to tell a current admin
+# (legitimately adminCount=1) from an orphan whose privilege was removed.
+_PROT_DOMAIN_RIDS = {512, 516, 518, 519, 521}  # DA, DCs, Schema, EA, RODC
+_PROT_BUILTIN_SIDS = {
+    "S-1-5-32-544",  # Administrators
+    "S-1-5-32-548",  # Account Operators
+    "S-1-5-32-549",  # Server Operators
+    "S-1-5-32-550",  # Print Operators
+    "S-1-5-32-551",  # Backup Operators
+    "S-1-5-32-552",  # Replicator
+}
+# LDAP_MATCHING_RULE_IN_CHAIN — transitive (nested) group membership.
+_IN_CHAIN = "1.2.840.113556.1.4.1941"
 from utils.timestamp import filetime_to_str, days_since_filetime
 from utils.enctypes import enctypes_summary, weakness as enc_weakness, has_rc4, has_des
 
@@ -23,7 +40,7 @@ _ATTRS = [
     "userAccountControl", "memberOf",
     "lastLogonTimestamp", "pwdLastSet", "accountExpires",
     "servicePrincipalName", "description",
-    "adminCount", "whenCreated",
+    "adminCount", "whenCreated", "primaryGroupID",
     "msDS-SupportedEncryptionTypes",
     "msDS-KeyCredentialLink",
 ]
@@ -127,6 +144,7 @@ class UsersModule(BaseModule):
         admin_count     = []   # adminCount=1
         privileged      = []   # member of high-priv group
         shadow_creds    = []   # msDS-KeyCredentialLink set
+        reversible      = []   # ENCRYPTED_TEXT_PWD_ALLOWED (cleartext recoverable)
 
         inactive_days = getattr(ctx.args, "inactive_days", 90)
 
@@ -155,6 +173,8 @@ class UsersModule(BaseModule):
                 "raw_desc":    raw_desc,        # original, for credential extraction
                 "desc_sev":    desc_sev,        # HIGH / MEDIUM / LOW / None
                 "admin_count": get_int(entry, "adminCount"),
+                "primary_gid": get_int(entry, "primaryGroupID"),
+                "dn":          get_dn(entry),
                 "key_cred":    kc,
                 "extra_creds": self._scan_cred_attrs(entry),
                 "enc":         get_int(entry, "msDS-SupportedEncryptionTypes"),
@@ -191,6 +211,8 @@ class UsersModule(BaseModule):
                 privileged.append(user)
             if kc:
                 shadow_creds.append(user)
+            if uac_has(uac, UAC_REVERSIBLE_PWD):
+                reversible.append(user)
 
             # Last logon
             last_logon_val = user["last_logon"]
@@ -217,6 +239,7 @@ class UsersModule(BaseModule):
             "shadow creds":    len(shadow_creds),
             "secrets in attrs": len(attr_cred_users),
             "adminCount=1":    len(admin_count),
+            "reversible pwd":  len(reversible),
         })
 
         # --- Secrets found in attributes other than description ---
@@ -345,12 +368,13 @@ class UsersModule(BaseModule):
             out.table(["Username", "Last Logon", "Description"], rows,
                       highlight_fn=lambda r: _row_color(r[0]))
 
-        # --- adminCount=1 ---
+        # --- adminCount=1 + AdminSDHolder orphan detection ---
         if admin_count:
-            out.subsection("AdminSDHolder Protected (adminCount=1)")
-            rows = [[u["sam"], uac_summary(u["uac"]) or "-", u["description"]] for u in admin_count]
-            out.table(["Username", "UAC Flags", "Description"], rows,
-                      highlight_fn=lambda r: _row_color(r[0]))
+            self._report_admincount(ctx, admin_count)
+
+        # --- Reversible password encryption (cleartext recoverable) ---
+        if reversible:
+            self._report_reversible(ctx, reversible)
 
         # --- Weak Kerberos encryption (msDS-SupportedEncryptionTypes) ---
         self._report_enctypes(ctx, all_users, kerberoastable, asrep)
@@ -508,6 +532,108 @@ class UsersModule(BaseModule):
                         f"Sensitive data in {attr} — {sam}",
                         f"{attr}: {raw}",
                     )
+
+    # ---- Reversible password encryption -----------------------------------
+    @staticmethod
+    def _report_reversible(ctx: ScanContext, reversible: list) -> None:
+        out = ctx.out
+        out.subsection("Reversible Password Encryption (ENCRYPTED_TEXT_PWD_ALLOWED)")
+        rows = [[u["sam"], uac_summary(u["uac"]) or "-", u["description"]]
+                for u in reversible]
+        out.table(["Username", "UAC Flags", "Description"], rows, indent=4,
+                  highlight_fn=lambda r: C.RED)
+        names = ", ".join(u["sam"] for u in reversible)
+        ctx.quick_wins.add(
+            Severity.HIGH,
+            f"Reversible password encryption — {len(reversible)} account(s)",
+            "These accounts store their password reversibly (RC4 under the SYSKEY), "
+            "so a DCSync / secretsdump recovers the CLEARTEXT password, not just the "
+            "NT hash (look under the 'ClearText' / Kerberos-keys section):\n  "
+            + names + "\n" + exploit_cmds.dcsync(ctx),
+        )
+
+    # ---- AdminSDHolder orphans --------------------------------------------
+    def _report_admincount(self, ctx: ScanContext, admin_count: list) -> None:
+        out = ctx.out
+        out.subsection("AdminSDHolder Protected (adminCount=1)")
+
+        protected = self._protected_member_dns(ctx)   # set, or None if undetermined
+
+        def _is_protected(u) -> bool:
+            if u["primary_gid"] in _PROT_DOMAIN_RIDS:
+                return True
+            return protected is not None and u["dn"].lower() in protected
+
+        orphans, legit = [], []
+        for u in admin_count:
+            if u["sam"].lower() == "krbtgt":
+                legit.append(u)
+                continue
+            (legit if _is_protected(u) else orphans).append(u)
+
+        def _status(u) -> str:
+            if u["sam"].lower() == "krbtgt":
+                return "yes (krbtgt)"
+            if protected is None:
+                return "unknown"
+            return "ORPHAN" if u in orphans else "yes"
+
+        rows = [[u["sam"], _status(u), uac_summary(u["uac"]) or "-", u["description"]]
+                for u in admin_count]
+        out.table(["Username", "Still protected", "UAC Flags", "Description"], rows,
+                  indent=4,
+                  highlight_fn=lambda r: C.YELLOW if r[1] == "ORPHAN" else None)
+
+        if protected is None:
+            out.info("Could not resolve current protected-group membership "
+                     "(transitive query unavailable) — orphan detection skipped.")
+            return
+
+        if orphans:
+            ctx.quick_wins.add(
+                Severity.MEDIUM,
+                f"AdminSDHolder orphans — {len(orphans)} stale privileged account(s)",
+                "These carry adminCount=1 but are no longer a (transitive) member of "
+                "any protected group. They were privileged once → expect residual "
+                "access, a stale locked-down ACL (inheritance still disabled), or an "
+                "adminCount persistence marker. Review each:\n  "
+                + ", ".join(u["sam"] for u in orphans),
+            )
+
+    @staticmethod
+    def _protected_member_dns(ctx: ScanContext):
+        """Lowercased DNs of every (transitive) member of AdminSDHolder-protected
+        groups. Returns None when the membership can't be determined (so callers
+        skip orphan judgement rather than over-report)."""
+        groups = ctx.conn.search("(objectClass=group)", ["objectSid"])
+        if not groups:
+            return None
+        dsid = ctx.domain_sid
+        prot_dns = []
+        for g in groups:
+            raw = get_raw(g, "objectSid")
+            sid = bytes_to_sid(raw) if raw else ""
+            is_prot = sid in _PROT_BUILTIN_SIDS
+            if not is_prot and dsid and sid.startswith(dsid + "-"):
+                try:
+                    is_prot = int(sid[len(dsid) + 1:]) in _PROT_DOMAIN_RIDS
+                except ValueError:
+                    is_prot = False
+            if is_prot:
+                prot_dns.append(get_dn(g))
+        if not prot_dns:
+            return None
+
+        clause = "".join(f"(memberOf:{_IN_CHAIN}:={dn})" for dn in prot_dns)
+        res = ctx.conn.search(
+            f"(&(objectCategory=person)(objectClass=user)(|{clause}))",
+            ["distinguishedName"],
+        )
+        members = {get_dn(r).lower() for r in res if get_dn(r)}
+        # A domain always has at least Administrator protected; an empty result
+        # means the transitive-match query was unsupported/failed, not that no
+        # account is protected → signal 'undetermined'.
+        return members or None
 
     @staticmethod
     def _enc_cell(u: dict) -> str:

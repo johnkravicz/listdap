@@ -35,6 +35,7 @@ PENTEST_FLAGS = {
     0x00000002: ("disabled",              "ACCOUNT_DISABLED"),
     0x00000010: ("locked",                "ACCOUNT_LOCKED"),
     0x00000020: ("passwd_notreqd",        "PASSWD_NOTREQD"),
+    0x00000080: ("reversible_pwd",        "ENCRYPTED_TEXT_PWD_ALLOWED"),
     0x00010000: ("no_expire_pwd",         "DONT_EXPIRE_PASSWORD"),
     0x00040000: ("smartcard_required",    "SMARTCARD_REQUIRED"),
     0x00080000: ("unconstrained_deleg",   "TRUSTED_FOR_DELEGATION"),
@@ -65,6 +66,7 @@ def uac_has(value, flag: int) -> bool:
 UAC_DISABLED          = 0x00000002
 UAC_LOCKOUT           = 0x00000010
 UAC_PASSWD_NOTREQD    = 0x00000020
+UAC_REVERSIBLE_PWD    = 0x00000080   # ENCRYPTED_TEXT_PWD_ALLOWED (cleartext recoverable)
 UAC_NO_EXPIRE_PWD     = 0x00010000
 UAC_SMARTCARD         = 0x00040000
 UAC_TRUSTED_DELEG     = 0x00080000   # Unconstrained delegation
@@ -86,6 +88,7 @@ def uac_summary(value) -> str:
     if v & UAC_LOCKOUT:         parts.append("LOCKED")
     if v & UAC_NO_PREAUTH:      parts.append("NO_PREAUTH")
     if v & UAC_PASSWD_NOTREQD:  parts.append("PASSWD_NOTREQD")
+    if v & UAC_REVERSIBLE_PWD:  parts.append("REVERSIBLE_PWD")
     if v & UAC_NO_EXPIRE_PWD:   parts.append("NO_EXPIRE_PWD")
     if v & UAC_TRUSTED_DELEG:   parts.append("UNCONSTRAINED_DELEG")
     if v & UAC_TRUSTED_TO_AUTH: parts.append("CONSTRAINED_DELEG")

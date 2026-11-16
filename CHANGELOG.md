@@ -10,6 +10,35 @@ banner and via `listdap.py --version`.
 
 ## [Unreleased]
 
+## [2.16.0] - 2026-11-16
+
+### Added
+- **Reversible password encryption detection** (users + policies modules).
+  `ENCRYPTED_TEXT_PWD_ALLOWED` means the password is stored reversibly (RC4 under
+  the SYSKEY), so a DCSync / secretsdump recovers the **cleartext**, not just the
+  NT hash.
+  - users: a new "Reversible Password Encryption" subsection + **HIGH** Quick Win
+    for every account with UAC flag `0x80` (previously decoded but never surfaced);
+    the flag is also added to the UAC summary (`REVERSIBLE_PWD`).
+  - policies: the domain-wide `pwdProperties` bit `DOMAIN_PASSWORD_STORE_CLEARTEXT`
+    (0x10) → **HIGH** Quick Win (every account affected).
+- **AdminSDHolder orphan detection** (users module). The adminCount=1 list now
+  cross-checks **current** protected-group membership and flags orphans — accounts
+  that carry adminCount=1 but are no longer a (transitive) member of any protected
+  group:
+  - the protected-member set is resolved with the transitive membership matching
+    rule (`LDAP_MATCHING_RULE_IN_CHAIN`, 1.2.840.113556.1.4.1941) over the
+    AdminSDHolder-protected groups (by SID/RID), plus `primaryGroupID`;
+  - a non-protected adminCount=1 account → **MEDIUM** Quick Win (residual privilege
+    / stale locked ACL / adminCount persistence marker to review);
+  - detection is best-effort: if the transitive query is unavailable it is skipped
+    (no over-reporting) and the table marks membership `unknown`; `krbtgt` is
+    excluded.
+
+### Changed
+- The AdminSDHolder (adminCount=1) subsection gains a "Still protected" column
+  (yes / ORPHAN / unknown).
+
 ## [2.15.0] - 2026-11-16
 
 ### Added
