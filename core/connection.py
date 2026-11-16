@@ -25,6 +25,7 @@ FUNCTIONAL_LEVELS = {
     5: "Windows Server 2012",
     6: "Windows Server 2012 R2",
     7: "Windows Server 2016 / 2019 / 2022",
+    10: "Windows Server 2025",
 }
 
 

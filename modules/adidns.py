@@ -34,7 +34,7 @@ strongest create-child target (plant a catch-all `*`).
 from modules.base import BaseModule, ScanContext
 from core.output import Severity, C
 from utils.ldap_helpers import get_attr, get_list, get_raw, get_raw_all, get_dn, SCOPE_SUBTREE
-from utils.sids import resolve_sid, is_privileged_sid
+from utils.sids import resolve_sid, is_privileged_sid, is_high_value_sid, bytes_to_sid
 from utils.dnsrecord import parse_records
 from modules.acls import (
     _parse_dacl, GENERIC_ALL, GENERIC_WRITE, WRITE_DACL, WRITE_OWNER,
@@ -139,10 +139,30 @@ class ADIDNSModule(BaseModule):
         wild_nodes = [n for n in nodes if n["name"] == "*"]
         wild_zones = {n["zone"].lower() for n in wild_nodes}
 
+        # DNS-administrative groups legitimately hold write on every record/zone;
+        # exclude them so a real low-priv finding is not drowned (and a writable
+        # wildcard is not falsely escalated to CRITICAL via their default ACE).
+        dns_sids = self._dns_admin_sids(ctx)
+
         self._dump_records(ctx, nodes)
         self._report_wildcards(ctx, wild_nodes)
-        self._check_zone_create(ctx, zones, nodes, wild_zones)
-        self._check_record_dacls(ctx, nodes)
+        self._check_zone_create(ctx, zones, nodes, wild_zones, dns_sids)
+        self._check_record_dacls(ctx, nodes, dns_sids)
+
+    @staticmethod
+    def _dns_admin_sids(ctx: ScanContext) -> set:
+        """SIDs of the DNS-admin groups (write on DNS is expected / by design)."""
+        sids = set()
+        for name in ("DnsAdmins", "DnsUpdateProxy"):
+            try:
+                res = ctx.conn.search(f"(sAMAccountName={name})", ["objectSid"])
+            except Exception:
+                res = []
+            if res:
+                raw = get_raw(res[0], "objectSid")
+                if raw:
+                    sids.add(bytes_to_sid(raw))
+        return sids
 
     # ------------------------------------------------------------------ bases
     def _partitions(self, ctx: ScanContext) -> list[str]:
@@ -226,7 +246,7 @@ class ADIDNSModule(BaseModule):
 
     # ----------------------------------------------------------- zone spoof
     def _check_zone_create(self, ctx: ScanContext, zones: dict, nodes: list,
-                           wild_zones: set) -> None:
+                           wild_zones: set, dns_sids: set = frozenset()) -> None:
         out = ctx.out
         out.subsection("Zone Create-Child (record spoofing)")
         dsid = ctx.domain_sid
@@ -238,7 +258,8 @@ class ADIDNSModule(BaseModule):
             best = None
             for ace in _parse_dacl(z["sd"]):
                 sid = ace["sid"]
-                if sid in _SKIP_SIDS or is_privileged_sid(sid, dsid):
+                if (sid in _SKIP_SIDS or sid in dns_sids
+                        or is_privileged_sid(sid, dsid) or is_high_value_sid(sid, dsid)):
                     continue
                 mask = ace["mask"]
                 if mask & (CREATE_CHILD | GENERIC_ALL | GENERIC_WRITE):
@@ -301,7 +322,8 @@ class ADIDNSModule(BaseModule):
             )
 
     # ---------------------------------------------------- record overwrite
-    def _check_record_dacls(self, ctx: ScanContext, nodes: list) -> None:
+    def _check_record_dacls(self, ctx: ScanContext, nodes: list,
+                            dns_sids: set = frozenset()) -> None:
         out = ctx.out
         out.subsection("Writable existing records (hijack)")
         dsid = ctx.domain_sid
@@ -315,7 +337,8 @@ class ADIDNSModule(BaseModule):
             is_wild = n["name"] == "*"
             for ace in _parse_dacl(n["sd"]):
                 sid = ace["sid"]
-                if sid in _SKIP_SIDS or is_privileged_sid(sid, dsid):
+                if (sid in _SKIP_SIDS or sid in dns_sids
+                        or is_privileged_sid(sid, dsid) or is_high_value_sid(sid, dsid)):
                     continue
                 mask = ace["mask"]
                 if (mask & _WRITE_BITS) or (mask & FULL_CONTROL) == FULL_CONTROL:

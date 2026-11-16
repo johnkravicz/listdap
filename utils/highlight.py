@@ -211,7 +211,17 @@ def extract_credentials(desc: str) -> list[str]:
     for m in _HASH_RE.finditer(desc):
         _add(m.group(0))
 
-    return found
+    # Drop a candidate that is another candidate minus trailing punctuation
+    # (e.g. "Winter2026Backup" when "Winter2026Backup!" is also present) — the
+    # trailing symbol is usually part of the secret, so keep the longer form.
+    def _redundant(v):
+        for o in found:
+            if (o != v and o.startswith(v) and o[len(v):]
+                    and all(not c.isalnum() for c in o[len(v):])):
+                return True
+        return False
+
+    return [v for v in found if not _redundant(v)]
 
 
 def severity_color(sev: Optional[str]) -> Optional[str]:

@@ -10,6 +10,28 @@ banner and via `listdap.py --version`.
 
 ## [Unreleased]
 
+## [2.19.0] - 2026-11-16
+
+### Fixed / Changed (live validation against a Windows Server 2025 lab DC)
+
+Found while validating listdap end-to-end against a real `corp.lab` (Server 2025,
+DFL/FFL 2025) domain controller:
+
+- **Functional level 10 → "Windows Server 2025"** (core/connection.py). It was
+  shown as `Unknown (10)`; the FUNCTIONAL_LEVELS map now recognises level 10.
+- **ADIDNS writable-records noise** (adidns module). The "writable existing
+  records" and "zone create-child" checks treated **DNS-administrative groups**
+  (DnsAdmins / DnsUpdateProxy, resolved by name→SID) and **high-value groups**
+  (Key/Enterprise Key Admins etc., via `is_high_value_sid`) as non-privileged,
+  flooding the output with ~50 records those principals may write *by design* —
+  and falsely escalating a writable wildcard to CRITICAL through their default
+  ACE. They are now excluded, so only genuinely non-privileged write (e.g. a
+  low-priv user on a record) is reported.
+- **Duplicate cleartext-credential finding** (utils/highlight.py). A value and its
+  trailing-punctuation-stripped prefix were both emitted (`Winter2026Backup` +
+  `Winter2026Backup!`); `extract_credentials` now drops the shorter when the only
+  difference is trailing punctuation (keeps the fuller secret).
+
 ## [2.18.0] - 2026-11-16
 
 ### Added
