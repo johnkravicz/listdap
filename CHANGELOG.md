@@ -10,6 +10,26 @@ banner and via `listdap.py --version`.
 
 ## [Unreleased]
 
+## [2.14.0] - 2026-11-16
+
+### Added
+- **ADIDNS wildcard (`*`) detection** (adidns module). A `*` record answers every
+  otherwise-unresolved name in a zone, which changes how every other ADIDNS
+  finding should be read:
+  - **Wildcard inventory.** New "Wildcard records (*)" subsection lists any `*`
+    node and its value, with a MEDIUM Quick Win: a present wildcard already
+    catches missing-name / wpad queries (classic injection largely neutralised),
+    but whoever can overwrite it controls resolution of *all* unresolved names
+    (domain-wide MITM) — and its current target should be confirmed as expected.
+  - **Create-child messaging is now wildcard-aware.** When a zone has no `*`, the
+    spoofing Quick Win surfaces *planting a `*` catch-all* as the strongest option
+    (domain-wide, beyond wpad) with the ready `dnstool.py --record '*'` command;
+    when a `*` already exists, it says so and redirects to overwriting it instead
+    of planting a redundant missing-name record.
+  - **A writable wildcard is CRITICAL.** In the "writable records" check, an
+    overwritable `*` is escalated from HIGH to **CRITICAL** and annotated, since
+    it hijacks every unresolved name in the zone at once.
+
 ## [2.13.0] - 2026-11-15
 
 ### Added

