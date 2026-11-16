@@ -10,6 +10,28 @@ banner and via `listdap.py --version`.
 
 ## [Unreleased]
 
+## [2.17.0] - 2026-11-16
+
+### Added
+- **Foreign Security Principals module** (`fsp`) — cross-domain / forest members
+  of local groups, pure LDAP:
+  - enumerates `CN=ForeignSecurityPrincipals,<domain>` and keeps only real
+    external domain SIDs (`S-1-5-21-<other>-<rid>`), skipping the benign
+    well-known SIDs AD auto-seeds there and principals of this domain;
+  - for each foreign SID, resolves **transitive** group membership
+    (`LDAP_MATCHING_RULE_IN_CHAIN`) and classifies privilege via the groups
+    catalog → a foreign principal in a privileged group (directly or nested) is a
+    **CRITICAL/HIGH** cross-trust escalation / persistence path (compromise it in
+    its home domain → inherit the privilege here);
+  - resolves the **source trust** by matching the SID's domain against
+    `trustedDomain` `securityIdentifier`, labels the trust kind/direction, and
+    notes when SID filtering is OFF (additional SID-injection surface);
+  - lists **orphan / stale FSPs** (no current group membership) as INFO — residue
+    of a removed cross-domain grant / historical-access indicator.
+  - Registered after `sidhistory`. Reuses the groups privilege catalog and the
+    trusts SID-filtering helper.
+  - ⚠️ **NOT VALIDATED LIVE**: unit-tested against mocked records only.
+
 ## [2.16.0] - 2026-11-16
 
 ### Added
