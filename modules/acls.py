@@ -192,7 +192,9 @@ def _is_dangerous_ace(ace: dict, check_dcsync: bool = False) -> tuple:
         if guid in (GUID_DS_REPL_GET_CHANGES_ALL, GUID_DS_REPL_GET_CHANGES):
             return True, "DS-Replication-Get-Changes"
 
-    if mask & GENERIC_ALL:
+    # Full control: the generic bit OR the expanded specific-rights mask — a real
+    # GenericAll is often stored as 0x000F01FF, not the 0x10000000 generic bit.
+    if (mask & GENERIC_ALL) or (mask & FULL_CONTROL) == FULL_CONTROL:
         return True, "GenericAll"
     if mask & WRITE_DACL:
         return True, "WriteDACL"
@@ -200,6 +202,16 @@ def _is_dangerous_ace(ace: dict, check_dcsync: bool = False) -> tuple:
         return True, "WriteOwner"
     if mask & GENERIC_WRITE:
         return True, "GenericWrite"
+    # Expanded write-property. Only dangerous when it is write-ALL-properties
+    # (no specific property GUID — e.g. .NET "GenericWrite") or a dangerous
+    # property (member = add to the group). A specific benign property ACE (many
+    # default ACEs, e.g. Terminal Server License Servers) is NOT a finding.
+    if mask & RIGHT_DS_WRITE_PROP:
+        obj_ace = ace["type"] == ACE_ACCESS_ALLOWED_OBJECT
+        if not obj_ace or not guid:
+            return True, "WriteAllProperties"
+        if guid == GUID_MEMBER:
+            return True, "Write member"
 
     return False, ""
 
@@ -432,12 +444,14 @@ class ACLsModule(BaseModule):
                 out.table(
                     ["Principal", "SID", "Permission"],
                     rows,
-                    highlight_fn=lambda r: C.RED if r[2] in ("GenericAll", "WriteDACL") else C.YELLOW,
+                    highlight_fn=lambda r: C.RED if r[2] in (
+                        "GenericAll", "WriteDACL", "Write member") else C.YELLOW,
                     indent=8,
                 )
                 for name, sid, reason in findings:
                     ctx.quick_wins.add(
-                        Severity.CRITICAL if reason in ("GenericAll", "WriteDACL", "WriteOwner")
+                        Severity.CRITICAL if reason in (
+                            "GenericAll", "WriteDACL", "WriteOwner", "Write member")
                         else Severity.HIGH,
                         f"{reason} on {label} — {name}",
                         f"SID: {sid}\n"

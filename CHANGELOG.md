@@ -10,6 +10,21 @@ banner and via `listdap.py --version`.
 
 ## [Unreleased]
 
+## [2.19.2] - 2026-11-16
+
+### Fixed (live validation)
+
+- **acls — sensitive-object check missed expanded masks** (`_is_dangerous_ace`).
+  It only matched the generic bits (GENERIC_ALL 0x10000000 / GENERIC_WRITE
+  0x40000000 / WriteDacl / WriteOwner), so a real **GenericAll stored as the
+  expanded specific-rights mask** (0x000F01FF) on a sensitive object (e.g. Domain
+  Admins) was **not flagged**. It now also matches the expanded FULL_CONTROL mask
+  (→ GenericAll), write-ALL-properties (no specific GUID → WriteAllProperties) and
+  `Write member` (→ CRITICAL), while still ignoring benign specific-property ACEs
+  (e.g. the default Terminal Server License Servers ACE) to avoid noise — mirroring
+  `_classify_control`. Validated: a GenericAll (0x000F01FF) ACE on Domain Admins is
+  now reported CRITICAL; default WriteProperty ACEs are not.
+
 ## [2.19.1] - 2026-11-16
 
 ### Fixed (locale independence — found & validated on a French Windows Server 2025 DC)
