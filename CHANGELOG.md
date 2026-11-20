@@ -10,6 +10,30 @@ banner and via `listdap.py --version`.
 
 ## [Unreleased]
 
+## [2.23.0] - 2026-11-20
+
+### Fixed
+
+- **DENY ACEs are now honoured in DACL analysis (acls module)** — fixes a
+  **false-positive** class. The DACL parser previously parsed only
+  `ACCESS_ALLOWED`/`ACCESS_ALLOWED_OBJECT` ACEs and ignored
+  `ACCESS_DENIED`/`ACCESS_DENIED_OBJECT`, so a dangerous right (GenericAll,
+  WriteDACL, DCSync, Write-KeyCredentialLink, …) was reported even when an
+  explicit DENY on the same trustee revoked it.
+  - `_parse_dacl` now also returns DENY ACEs (incl. the object form `0x06`).
+  - New **effective-access engine** (`_effective_access`): per object it
+    collapses ALLOW and DENY ACEs for a trustee set into the rights actually
+    held (DENY wins). All three checks now decide on effective access rather
+    than a lone ALLOW: DCSync rights, dangerous permissions on sensitive
+    objects, and outbound control held by the current account.
+  - Scope/limits (documented): DENY is matched on the resolved trustee SIDs,
+    not on implicit broad groups a principal only transitively belongs to
+    (Everyone / Authenticated Users), and not on non-canonical ALLOW-before-DENY
+    ordering (AD rewrites DACLs to canonical order on write).
+  - Validated with crafted binary security descriptors (ALLOW+DENY of the same
+    right → no finding; ALLOW-only → finding kept) and live against the lab DC
+    (no regression on genuine findings).
+
 ## [2.22.0] - 2026-11-20
 
 ### Changed

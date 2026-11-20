@@ -12,7 +12,7 @@ Checks:
 """
 
 import struct
-from typing import Optional
+from dataclasses import dataclass, field
 from modules.base import BaseModule, ScanContext
 from core.output import Severity, C
 from utils.ldap_helpers import get_attr, get_list, get_raw, get_dn, SCOPE_BASE
@@ -62,6 +62,7 @@ DANGEROUS_WRITE_GUIDS = {
 ACE_ACCESS_ALLOWED          = 0x00
 ACE_ACCESS_ALLOWED_OBJECT   = 0x05
 ACE_ACCESS_DENIED           = 0x01
+ACE_ACCESS_DENIED_OBJECT    = 0x06
 
 # Well-known low-privilege SIDs to skip in output
 _SKIP_SIDS = {
@@ -105,10 +106,16 @@ def _parse_sid_from_ace(data: bytes, offset: int) -> tuple:
     return sid, size
 
 
-def _parse_dacl(raw_sd: bytes) -> list:
+def _parse_dacl(raw_sd: bytes, include_deny: bool = False) -> list:
     """
     Parse a Windows Security Descriptor (binary) and extract ACEs from DACL.
     Returns list of dicts: {type, mask, sid, object_type_guid}
+
+    By default only ALLOW ACEs are returned (the long-standing contract relied
+    on by every caller that reads ``ace["mask"]`` as a grant: gpo, adidns, adcs,
+    gmsa). Pass ``include_deny=True`` to also get DENY ACEs — only the
+    effective-access engine in this module (``_effective_access``), which
+    distinguishes the two, asks for them.
     """
     aces = []
     if not raw_sd or len(raw_sd) < 20:
@@ -147,7 +154,10 @@ def _parse_dacl(raw_sd: bytes) -> list:
         ace_data = raw_sd[pos:pos + ace_size]
         pos += ace_size
 
-        if ace_type not in (ACE_ACCESS_ALLOWED, ACE_ACCESS_ALLOWED_OBJECT):
+        if ace_type not in (ACE_ACCESS_ALLOWED, ACE_ACCESS_ALLOWED_OBJECT,
+                             ACE_ACCESS_DENIED, ACE_ACCESS_DENIED_OBJECT):
+            continue
+        if not include_deny and ace_type in (ACE_ACCESS_DENIED, ACE_ACCESS_DENIED_OBJECT):
             continue
         if len(ace_data) < 8:
             continue
@@ -155,7 +165,7 @@ def _parse_dacl(raw_sd: bytes) -> list:
         mask = struct.unpack_from("<I", ace_data, 4)[0]
 
         object_type_guid = ""
-        if ace_type == ACE_ACCESS_ALLOWED_OBJECT:
+        if ace_type in (ACE_ACCESS_ALLOWED_OBJECT, ACE_ACCESS_DENIED_OBJECT):
             # Object ACE: flags(4) + optional object_type(16) + optional inherited_type(16) + SID
             if len(ace_data) < 12:
                 continue
@@ -181,92 +191,176 @@ def _parse_dacl(raw_sd: bytes) -> list:
     return aces
 
 
-def _is_dangerous_ace(ace: dict, check_dcsync: bool = False) -> tuple:
-    """
-    Returns (is_dangerous, reason) for a given ACE.
-    """
-    mask = ace["mask"]
-    guid = ace["object_type_guid"].lower()
+def _is_allow(ace: dict) -> bool:
+    return ace["type"] in (ACE_ACCESS_ALLOWED, ACE_ACCESS_ALLOWED_OBJECT)
 
-    if check_dcsync:
-        if guid in (GUID_DS_REPL_GET_CHANGES_ALL, GUID_DS_REPL_GET_CHANGES):
-            return True, "DS-Replication-Get-Changes"
 
-    # Full control: the generic bit OR the expanded specific-rights mask — a real
-    # GenericAll is often stored as 0x000F01FF, not the 0x10000000 generic bit.
-    if (mask & GENERIC_ALL) or (mask & FULL_CONTROL) == FULL_CONTROL:
+def _is_deny(ace: dict) -> bool:
+    return ace["type"] in (ACE_ACCESS_DENIED, ACE_ACCESS_DENIED_OBJECT)
+
+
+def _covers_full(mask: int) -> bool:
+    """A mask that amounts to full control (the generic bit or the expanded
+    specific-rights mask 0x000F01FF — a real GenericAll is often stored as the
+    latter, not the 0x10000000 generic bit)."""
+    return bool(mask & GENERIC_ALL) or (mask & FULL_CONTROL) == FULL_CONTROL
+
+
+@dataclass
+class _Eff:
+    """Effective access a set of trustees holds over one object, after ALLOW and
+    DENY ACEs have been collapsed."""
+    mask:         int  = 0       # effective general-right mask (GenericAll/WriteDACL/…)
+    access_guids: set  = field(default_factory=set)  # extended rights granted (by GUID)
+    write_guids:  set  = field(default_factory=set)  # write-property granted (by GUID)
+    self_guids:   set  = field(default_factory=set)  # validated writes granted (by GUID)
+    all_access:   bool = False   # all-extended-rights granted (CONTROL_ACCESS, no GUID)
+    all_write:    bool = False   # write-all-properties granted (WRITE_PROP, no GUID)
+    src:          dict = field(default_factory=dict)  # right-key → granting trustee SID
+
+
+def _effective_access(aces: list, trustees: set) -> "_Eff":
+    """Collapse an ordered ACE list into the access the given trustee SIDs
+    effectively hold, honouring ACCESS_DENIED[_OBJECT] ACEs.
+
+    Model: a right is granted iff an ALLOW ACE for a trustee grants it AND no
+    DENY ACE for a trustee in the same set revokes it (DENY wins). This fixes
+    the false positive where a lone ALLOW is reported even though a DENY on the
+    same principal removes the right. Scope/limit: DENY is matched on the
+    trustee SIDs we are given — not on implicit broad groups a principal only
+    *transitively* belongs to (Everyone / Authenticated Users), nor on
+    non-canonical ALLOW-before-DENY ordering (AD rewrites DACLs to canonical).
+    """
+    allow_general = deny_general = 0
+    a_access, a_write, a_self = set(), set(), set()
+    d_access, d_write, d_self = set(), set(), set()
+    a_all_access = a_all_write = d_all_access = d_all_write = False
+    src: dict = {}
+    GEN_BITS = GENERIC_ALL | GENERIC_WRITE | WRITE_DACL | WRITE_OWNER
+
+    for ace in aces:
+        if ace["sid"] not in trustees:
+            continue
+        mask = ace["mask"]
+        guid = ace["object_type_guid"].lower()
+        deny = _is_deny(ace)
+        obj  = ace["type"] in (ACE_ACCESS_ALLOWED_OBJECT, ACE_ACCESS_DENIED_OBJECT)
+
+        if obj and guid:
+            # Object ACE: the right bit(s) apply to this GUID only.
+            if deny:
+                if mask & RIGHT_DS_CONTROL_ACCESS: d_access.add(guid)
+                if mask & RIGHT_DS_WRITE_PROP:     d_write.add(guid)
+                if mask & RIGHT_DS_SELF:           d_self.add(guid)
+            else:
+                if mask & RIGHT_DS_CONTROL_ACCESS: a_access.add(guid); src.setdefault(guid, ace["sid"])
+                if mask & RIGHT_DS_WRITE_PROP:     a_write.add(guid);  src.setdefault(guid, ace["sid"])
+                if mask & RIGHT_DS_SELF:           a_self.add(guid);   src.setdefault(guid, ace["sid"])
+            # Any general bits carried alongside the GUID still apply generally.
+            general = mask & GEN_BITS
+            if general:
+                if deny:
+                    deny_general |= general
+                else:
+                    allow_general |= general
+                    src.setdefault("general", ace["sid"])
+        else:
+            # Non-object ACE (or object ACE with no ObjectType): applies to all.
+            if deny:
+                deny_general |= mask
+                if mask & RIGHT_DS_CONTROL_ACCESS: d_all_access = True
+                if mask & RIGHT_DS_WRITE_PROP:     d_all_write = True
+            else:
+                allow_general |= mask
+                if mask & GEN_BITS:
+                    src.setdefault("general", ace["sid"])
+                if mask & RIGHT_DS_CONTROL_ACCESS:
+                    a_all_access = True; src.setdefault("all_access", ace["sid"])
+                if mask & RIGHT_DS_WRITE_PROP:
+                    a_all_write = True;  src.setdefault("all_write", ace["sid"])
+
+    deny_full = _covers_full(deny_general)
+
+    def _ok(g: str, allow_set: set, deny_set: set, deny_all: bool) -> bool:
+        return (not deny_full) and (not deny_all) and (g not in deny_set) and (g in allow_set)
+
+    return _Eff(
+        mask         = 0 if deny_full else (allow_general & ~deny_general),
+        access_guids = {g for g in a_access if _ok(g, a_access, d_access, d_all_access)},
+        write_guids  = {g for g in a_write  if _ok(g, a_write,  d_write,  d_all_write)},
+        self_guids   = {g for g in a_self   if _ok(g, a_self,   d_self,   False)},
+        all_access   = a_all_access and not deny_full and not d_all_access,
+        all_write    = a_all_write  and not deny_full and not d_all_write,
+        src          = src,
+    )
+
+
+def _effective_danger(eff: "_Eff", check_dcsync: bool = False) -> tuple:
+    """Single most-significant dangerous right in effective access (DENY-aware).
+    Mirrors the old per-ACE _is_dangerous_ace contract: (is_dangerous, reason)."""
+    if check_dcsync and (GUID_DS_REPL_GET_CHANGES in eff.access_guids
+                         or GUID_DS_REPL_GET_CHANGES_ALL in eff.access_guids):
+        return True, "DS-Replication-Get-Changes"
+    if _covers_full(eff.mask):
         return True, "GenericAll"
-    if mask & WRITE_DACL:
+    if eff.mask & WRITE_DACL:
         return True, "WriteDACL"
-    if mask & WRITE_OWNER:
+    if eff.mask & WRITE_OWNER:
         return True, "WriteOwner"
-    if mask & GENERIC_WRITE:
+    if eff.mask & GENERIC_WRITE:
         return True, "GenericWrite"
-    # Expanded write-property. Only dangerous when it is write-ALL-properties
-    # (no specific property GUID — e.g. .NET "GenericWrite") or a dangerous
-    # property (member = add to the group). A specific benign property ACE (many
-    # default ACEs, e.g. Terminal Server License Servers) is NOT a finding.
-    if mask & RIGHT_DS_WRITE_PROP:
-        obj_ace = ace["type"] == ACE_ACCESS_ALLOWED_OBJECT
-        if not obj_ace or not guid:
-            return True, "WriteAllProperties"
-        if guid == GUID_MEMBER:
-            return True, "Write member"
-
+    # Write-ALL-properties (no specific GUID) or a dangerous property (member).
+    # A specific benign property write (many default ACEs) is NOT a finding.
+    if eff.all_write:
+        return True, "WriteAllProperties"
+    if GUID_MEMBER in eff.write_guids:
+        return True, "Write member"
     return False, ""
 
 
-def _classify_control(ace: dict) -> Optional[tuple]:
-    """Classify a dangerous right the ACE's trustee holds over the object.
+def _control_from_effective(eff: "_Eff") -> list:
+    """Every dangerous right the effective access grants, as a list of
+    (right_label, severity, impact, granting_sid). DENY-aware; recognises the
+    expanded full-control mask and targeted write/extended rights."""
+    g = eff.src
+    if _covers_full(eff.mask):
+        return [("GenericAll", "CRITICAL", "full control over the object", g.get("general"))]
 
-    Returns (right_label, severity, impact) or None. Unlike _is_dangerous_ace
-    this also recognises the expanded full-control mask (0x000F01FF) and
-    targeted write/extended rights (KeyCredentialLink, SPN, member, force
-    password reset…). Severity is the string "CRITICAL" or "HIGH".
-    """
-    mask    = ace["mask"]
-    guid    = ace["object_type_guid"].lower()
-    obj_ace = ace["type"] == ACE_ACCESS_ALLOWED_OBJECT
-
-    # Full control (generic bit OR the expanded specific-rights mask)
-    if (mask & GENERIC_ALL) or (mask & FULL_CONTROL) == FULL_CONTROL:
-        return ("GenericAll", "CRITICAL", "full control over the object")
-    if mask & WRITE_DACL:
-        return ("WriteDACL", "CRITICAL", "rewrite the DACL → grant self full control")
-    if mask & WRITE_OWNER:
-        return ("WriteOwner", "CRITICAL", "take ownership → then rewrite the DACL")
-    if mask & GENERIC_WRITE:
-        return ("GenericWrite", "HIGH", "write any attribute of the object")
+    res = []
+    if eff.mask & WRITE_DACL:
+        res.append(("WriteDACL", "CRITICAL", "rewrite the DACL → grant self full control", g.get("general")))
+    if eff.mask & WRITE_OWNER:
+        res.append(("WriteOwner", "CRITICAL", "take ownership → then rewrite the DACL", g.get("general")))
+    if eff.mask & GENERIC_WRITE:
+        res.append(("GenericWrite", "HIGH", "write any attribute of the object", g.get("general")))
 
     # Targeted write-property
-    if mask & RIGHT_DS_WRITE_PROP:
-        if not obj_ace or not guid:
-            return ("WriteAllProperties", "HIGH", "write any attribute of the object")
-        if guid == GUID_KEY_CREDENTIAL_LINK:
-            return ("Write msDS-KeyCredentialLink", "CRITICAL", "Shadow Credentials → recover NT hash")
-        if guid == GUID_ALLOWED_TO_ACT:
-            return ("Write msDS-AllowedToActOnBehalfOfOtherIdentity", "CRITICAL", "RBCD → impersonate")
-        if guid == GUID_SPN:
-            return ("Write servicePrincipalName", "HIGH", "targeted Kerberoast")
-        if guid == GUID_MEMBER:
-            return ("Write member", "CRITICAL", "add members to the group")
-        return None
+    if eff.all_write:
+        res.append(("WriteAllProperties", "HIGH", "write any attribute of the object", g.get("all_write")))
+    else:
+        if GUID_KEY_CREDENTIAL_LINK in eff.write_guids:
+            res.append(("Write msDS-KeyCredentialLink", "CRITICAL", "Shadow Credentials → recover NT hash", g.get(GUID_KEY_CREDENTIAL_LINK)))
+        if GUID_ALLOWED_TO_ACT in eff.write_guids:
+            res.append(("Write msDS-AllowedToActOnBehalfOfOtherIdentity", "CRITICAL", "RBCD → impersonate", g.get(GUID_ALLOWED_TO_ACT)))
+        if GUID_SPN in eff.write_guids:
+            res.append(("Write servicePrincipalName", "HIGH", "targeted Kerberoast", g.get(GUID_SPN)))
+        if GUID_MEMBER in eff.write_guids:
+            res.append(("Write member", "CRITICAL", "add members to the group", g.get(GUID_MEMBER)))
 
     # Validated write: self-membership
-    if (mask & RIGHT_DS_SELF) and guid == GUID_MEMBER:
-        return ("Self-Membership", "HIGH", "add yourself to the group")
+    if GUID_MEMBER in eff.self_guids:
+        res.append(("Self-Membership", "HIGH", "add yourself to the group", g.get(GUID_MEMBER)))
 
     # Extended / control-access rights
-    if mask & RIGHT_DS_CONTROL_ACCESS:
-        if guid == GUID_FORCE_CHANGE_PASSWORD:
-            return ("ForceChangePassword", "CRITICAL", "reset the account's password")
-        if guid in (GUID_DS_REPL_GET_CHANGES, GUID_DS_REPL_GET_CHANGES_ALL):
-            return ("DS-Replication-Get-Changes", "CRITICAL", "DCSync")
-        if not guid:
-            return ("AllExtendedRights", "CRITICAL", "incl. ForceChangePassword / DCSync")
-        return None
-
-    return None
+    if eff.all_access:
+        res.append(("AllExtendedRights", "CRITICAL", "incl. ForceChangePassword / DCSync", g.get("all_access")))
+    else:
+        if GUID_FORCE_CHANGE_PASSWORD in eff.access_guids:
+            res.append(("ForceChangePassword", "CRITICAL", "reset the account's password", g.get(GUID_FORCE_CHANGE_PASSWORD)))
+        if GUID_DS_REPL_GET_CHANGES in eff.access_guids or GUID_DS_REPL_GET_CHANGES_ALL in eff.access_guids:
+            res.append(("DS-Replication-Get-Changes", "CRITICAL", "DCSync",
+                        g.get(GUID_DS_REPL_GET_CHANGES) or g.get(GUID_DS_REPL_GET_CHANGES_ALL)))
+    return res
 
 
 # Most-specific → least-specific object class for labelling a target.
@@ -325,29 +419,25 @@ class ACLsModule(BaseModule):
             out.warning("Could not parse domain object security descriptor")
             return
 
-        aces = _parse_dacl(raw_sd)
+        aces = _parse_dacl(raw_sd, include_deny=True)
         domain_sid = ctx.domain_sid
 
-        # Track per-SID which replication rights are granted
-        repl_rights: dict[str, set] = {}
-        for ace in aces:
-            sid  = ace["sid"]
-            if sid in _SKIP_SIDS:
+        # Effective replication rights per principal, honouring DENY ACEs: an
+        # ALLOW GetChanges[-All] that a DENY on the same trustee revokes is NOT
+        # a finding (_effective_access collapses ALLOW/DENY per trustee).
+        candidates = {a["sid"] for a in aces if _is_allow(a) and a["sid"] not in _SKIP_SIDS}
+        for sid in candidates:
+            eff = _effective_access(aces, {sid})
+            has_all   = GUID_DS_REPL_GET_CHANGES_ALL in eff.access_guids
+            has_basic = GUID_DS_REPL_GET_CHANGES in eff.access_guids
+            if not (has_all or has_basic):
                 continue
-            guid = ace["object_type_guid"].lower()
-            if guid in (GUID_DS_REPL_GET_CHANGES, GUID_DS_REPL_GET_CHANGES_ALL,
-                        GUID_DS_REPL_GET_CHANGES_IN_FILTERED_SET):
-                repl_rights.setdefault(sid, set()).add(guid)
-
-        for sid, rights in repl_rights.items():
             name = resolve_sid(sid, domain_sid)
-            has_all   = GUID_DS_REPL_GET_CHANGES_ALL in rights
-            has_basic = GUID_DS_REPL_GET_CHANGES in rights
             if has_all and has_basic:
                 dcsync_accounts.append((name, sid, "FULL DCSync (GetChanges + GetChangesAll)"))
             elif has_all:
                 dcsync_accounts.append((name, sid, "GetChangesAll"))
-            elif has_basic:
+            else:
                 dcsync_accounts.append((name, sid, "GetChanges only"))
 
         # Filter out already-privileged principals: DA/EA/DCs AND
@@ -421,18 +511,18 @@ class ACLsModule(BaseModule):
             if not raw_sd:
                 continue
 
-            aces = _parse_dacl(raw_sd)
+            aces = _parse_dacl(raw_sd, include_deny=True)
             findings = []
 
-            for ace in aces:
-                sid = ace["sid"]
-                if sid in _SKIP_SIDS:
-                    continue
+            # Evaluate each non-privileged trustee's EFFECTIVE access (DENY-aware),
+            # so a DENY revoking an ALLOW on the same principal is not a finding.
+            candidates = {a["sid"] for a in aces if _is_allow(a) and a["sid"] not in _SKIP_SIDS}
+            for sid in candidates:
                 # Skip already-privileged principals (DA/EA/DCs/Administrators…).
                 if is_privileged_sid(sid, domain_sid):
                     continue
-
-                dangerous, reason = _is_dangerous_ace(ace)
+                eff = _effective_access(aces, {sid})
+                dangerous, reason = _effective_danger(eff)
                 if dangerous:
                     name = resolve_sid(sid, domain_sid)
                     findings.append((name, sid, reason))
@@ -503,7 +593,7 @@ class ACLsModule(BaseModule):
             base=ctx.base_dn,
         )
 
-        # (target, type, right, severity, impact) — dedup on (target, right)
+        # (target, type, right, severity, impact, sid) — dedup on (target, right)
         seen: set = set()
         findings: list = []
         for rec in entries:
@@ -512,18 +602,15 @@ class ACLsModule(BaseModule):
                 continue
             target = get_attr(rec, "sAMAccountName") or get_dn(rec)
             tclass = _obj_class(rec)
-            for ace in _parse_dacl(raw_sd):
-                if ace["sid"] not in match:
-                    continue
-                res = _classify_control(ace)
-                if not res:
-                    continue
-                right, sev, impact = res
+            # Effective rights the current token holds over this object, with any
+            # DENY ACE targeting the same token SIDs subtracted from the grant.
+            eff = _effective_access(_parse_dacl(raw_sd, include_deny=True), match)
+            for right, sev, impact, gsid in _control_from_effective(eff):
                 key = (target.lower(), right)
                 if key in seen:
                     continue
                 seen.add(key)
-                findings.append((target, tclass, right, sev, impact, ace["sid"]))
+                findings.append((target, tclass, right, sev, impact, gsid))
 
         if not findings:
             out.success("Current account holds no dangerous rights over other objects")
@@ -533,7 +620,7 @@ class ACLsModule(BaseModule):
         order = {"CRITICAL": 0, "HIGH": 1}
         findings.sort(key=lambda f: (order.get(f[3], 2), f[0].lower()))
 
-        rows = [[t, tc, right, resolve_sid(sid, domain_sid), impact]
+        rows = [[t, tc, right, (resolve_sid(sid, domain_sid) if sid else "—"), impact]
                 for t, tc, right, sev, impact, sid in findings]
         out.table(
             ["Target", "Type", "Right", "Granted via", "Impact"],
