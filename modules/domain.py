@@ -169,12 +169,24 @@ class DomainModule(BaseModule):
 
     @staticmethod
     def _guess_role(dn: str, base_dn: str, schema_dn: str, config_dn: str) -> str:
-        dn_l = dn.lower()
-        if base_dn and dn_l == base_dn.lower():
-            return "PDC Emulator / RID Master"  # simplified
-        if "ridmanager" in dn_l:
+        """Map a domain-partition object holding fSMORoleOwner to its role.
+
+        The three domain-NC roles live on distinct objects — PDC Emulator on the
+        domain head, RID Master on ``CN=RID Manager$,CN=System``, Infrastructure
+        Master on ``CN=Infrastructure`` — so they must NOT be conflated. Matching
+        is exact/base-relative: the old ``"ridmanager" in dn`` never matched the
+        real ``CN=RID Manager$`` object (note the space), so the RID Master was
+        silently dropped and the domain head was mislabelled as holding both; and
+        a loose ``"infrastructure" in dn`` also matches the DNS application
+        partitions' own Infrastructure objects (false extra rows).
+        """
+        dn_l = (dn or "").lower()
+        b    = (base_dn or "").lower()
+        if b and dn_l == b:
+            return "PDC Emulator"
+        if b and dn_l == f"cn=rid manager$,cn=system,{b}":
             return "RID Master"
-        if "infrastructure" in dn_l:
+        if b and dn_l == f"cn=infrastructure,{b}":
             return "Infrastructure Master"
         return ""
 

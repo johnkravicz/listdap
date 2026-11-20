@@ -343,6 +343,9 @@ class UsersModule(BaseModule):
         # --- Inactive accounts ---
         if inactive or never_logged:
             out.subsection(f"Inactive / Never Logged-in (>{inactive_days} days)")
+            out.info("  Note: lastLogonTimestamp is replicated lazily (lags up to "
+                     "~14 days) — a recently-active account may appear here; confirm "
+                     "before acting on individual accounts.")
             combined = never_logged + [u for u in inactive if u not in never_logged]
             rows = []
             for u in combined[:30]:  # cap display to 30

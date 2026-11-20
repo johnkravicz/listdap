@@ -64,6 +64,24 @@ ACE_ACCESS_ALLOWED_OBJECT   = 0x05
 ACE_ACCESS_DENIED           = 0x01
 ACE_ACCESS_DENIED_OBJECT    = 0x06
 
+# Conditional (callback) ACE types — same binary layout (Mask/Flags/GUID/SID) as
+# their non-callback base type, followed by a trailing conditional-expression
+# blob we do not evaluate. Normalised to the base type on parse; the ACE is then
+# tagged conditional=True so the effective-access engine can stay detection-safe.
+ACE_ACCESS_ALLOWED_CALLBACK         = 0x09
+ACE_ACCESS_DENIED_CALLBACK          = 0x0A
+ACE_ACCESS_ALLOWED_CALLBACK_OBJECT  = 0x0B
+ACE_ACCESS_DENIED_CALLBACK_OBJECT   = 0x0C
+_CALLBACK_TO_BASE = {
+    ACE_ACCESS_ALLOWED_CALLBACK:        ACE_ACCESS_ALLOWED,
+    ACE_ACCESS_DENIED_CALLBACK:         ACE_ACCESS_DENIED,
+    ACE_ACCESS_ALLOWED_CALLBACK_OBJECT: ACE_ACCESS_ALLOWED_OBJECT,
+    ACE_ACCESS_DENIED_CALLBACK_OBJECT:  ACE_ACCESS_DENIED_OBJECT,
+}
+
+# ACE header flags
+INHERIT_ONLY_ACE            = 0x08   # ACE applies to children only, NOT this object
+
 # Well-known low-privilege SIDs to skip in output
 _SKIP_SIDS = {
     "S-1-1-0",       # Everyone
@@ -154,10 +172,19 @@ def _parse_dacl(raw_sd: bytes, include_deny: bool = False) -> list:
         ace_data = raw_sd[pos:pos + ace_size]
         pos += ace_size
 
+        # Normalise conditional (callback) ACEs to their base type; they carry the
+        # same Mask/Flags/GUID/SID layout, so everything below is identical.
+        conditional = ace_type in _CALLBACK_TO_BASE
+        ace_type = _CALLBACK_TO_BASE.get(ace_type, ace_type)
+
         if ace_type not in (ACE_ACCESS_ALLOWED, ACE_ACCESS_ALLOWED_OBJECT,
                              ACE_ACCESS_DENIED, ACE_ACCESS_DENIED_OBJECT):
             continue
         if not include_deny and ace_type in (ACE_ACCESS_DENIED, ACE_ACCESS_DENIED_OBJECT):
+            continue
+        # INHERIT_ONLY ACEs are a template for child objects and grant NO access
+        # on this object itself — counting them is a false positive.
+        if ace_flags & INHERIT_ONLY_ACE:
             continue
         if len(ace_data) < 8:
             continue
@@ -186,6 +213,7 @@ def _parse_dacl(raw_sd: bytes, include_deny: bool = False) -> list:
                 "mask":             mask,
                 "sid":              sid,
                 "object_type_guid": object_type_guid,
+                "conditional":      conditional,
             })
 
     return aces
@@ -241,9 +269,15 @@ def _effective_access(aces: list, trustees: set) -> "_Eff":
     for ace in aces:
         if ace["sid"] not in trustees:
             continue
+        deny = _is_deny(ace)
+        # A conditional (callback) DENY only denies when its expression evaluates
+        # true — which we do not evaluate. Letting it suppress a grant would hide
+        # a real path (false negative), so we ignore conditional DENYs. Conditional
+        # ALLOWs are kept: they surface a potential grant worth reporting.
+        if deny and ace.get("conditional"):
+            continue
         mask = ace["mask"]
         guid = ace["object_type_guid"].lower()
-        deny = _is_deny(ace)
         obj  = ace["type"] in (ACE_ACCESS_ALLOWED_OBJECT, ACE_ACCESS_DENIED_OBJECT)
 
         if obj and guid:

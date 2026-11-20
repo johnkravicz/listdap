@@ -10,6 +10,41 @@ banner and via `listdap.py --version`.
 
 ## [Unreleased]
 
+## [2.25.0] - 2026-11-20
+
+### Fixed
+
+- **INHERIT_ONLY ACEs no longer counted as access on the object (acls module)**
+  — fixes a **false positive**. The DACL parser ignored the ACE header flags, so
+  an `INHERIT_ONLY` ACE (which is a template for child objects and grants no
+  access on the object itself) was reported as a dangerous right. `_parse_dacl`
+  now skips `INHERIT_ONLY_ACE` (0x08); inherited ACEs without that flag (0x10)
+  still correctly apply. Benefits every DACL consumer (acls, gpo, adidns, adcs,
+  gmsa).
+- **Conditional (callback) ACEs are now parsed (acls module)** — fixes a
+  **false negative**. `ACCESS_ALLOWED/DENIED_CALLBACK[_OBJECT]` (0x09/0x0A/0x0B/
+  0x0C) were dropped entirely, so a real conditional grant was invisible. They
+  share the base-type binary layout, so they are normalised to the base type and
+  tagged `conditional`. Detection-safe handling: a conditional ALLOW surfaces as
+  a potential grant, while a conditional DENY does **not** suppress a finding
+  (its expression is not evaluated, so assuming it denies could hide a real path).
+  The trailing conditional expression itself is not evaluated (documented limit).
+- **FSMO roles are now identified distinctly (domain module)** — fixes a
+  **mislabel + a missing role**. `_guess_role` tested `"ridmanager" in dn`, which
+  never matched the real `CN=RID Manager$` object (note the space), so the RID
+  Master was silently dropped and the domain head was labelled "PDC Emulator /
+  RID Master". Matching is now exact/base-relative: domain head → **PDC
+  Emulator**, `CN=RID Manager$,CN=System` → **RID Master**, `CN=Infrastructure`
+  → **Infrastructure Master** (the exact match also avoids the DNS application
+  partitions' own Infrastructure objects being reported as extra rows).
+
+### Changed
+
+- **Inactive-accounts finding now carries a caveat** (users module):
+  `lastLogonTimestamp` replicates lazily (lags up to ~14 days), so a
+  recently-active account can appear in the inactive list — the output now says
+  so, to avoid acting on a false positive for an individual account.
+
 ## [2.24.0] - 2026-11-20
 
 ### Fixed
