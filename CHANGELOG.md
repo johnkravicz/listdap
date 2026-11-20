@@ -10,6 +10,16 @@ banner and via `listdap.py --version`.
 
 ## [Unreleased]
 
+### Added
+
+- **Offline unit-test suite (`tests/`)** for the correctness-critical parsers —
+  no DC, no network: each test assembles the exact binary Security Descriptor /
+  ACE bytes (`tests/sd_helpers.py`) and asserts on the decoded result. Covers the
+  DACL parser + effective-access engine (DENY / INHERIT_ONLY / conditional
+  callback ACEs, the ALLOW-only default contract, granting-SID attribution) and
+  FSMO role identification. Runs with zero dependencies (`python3 tests/run.py`)
+  or under pytest (`python3 -m pytest tests/ -q`); both exit non-zero on failure.
+
 ## [2.25.0] - 2026-11-20
 
 ### Fixed
