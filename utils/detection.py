@@ -51,6 +51,9 @@ class Artifact:
 
 # --- Per-connection auth baseline: every authenticated listdap bind emits this.
 # Visible BY DEFAULT. Repeated once per LDAP bind (see ModuleFootprint.binds).
+# The credential-proof event depends on the auth method actually used: NTLM emits
+# 4776, Kerberos emits 4768/4769 instead. The logon/priv/logoff events (4624/4672/
+# 4634) are method-agnostic. Pick the right baseline with `auth_baseline()`.
 AUTH_BASELINE: list[Artifact] = [
     Artifact(4776, Log.SEC, "NTLM credential validation",
              "", True, "medium", tested=True,
@@ -65,6 +68,42 @@ AUTH_BASELINE: list[Artifact] = [
     Artifact(4634, Log.SEC, "Logoff",
              "", True, "low", tested=True),
 ]
+
+# Kerberos baseline: 4768/4769 replace the NTLM 4776. Not lab-measured (Phase 5
+# ran the NTLM path), so the Kerberos-specific events are marked `~` (inferred).
+AUTH_BASELINE_KERBEROS: list[Artifact] = [
+    Artifact(4768, Log.SEC, "Kerberos TGT requested (AS-REQ)",
+             "only when listdap obtains the TGT itself (password / NT-hash); "
+             "ABSENT with a pre-existing ccache", True, "medium", tested=False,
+             note="replaces the NTLM 4776; inferred — Phase 5 measured the NTLM path."),
+    Artifact(4769, Log.SEC, "Kerberos service ticket requested (TGS-REQ)",
+             "", True, "medium", tested=False,
+             note="service ticket for the ldap/<dc> SPN — the Kerberos default tell; inferred."),
+    Artifact(4624, Log.SEC, "Logon (type 3)",
+             "", True, "medium", tested=True,
+             note="IpAddress = attacker host; method-agnostic (fires under NTLM and Kerberos)."),
+    Artifact(4672, Log.SEC, "Special privileges assigned",
+             "", True, "low", tested=True,
+             note="fires even for a low-priv account on Server 2025 (env-specific)."),
+    Artifact(4634, Log.SEC, "Logoff",
+             "", True, "low", tested=True),
+]
+
+
+def auth_baseline(auth: str = "ntlm", from_ccache: bool = False) -> list[Artifact]:
+    """The per-bind auth artifacts for the method listdap actually used.
+
+    auth:        "kerberos" or "ntlm" (NTLM also stands in for SIMPLE / anonymous
+                 password binds — same 4776-style tell on a signing DC).
+    from_ccache: Kerberos with a pre-existing ticket cache → the TGT was obtained
+                 elsewhere, so no 4768 (AS-REQ) is emitted at bind time.
+    """
+    if auth == "kerberos":
+        base = AUTH_BASELINE_KERBEROS
+        if from_ccache:
+            base = [a for a in base if a.event_id != 4768]
+        return base
+    return AUTH_BASELINE
 
 # --- Reusable object-level artifacts (all conditional on audit tuning) ---------
 A_DS_READ = Artifact(
@@ -175,26 +214,35 @@ def loudest(modules: list[str]) -> str | None:
     return max(known, key=lambda m: SIGNAL_RANK.get(REGISTRY[m].red_signal, 1))
 
 
-def stealth_notice(modules: list[str], rpc_skipped: bool) -> list[str]:
-    """Honest residual-signal summary for a stealth run (no false comfort)."""
+def stealth_notice(modules: list[str], rpc_skipped: bool, auth: str = "ntlm") -> list[str]:
+    """Honest residual-signal summary for a stealth run (no false comfort).
+    `auth` tailors the baseline tell to the method actually in use."""
+    if auth == "kerberos":
+        tell = ("4768/4769 Kerberos / 4624 logon / 4672 / 4634")
+        advice = ("  - already on Kerberos (no 4776); a pre-existing ccache also drops "
+                  "4768. Pick a source IP that blends in.")
+    else:
+        tell = ("4776 NTLM / 4624 logon / 4672 / 4634")
+        advice = ("  - consider a Kerberos ccache (drops 4776, adds 4768/4769) and a "
+                  "source IP that blends in.")
     lines = [
         "Stealth reduces noise; it does NOT make listdap invisible. Residual signal:",
-        "  - every bind still emits the auth quartet (4776 NTLM / 4624 logon / 4672 / "
-        "4634) from YOUR source IP — the pivot a SOC correlates on.",
+        f"  - every bind still emits the auth quartet ({tell}) from YOUR source IP "
+        "— the pivot a SOC correlates on.",
     ]
     hot = [m for m in modules if m in REGISTRY and REGISTRY[m].red_signal == "high"]
     if hot:
         lines.append(f"  - still-loud module(s) kept: {', '.join(hot)}.")
-    lines.append("  - consider a Kerberos ccache (drops 4776, adds 4768/4769) and a "
-                 "source IP that blends in.")
+    lines.append(advice)
     return lines
 
 
 # --- Views --------------------------------------------------------------------
-def detectable(module: str) -> list[Artifact]:
-    """All artifacts for a module: the auth baseline plus its specific ones."""
+def detectable(module: str, auth: str = "ntlm", from_ccache: bool = False) -> list[Artifact]:
+    """All artifacts for a module: the auth baseline (for the method used) plus
+    its specific ones."""
     fp = REGISTRY[module]
-    return AUTH_BASELINE + fp.artifacts
+    return auth_baseline(auth, from_ccache) + fp.artifacts
 
 
 def module_signal(module: str) -> Signal:
@@ -208,19 +256,24 @@ def _rows():
             yield name, fp, a
 
 
-def blue_markdown(modules: list[str] | None = None) -> str:
+def blue_markdown(modules: list[str] | None = None,
+                  auth: str = "ntlm", from_ccache: bool = False) -> str:
     """Render the detection map. `modules` limits it to those module names
-    (preserving registry order); None = all. Unknown names are ignored."""
+    (preserving registry order); None = all. Unknown names are ignored.
+    `auth` selects the per-bind baseline (NTLM 4776 vs Kerberos 4768/4769)."""
     sel = [m for m in REGISTRY if (modules is None or m in modules)]
+    base = auth_baseline(auth, from_ccache)
+    auth_label = "Kerberos" if auth == "kerberos" else "NTLM"
     L = ["# listdap detection map (`--blue`)\n",
          "Per-module artifacts on a Domain Controller. Legend: **[default]** = "
          "visible with stock audit; **[needs]** = requires the stated audit "
          "prerequisite (off by default); `~` = inferred, not lab-validated.\n"]
     if modules is not None:
         L.append(f"_Scope: modules {', '.join(sel) or '(none)'}._\n")
-    L.append("## Always emitted (every authenticated bind)\n")
-    for a in AUTH_BASELINE:
+    L.append(f"## Always emitted (every authenticated bind — auth: {auth_label})\n")
+    for a in base:
         L.append(f"- **{a.event_id}** {a.name} — {a.log.value} · red:{a.red_signal}"
+                 + ("" if a.tested else " · ~inferred")
                  + (f" · _{a.note}_" if a.note else ""))
     L.append("\n## Per module\n")
     L.append("| Module | binds | red | artifacts (beyond baseline) |")
@@ -259,20 +312,34 @@ def _sigcol(sig: str):
     return {"high": C.RED, "medium": C.YELLOW, "low": C.GREEN}.get(sig, C.RESET)
 
 
-def render_blue(out, modules: list[str] | None = None) -> None:
+def render_blue(out, modules: list[str] | None = None,
+                auth: str = "ntlm", from_ccache: bool = False) -> None:
     """Terminal rendering of the detection map via the Output engine (colours,
-    aligned blocks) — not Markdown. `modules` limits it to those names."""
+    aligned blocks) — not Markdown. `modules` limits it to those names.
+    `auth` selects the per-bind baseline (NTLM 4776 vs Kerberos 4768/4769)."""
     from core.output import C
     sel = [m for m in REGISTRY if (modules is None or m in modules)]
+    base = auth_baseline(auth, from_ccache)
+    auth_label = "Kerberos" if auth == "kerberos" else "NTLM"
     if modules is not None:
         out.info(f"Scope: {', '.join(sel) or '(none)'}")
 
-    out.subsection("Always emitted — every authenticated bind")
-    for a in AUTH_BASELINE:
-        out.plain(f"      {C.BOLD}{a.event_id:>4}{C.RESET} {a.name}  "
+    out.subsection(f"Always emitted — every authenticated bind  (auth: {auth_label})")
+    for a in base:
+        tilde = f" {C.DIM}~{C.RESET}" if not a.tested else ""
+        out.plain(f"      {C.BOLD}{a.event_id:>4}{C.RESET} {a.name}{tilde}  "
                   f"{C.DIM}[{a.log.value}] red:{a.red_signal}{C.RESET}")
-    out.plain(f"      {C.DIM}listdap binds via signed NTLM → 4776 is the default "
-              f"tell; no 4768/4769 without a ccache.{C.RESET}")
+    if auth == "kerberos":
+        if from_ccache:
+            tell = ("listdap used a Kerberos ccache → 4769 (TGS-REQ) is the tell; "
+                    "the TGT (4768) was obtained elsewhere; no NTLM 4776.")
+        else:
+            tell = ("listdap authenticated via Kerberos → 4768 (AS-REQ) + 4769 "
+                    "(TGS-REQ) replace the NTLM 4776.")
+    else:
+        tell = ("listdap binds via signed NTLM → 4776 is the default tell; "
+                "no 4768/4769 without a ccache.")
+    out.plain(f"      {C.DIM}{tell}{C.RESET}")
 
     out.subsection("Per module  (binds · red signal · artifacts)")
     for name in sel:

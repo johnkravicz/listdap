@@ -30,7 +30,7 @@ _HERE = os.path.dirname(os.path.abspath(__file__))
 if _HERE not in sys.path:
     sys.path.insert(0, _HERE)
 
-__version__ = "2.23.0"
+__version__ = "2.24.0"
 
 from core.connection import connect
 from core.auth import AuthError
@@ -209,6 +209,26 @@ def _parse_hashes(raw: str) -> tuple[str, str]:
     return lm.lower(), nt.lower()
 
 
+def _planned_auth(args):
+    """Infer the auth method a run WOULD use, for --blue-only (no connection).
+    listdap tries explicit-ccache Kerberos first, else signed NTLM; a password/
+    hash alone binds over NTLM. Returns (auth_kind, from_ccache)."""
+    import os
+    has_ccache = bool(args.ccache or os.environ.get("KRB5CCNAME"))
+    if not args.no_kerberos and has_ccache:
+        return "kerberos", True
+    return "ntlm", False
+
+
+def _auth_kind(auth_result):
+    """Map a realized AuthResult to the detection baseline selector.
+    Returns (auth_kind, from_ccache)."""
+    kerberos = getattr(auth_result.auth_type, "value", "") == "Kerberos"
+    if not kerberos:
+        return "ntlm", False
+    return "kerberos", bool(getattr(auth_result, "ccache_path", ""))
+
+
 def _resolve_module_names(args, out):
     """Module names that WOULD run, for --blue-only (offline). Honours
     --modules and --no-rpc. Returns None on an unknown module name."""
@@ -250,7 +270,8 @@ def main() -> int:
         if names is None:
             return 1
         out.section("DETECTION FOOTPRINT (--blue-only)")
-        render_blue(out, names)
+        auth_kind, from_cc = _planned_auth(args)
+        render_blue(out, names, auth=auth_kind, from_ccache=from_cc)
         print()
         return 0
 
@@ -351,7 +372,9 @@ def main() -> int:
         out.warning("Stealth profile active — "
                     + ("rpc/SAMR kept (--rpc)" if args.rpc else "rpc/SAMR skipped")
                     + f", modules reordered quiet→loud, throttle ~{args.throttle:g}s±jitter")
-        for line in stealth_notice([m.name for m in selected], rpc_skipped=not args.rpc):
+        _ak, _ = _auth_kind(conn.auth_result)
+        for line in stealth_notice([m.name for m in selected],
+                                   rpc_skipped=not args.rpc, auth=_ak):
             out.info(line)
 
     # Dump manager (needed for --dump prefixed lists and/or --user-file)
@@ -395,7 +418,8 @@ def main() -> int:
     if args.blue:
         from utils.detection import render_blue
         out.section("DETECTION FOOTPRINT (--blue)")
-        render_blue(out, [m.name for m in selected])
+        _ak, _fc = _auth_kind(conn.auth_result)
+        render_blue(out, [m.name for m in selected], auth=_ak, from_ccache=_fc)
         print()
 
     # Dump files

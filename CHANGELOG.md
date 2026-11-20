@@ -10,6 +10,29 @@ banner and via `listdap.py --version`.
 
 ## [Unreleased]
 
+## [2.24.0] - 2026-11-20
+
+### Fixed
+
+- **`--blue` now reflects the auth method actually used (NTLM vs Kerberos)**
+  (detection registry + CLI). The detection map's per-bind baseline was
+  hard-coded to the NTLM quartet (**4776** credential validation + 4624/4672/
+  4634), so on a Kerberos run the map was factually wrong — it claimed 4776 that
+  never fired and hid the **4768 (AS-REQ) / 4769 (TGS-REQ)** that did.
+  - New `AUTH_BASELINE_KERBEROS` and `auth_baseline(auth, from_ccache)` in
+    `utils/detection.py`: Kerberos swaps 4776 → 4768+4769, and a **pre-existing
+    ccache drops 4768** (the TGT was obtained elsewhere; only 4769 at bind time).
+    The Kerberos-specific events are marked `~` (inferred — Phase 5 measured the
+    NTLM path); 4624/4672/4634 are method-agnostic and stay lab-validated.
+  - `blue_markdown`, `render_blue` and `stealth_notice` take an `auth` argument
+    and render the correct baseline, header and residual-signal tell.
+  - `listdap.py` selects it from the realized `AuthResult` for `--blue`/
+    `--stealth` (`_auth_kind`, incl. `ccache_path` → `from_ccache`) and infers it
+    for the offline `--blue-only` from the args that would be used
+    (`_planned_auth`: explicit `--ccache`/`$KRB5CCNAME` → Kerberos, else NTLM).
+  - Validated live against the lab DC: NTLM run shows 4776; Kerberos run (via a
+    real TGT/ccache) shows 4769 only, no 4776/4768.
+
 ## [2.23.0] - 2026-11-20
 
 ### Fixed
