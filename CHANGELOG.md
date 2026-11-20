@@ -10,6 +10,36 @@ banner and via `listdap.py --version`.
 
 ## [Unreleased]
 
+### Notes
+
+- **Live validation on the test DCs (2026-11-20)** — the v2.23.0–v2.26.0
+  correctness work was exercised end-to-end against the real lab DCs (Windows
+  Server 2025; `corp.lab`, and `partner.lab` as a separate forest over a
+  bidirectional trust):
+  - **acls** — all four effective-access paths confirmed live via the
+    Outbound-Control code path on a throwaway target: a granted `GenericAll`
+    surfaces; adding a **DENY** suppresses it; an **INHERIT_ONLY** grant is not
+    counted on the object; a **conditional (callback) ALLOW** surfaces; a
+    **conditional DENY** does not suppress a hard ALLOW.
+  - **domain** — FSMO roles reported distinctly (PDC Emulator + RID Master +
+    Infrastructure Master) against real `fSMORoleOwner` data.
+  - **blue** — the auth-aware baseline reflects the method actually used (NTLM
+    4776 vs Kerberos 4768/4769 from a ccache).
+  - **users** — the `lastLogonTimestamp` replication-lag caveat renders.
+  - **sidhistory** — the `[FOREIGN]` path is confirmed live end-to-end
+    (LDAP read → binary SID decode → classification → resolve → Quick Win): a
+    real `partner.lab` principal was migrated into a `corp.lab` account's
+    `sIDHistory` through the supported `DsAddSidHistory` API and listdap flagged
+    it `[FOREIGN]` / HIGH.
+  - **sidhistory `[FOREIGN-PRIV]`** — classification remains unit-tested only
+    (`privileged_rid_of`); the flag could **not** be reproduced live on the
+    DC-only Server 2025 lab, which is itself corroborating: a foreign *privileged*
+    SID in `sIDHistory` is not writable by any standard path — the legitimate
+    `DsAddSidHistory` API refuses RIDs < 1000 by design, mimikatz `sid::patch`
+    has no offsets for Server 2025 (so `sid::add` is rejected by the DSA), and
+    DCShadow requires a non-DC member host. Reproducing it would need dedicated
+    attack infrastructure, which is exactly what makes it a strong IOC.
+
 ## [2.26.0] - 2026-11-20
 
 ### Fixed
