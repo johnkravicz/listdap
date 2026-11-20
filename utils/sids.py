@@ -145,6 +145,20 @@ def is_privileged_sid(sid: str, domain_sid: str = "") -> bool:
     return False
 
 
+def privileged_rid_of(sid: str) -> bool:
+    """True if `sid` is a domain-account SID (S-1-5-21-…-RID) whose RID is a
+    privileged built-in RID, REGARDLESS of which domain it belongs to.
+
+    Unlike is_privileged_sid (which only matches the CURRENT domain), this spots
+    a *foreign* privileged SID — e.g. another domain's -512 / -519 in sIDHistory,
+    the crown jewel of a cross-forest SID-history injection — that the
+    domain-scoped check would miss.
+    """
+    if not sid.startswith("S-1-5-21-"):
+        return False
+    return sid.rsplit("-", 1)[-1] in PRIVILEGED_RIDS
+
+
 def resolve_sid(sid: str, domain_sid: str = "") -> str:
     """Resolve a SID string to a human-readable name.
 

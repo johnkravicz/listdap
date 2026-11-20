@@ -10,6 +10,34 @@ banner and via `listdap.py --version`.
 
 ## [Unreleased]
 
+## [2.26.0] - 2026-11-20
+
+### Fixed
+
+- **Foreign privileged SIDs in sIDHistory are no longer under-classified
+  (sidhistory module)** — fixes a **false negative** on severity. A sIDHistory
+  SID from another domain whose RID is privileged (another domain's -512 / -519
+  / -518 …) — the signature of a cross-forest SID-history injection — was bucketed
+  as a plain `[FOREIGN]` (HIGH), because `is_privileged_sid` only matches the
+  *current* domain's RIDs. New `utils.sids.privileged_rid_of` checks the RID
+  domain-agnostically; such SIDs now get a dedicated `[FOREIGN-PRIV]` bucket and
+  a **CRITICAL** Quick Win pointing at the trust's SID-filtering posture.
+
+### Added
+
+- Tests for the SID privilege helpers (`tests/test_sids.py`): `is_privileged_sid`
+  (current-domain scope) and `privileged_rid_of` (domain-agnostic, incl. the
+  foreign privileged-RID case).
+
+### Notes
+
+- Audited `delegations`, `trusts` and `is_privileged_sid` for FP/FN: the DC-skip
+  in unconstrained-delegation detection, the trust SID-filtering direction logic
+  (outbound/bidirectional = this domain trusts the partner = at risk), and the
+  privileged-principal filter were all found correct; no change needed.
+
+## [2.25.0] - 2026-11-20
+
 ### Added
 
 - **Offline unit-test suite (`tests/`)** for the correctness-critical parsers —

@@ -27,6 +27,7 @@ from core.output import Severity, C
 from utils.ldap_helpers import get_attr, get_list, get_raw_all, get_dn
 from utils.sids import (
     resolve_sid, bytes_to_sid, is_privileged_sid, is_high_value_sid,
+    privileged_rid_of,
 )
 
 _FILTER = "(sIDHistory=*)"
@@ -82,9 +83,10 @@ class SIDHistoryModule(BaseModule):
             return
 
         dsid = ctx.domain_sid
-        rows      = []
-        priv_find = []   # (account, type, sid, name)
-        fgn_find  = []   # (account, type, sid, name)
+        rows          = []
+        priv_find     = []   # (account, type, sid, name) — privileged in THIS domain
+        fgn_priv_find = []   # (account, type, sid, name) — foreign SID w/ privileged RID
+        fgn_find      = []   # (account, type, sid, name) — plain foreign SID
 
         for e in entries:
             sam  = get_attr(e, "sAMAccountName") or get_dn(e)
@@ -100,6 +102,12 @@ class SIDHistoryModule(BaseModule):
                 if priv:
                     flag = f"{C.RED}[PRIV]{C.RESET}"
                     priv_find.append((sam, typ, sid, name))
+                elif fgn and privileged_rid_of(sid):
+                    # Foreign SID whose RID is privileged (e.g. another domain's
+                    # -512/-519): privileged in its own domain → cross-forest
+                    # SID-history injection, more severe than a plain migration.
+                    flag = f"{C.RED}[FOREIGN-PRIV]{C.RESET}"
+                    fgn_priv_find.append((sam, typ, sid, name))
                 elif fgn:
                     flag = f"{C.YELLOW}[FOREIGN]{C.RESET}"
                     fgn_find.append((sam, typ, sid, name))
@@ -108,7 +116,9 @@ class SIDHistoryModule(BaseModule):
                 rows.append([sam, typ, sid, name if name != sid else "-", flag])
 
         out.counter("Objects with sIDHistory", len(entries),
-                    {"privileged SID": len(priv_find), "foreign SID": len(fgn_find)})
+                    {"privileged SID": len(priv_find),
+                     "foreign privileged SID": len(fgn_priv_find),
+                     "foreign SID": len(fgn_find)})
         out.table(["Account", "Type", "sIDHistory SID", "Resolved", "Flag"],
                   rows, indent=4)
 
@@ -126,6 +136,19 @@ class SIDHistoryModule(BaseModule):
                 "privilege:\n" + "\n".join(lines) + "\n"
                 "  # e.g. if you control one of these, you can DCSync:\n"
                 f"  impacket-secretsdump '{self._cp_target(ctx)}' -just-dc",
+            )
+        if fgn_priv_find:
+            lines = [f"  - {acct} ({typ}) carries foreign PRIVILEGED {name or sid}  [{sid}]"
+                     for (acct, typ, sid, name) in fgn_priv_find]
+            ctx.quick_wins.add(
+                Severity.CRITICAL,
+                f"sIDHistory — {len(fgn_priv_find)} account(s) hold a FOREIGN PRIVILEGED SID",
+                "These sIDHistory SIDs are privileged in another domain (RID "
+                "500/512/519/518/516…). That is the signature of a cross-forest "
+                "SID-history injection: where SID filtering / quarantine is not "
+                "enforced on the trust, the account wields that foreign domain's "
+                "privilege. Verify the trust's SID filtering (see the trusts "
+                "module) and the legitimacy of the migration:\n" + "\n".join(lines),
             )
         if fgn_find:
             lines = [f"  - {acct} ({typ}) carries foreign {name or sid}  [{sid}]"

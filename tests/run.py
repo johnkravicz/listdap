@@ -18,6 +18,7 @@ sys.path.insert(0, ROOT)
 TEST_MODULES = [
     "tests.test_acls_dacl",
     "tests.test_domain_fsmo",
+    "tests.test_sids",
 ]
 
 
