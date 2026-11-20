@@ -10,6 +10,32 @@ banner and via `listdap.py --version`.
 
 ## [Unreleased]
 
+## [2.22.0] - 2026-11-20
+
+### Changed
+
+- **ADIDNS reframed around the attack surface, not the record dump** (adidns
+  module). The full record listing is recon-only, so it is now **demoted behind
+  `-v`** (default shows a count + the name→IP Quick Win). The new headline is a
+  **"Plantable missing names"** view: for every zone where the current identity
+  holds Create-Child, it lists the high-value names that are **absent and
+  therefore plantable** — `*` (CRITICAL, domain-wide catch-all), `wpad` (HIGH,
+  WPAD coercion), `isatap` (MEDIUM) — each with a ready `dnstool.py` / Powermad
+  command. A present `*` in a zone marks it neutralised (overwrite instead).
+  **Client-facing only**: reverse (`.arpa`) and locator/service zones (`_msdcs`,
+  `_sites`, `_tcp`…) are skipped for wpad/catch-all, since clients never resolve
+  wpad there. `_check_zone_create` now reports just the Create-Child permission
+  surface; the "what to plant" detail moved to `_check_missing_names`.
+  Validated live (corp.lab wildcard neutralised; a clean client zone → `*`/`wpad`/
+  `isatap` plantable; `_msdcs` skipped).
+
+### Fixed
+
+- **`--blue` / `--blue-only` rendered as raw Markdown** in the terminal. They now
+  render through the Output engine (`detection.render_blue`): boxed section,
+  coloured module headers by red signal, `[needs: …]`/`[default]` tags — no more
+  `#`/`|`/`<br>`. `blue_markdown()` is kept for file/Markdown use.
+
 ## [2.21.0] - 2026-11-20
 
 ### Added

@@ -30,7 +30,7 @@ _HERE = os.path.dirname(os.path.abspath(__file__))
 if _HERE not in sys.path:
     sys.path.insert(0, _HERE)
 
-__version__ = "2.21.0"
+__version__ = "2.22.0"
 
 from core.connection import connect
 from core.auth import AuthError
@@ -245,11 +245,13 @@ def main() -> int:
 
     # --blue-only: print the detection map and exit WITHOUT connecting.
     if args.blue_only:
-        from utils.detection import blue_markdown
+        from utils.detection import render_blue
         names = _resolve_module_names(args, out)
         if names is None:
             return 1
-        print(blue_markdown(names))
+        out.section("DETECTION FOOTPRINT (--blue-only)")
+        render_blue(out, names)
+        print()
         return 0
 
     # Resolve port (GC takes priority if --gc)
@@ -391,9 +393,9 @@ def main() -> int:
 
     # --blue: detection footprint of the modules that ran
     if args.blue:
-        from utils.detection import blue_markdown
+        from utils.detection import render_blue
         out.section("DETECTION FOOTPRINT (--blue)")
-        print(blue_markdown([m.name for m in selected]))
+        render_blue(out, [m.name for m in selected])
         print()
 
     # Dump files

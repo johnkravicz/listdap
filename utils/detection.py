@@ -254,5 +254,55 @@ def blue_markdown(modules: list[str] | None = None) -> str:
     return "\n".join(L)
 
 
+def _sigcol(sig: str):
+    from core.output import C
+    return {"high": C.RED, "medium": C.YELLOW, "low": C.GREEN}.get(sig, C.RESET)
+
+
+def render_blue(out, modules: list[str] | None = None) -> None:
+    """Terminal rendering of the detection map via the Output engine (colours,
+    aligned blocks) — not Markdown. `modules` limits it to those names."""
+    from core.output import C
+    sel = [m for m in REGISTRY if (modules is None or m in modules)]
+    if modules is not None:
+        out.info(f"Scope: {', '.join(sel) or '(none)'}")
+
+    out.subsection("Always emitted — every authenticated bind")
+    for a in AUTH_BASELINE:
+        out.plain(f"      {C.BOLD}{a.event_id:>4}{C.RESET} {a.name}  "
+                  f"{C.DIM}[{a.log.value}] red:{a.red_signal}{C.RESET}")
+    out.plain(f"      {C.DIM}listdap binds via signed NTLM → 4776 is the default "
+              f"tell; no 4768/4769 without a ccache.{C.RESET}")
+
+    out.subsection("Per module  (binds · red signal · artifacts)")
+    for name in sel:
+        fp = REGISTRY[name]
+        col = _sigcol(fp.red_signal)
+        out.plain(f"  {col}{C.BOLD}{name:<13}{C.RESET} "
+                  f"{C.DIM}binds:{fp.binds}  red:{fp.red_signal}{C.RESET}")
+        if not fp.artifacts:
+            out.plain(f"        {C.DIM}— auth baseline only{C.RESET}")
+            continue
+        for a in fp.artifacts:
+            idlabel = str(a.event_id) if a.event_id else "MDI"
+            tilde = f" {C.DIM}~{C.RESET}" if not a.tested else ""
+            if a.default_on:
+                tag = f"{C.GREEN}[default]{C.RESET}"
+            else:
+                tag = f"{C.YELLOW}[needs: {a.condition}]{C.RESET}"
+            out.plain(f"        {C.BOLD}{idlabel:>4}{C.RESET} {a.name}{tilde}  {tag}")
+
+    out.subsection("To actually SEE the conditional artifacts")
+    out.plain("      4662  → a SACL auditing Read on the object (OFF by default)")
+    out.plain("      4661 / 5140 / 5145  → advanced audit: SAM / File Share / "
+              "Detailed File Share (OFF by default)")
+    out.plain("      MDI (~)  → a licensed MDI sensor; Sysmon (SwiftOnSecurity) "
+              "added nothing for listdap")
+
+    out.subsection("Red-team notes (--stealth levers)")
+    for s in STEALTH_LEVERS:
+        out.plain(f"      • {s}")
+
+
 if __name__ == "__main__":
     print(blue_markdown())
