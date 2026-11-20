@@ -30,7 +30,7 @@ _HERE = os.path.dirname(os.path.abspath(__file__))
 if _HERE not in sys.path:
     sys.path.insert(0, _HERE)
 
-__version__ = "2.19.4"
+__version__ = "2.21.0"
 
 from core.connection import connect
 from core.auth import AuthError
@@ -135,6 +135,36 @@ def build_parser() -> argparse.ArgumentParser:
         help="Never run RPC enumeration (disables the LDAP-dry auto-trigger).",
     )
 
+    # Detection (blue)
+    blue = p.add_argument_group("Detection (blue)")
+    blue.add_argument(
+        "--blue", action="store_true",
+        help="After the scan, print the detection footprint: the Windows events "
+             "each executed module generates on the DC, with the audit "
+             "prerequisite for each (from the Phase 5-measured registry).",
+    )
+    blue.add_argument(
+        "--blue-only", action="store_true",
+        help="Print the detection map for the selected modules and EXIT without "
+             "connecting (deconfliction sheet; no authentication, no directory "
+             "traffic). Honours --modules / --no-rpc.",
+    )
+
+    # Stealth (red)
+    red = p.add_argument_group("Stealth (red)")
+    red.add_argument(
+        "--stealth", action="store_true",
+        help="Reduce the detection footprint: reorder modules quiet->loud, skip "
+             "the loud rpc/SAMR module unless --rpc, throttle between modules, "
+             "and print the residual signal honestly. Does NOT make listdap "
+             "invisible (every bind still logs the NTLM auth quartet).",
+    )
+    red.add_argument(
+        "--throttle", type=float, default=0.0, metavar="SEC",
+        help="Base delay (seconds) between modules; random jitter up to the same "
+             "amount is added. Default 0; --stealth sets it to 3.0 if unset.",
+    )
+
     # Output
     out = p.add_argument_group("Output")
     out.add_argument("--dump",    metavar="PREFIX",
@@ -179,6 +209,23 @@ def _parse_hashes(raw: str) -> tuple[str, str]:
     return lm.lower(), nt.lower()
 
 
+def _resolve_module_names(args, out):
+    """Module names that WOULD run, for --blue-only (offline). Honours
+    --modules and --no-rpc. Returns None on an unknown module name."""
+    if args.modules:
+        names = [m.strip() for m in args.modules.split(",")]
+        unknown = [n for n in names if n not in MODULE_MAP]
+        if unknown:
+            out.error(f"Unknown module(s): {', '.join(unknown)}")
+            out.error(f"Available: {', '.join(MODULE_MAP.keys())}")
+            return None
+    else:
+        names = [m.name for m in ALL_MODULES]
+        if args.no_rpc and "rpc" in names:
+            names.remove("rpc")
+    return names
+
+
 def main() -> int:
     parser  = build_parser()
     args    = parser.parse_args()
@@ -195,6 +242,15 @@ def main() -> int:
     print("  ╚══════╝╚═╝╚══════╝   ╚═╝   ╚═════╝ ╚═╝  ╚═╝╚═╝     ")
     print(f"  LDAP enumeration for offensive assessments · v{__version__}")
     print()
+
+    # --blue-only: print the detection map and exit WITHOUT connecting.
+    if args.blue_only:
+        from utils.detection import blue_markdown
+        names = _resolve_module_names(args, out)
+        if names is None:
+            return 1
+        print(blue_markdown(names))
+        return 0
 
     # Resolve port (GC takes priority if --gc)
     port = args.port
@@ -280,6 +336,22 @@ def main() -> int:
     else:
         selected = ALL_MODULES
 
+    # Stealth profile (red): skip the loud rpc/SAMR module (unless forced),
+    # reorder quiet->loud, default a throttle, and warn about residual signal.
+    if args.stealth:
+        from utils.detection import stealth_order, stealth_notice
+        if not args.rpc:
+            selected = [m for m in selected if m.name != "rpc"]
+        name2mod = {m.name: m for m in selected}
+        selected = [name2mod[n] for n in stealth_order(list(name2mod))]
+        if args.throttle == 0.0:
+            args.throttle = 3.0
+        out.warning("Stealth profile active — "
+                    + ("rpc/SAMR kept (--rpc)" if args.rpc else "rpc/SAMR skipped")
+                    + f", modules reordered quiet→loud, throttle ~{args.throttle:g}s±jitter")
+        for line in stealth_notice([m.name for m in selected], rpc_skipped=not args.rpc):
+            out.info(line)
+
     # Dump manager (needed for --dump prefixed lists and/or --user-file)
     dump = DumpManager(args.dump) if (args.dump or args.user_file) else None
 
@@ -300,7 +372,7 @@ def main() -> int:
 
     # Run modules
     errors = []
-    for module in selected:
+    for idx, module in enumerate(selected):
         try:
             module.run(ctx)
         except Exception as e:
@@ -309,9 +381,20 @@ def main() -> int:
                 import traceback
                 traceback.print_exc()
             errors.append(module.name)
+        # Stealth throttle: delay + jitter between modules (not after the last).
+        if args.throttle and idx < len(selected) - 1:
+            import time, random
+            time.sleep(args.throttle + random.uniform(0.0, args.throttle))
 
     # Quick Wins summary
     quick_wins.display(out)
+
+    # --blue: detection footprint of the modules that ran
+    if args.blue:
+        from utils.detection import blue_markdown
+        out.section("DETECTION FOOTPRINT (--blue)")
+        print(blue_markdown([m.name for m in selected]))
+        print()
 
     # Dump files
     if dump:

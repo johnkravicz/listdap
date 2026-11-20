@@ -10,6 +10,51 @@ banner and via `listdap.py --version`.
 
 ## [Unreleased]
 
+## [2.21.0] - 2026-11-20
+
+### Added
+
+- **`--stealth` (red) + `--throttle`** (`listdap.py`, backed by the Phase 5
+  detection registry). `--stealth` reduces the detection footprint, driven by the
+  measured per-module red signal:
+  - **skips the `rpc`/SAMR module** (its 4661 + 5140/5145 + SAMR-recon are the
+    highest-fidelity footprint) unless `--rpc` forces it;
+  - **reorders modules quiet→loud** (`detection.stealth_order`) so the budget is
+    spent on low-signal modules first;
+  - **throttles between modules** (base delay + random jitter) to break the burst
+    pattern that drives MDI "LDAP reconnaissance"; `--stealth` defaults the delay
+    to 3.0s, and `--throttle SEC` tunes it (usable on its own too);
+  - **prints the residual signal honestly** — stealth does NOT make listdap
+    invisible: every bind still logs the NTLM auth quartet from the source IP,
+    and any kept high-signal module is named. No false comfort.
+
+  The LDAP connection was already reused across searches, so the quiet-by-default
+  posture is preserved; `--stealth` addresses the remaining measured noise.
+
+## [2.20.0] - 2026-11-20
+
+### Added
+
+- **Detection registry + `--blue` (purple-team)** (`utils/detection.py`). A single
+  source of truth maps each module to the artifacts it generates on a DC
+  (Windows event ID, log, and — crucially — the **audit prerequisite** for each,
+  since almost every object-level artifact needs a SACL or advanced-audit
+  subcategory that is OFF by default). Two new flags render it:
+  - `--blue` — after the scan, print the detection footprint of the modules that
+    actually ran (auto-scoped).
+  - `--blue-only` — print the map for the selected modules and **exit without
+    connecting** (deconfliction sheet: no authentication, no directory traffic;
+    honours `--modules` / `--no-rpc`).
+
+  Grounded in a live lab measurement (Server 2025 DC, default-audit vs
+  instrumented): listdap's default footprint is the **NTLM auth quartet**
+  (4776/4624/4672/4634) per bind — it uses NTLM, never Kerberos, without a
+  ccache — and is otherwise invisible at the object level unless the DC has
+  SACLs / advanced audit. `4662` lights up for SACLed object reads; the `rpc`
+  module additionally yields `4661` + `5140`/`5145` (SAMR/IPC$/named-pipe).
+  Artifacts carry a `tested` flag (`~` = inferred, e.g. MDI alerts, not
+  lab-validated). Sysmon (SwiftOnSecurity) added nothing for signed-LDAP/RPC.
+
 ## [2.19.4] - 2026-11-16
 
 ### Fixed (live validation)
