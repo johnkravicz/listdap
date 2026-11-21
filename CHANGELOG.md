@@ -24,7 +24,12 @@ banner and via `listdap.py --version`.
   - **domain** — FSMO roles reported distinctly (PDC Emulator + RID Master +
     Infrastructure Master) against real `fSMORoleOwner` data.
   - **blue** — the auth-aware baseline reflects the method actually used (NTLM
-    4776 vs Kerberos 4768/4769 from a ccache).
+    4776 vs Kerberos 4768/4769 from a ccache). The **Kerberos baseline is now
+    measured live** (DC1, Server 2025): a `getTGT` + ccache-backed bind produced
+    exactly one 4768 (AS-REQ, svc `krbtgt`) and one 4769 (TGS-REQ, svc `DC01$` =
+    the ldap SPN), both AES256, no 4776 — the `from_ccache` case (4769 only at
+    bind). `utils/detection.py` now marks those two artifacts `tested=True`
+    (no longer `~` inferred).
   - **users** — the `lastLogonTimestamp` replication-lag caveat renders.
   - **sidhistory** — the `[FOREIGN]` path is confirmed live end-to-end
     (LDAP read → binary SID decode → classification → resolve → Quick Win): a

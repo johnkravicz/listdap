@@ -14,7 +14,8 @@ drives two views:
 IMPORTANT — honesty of the map:
   * `default_on=True`  -> visible on a stock Server 2025 DC (no tuning).
   * `default_on=False` -> needs the stated `condition`; invisible otherwise.
-  * `tested=True`      -> observed live in Phase 5 on the lab DC.
+  * `tested=True`      -> observed live on the lab DC (Phase 5, or a later
+                          targeted measurement — e.g. the Kerberos baseline).
   * `tested=False`     -> inferred / documented only (e.g. MDI: no sensor in lab).
 Measured on a single Server 2025 DC with TARGETED SACLs; a differently-audited
 DC will differ — the map states conditions, not guarantees.
@@ -69,16 +70,20 @@ AUTH_BASELINE: list[Artifact] = [
              "", True, "low", tested=True),
 ]
 
-# Kerberos baseline: 4768/4769 replace the NTLM 4776. Not lab-measured (Phase 5
-# ran the NTLM path), so the Kerberos-specific events are marked `~` (inferred).
+# Kerberos baseline: 4768/4769 replace the NTLM 4776. Measured live on the lab DC
+# (Server 2025, 2026-11-20): a getTGT (AS-REQ) then a ccache-backed listdap bind
+# emitted exactly one 4768 (svc krbtgt) and one 4769 (svc <dc>$, the ldap SPN),
+# both AES256 (enc 0x12), and no 4776 — confirming the from_ccache case (4769 only
+# at bind time, the TGT obtained elsewhere).
 AUTH_BASELINE_KERBEROS: list[Artifact] = [
     Artifact(4768, Log.SEC, "Kerberos TGT requested (AS-REQ)",
              "only when listdap obtains the TGT itself (password / NT-hash); "
-             "ABSENT with a pre-existing ccache", True, "medium", tested=False,
-             note="replaces the NTLM 4776; inferred — Phase 5 measured the NTLM path."),
+             "ABSENT with a pre-existing ccache", True, "medium", tested=True,
+             note="replaces the NTLM 4776; measured live (svc krbtgt, AES256)."),
     Artifact(4769, Log.SEC, "Kerberos service ticket requested (TGS-REQ)",
-             "", True, "medium", tested=False,
-             note="service ticket for the ldap/<dc> SPN — the Kerberos default tell; inferred."),
+             "", True, "medium", tested=True,
+             note="service ticket for the ldap/<dc> SPN — the Kerberos default tell; "
+                  "measured live (svc <dc>$, AES256)."),
     Artifact(4624, Log.SEC, "Logon (type 3)",
              "", True, "medium", tested=True,
              note="IpAddress = attacker host; method-agnostic (fires under NTLM and Kerberos)."),
